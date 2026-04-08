@@ -2,7 +2,7 @@
 <resources>
     <!-- App -->
     <string name="app_name">StarVision TV</string>
-    <string name="iptv_playlist" translatable="false">https://raw.githubusercontent.com/aurorasekai15-hub/SymphogearTV-Native/main/channels.json</string>
+    <string name="iptv_playlist" translatable="false">https://raw.githubusercontent.com/toyamahikari12-hub/StarVision-TV/main/channels.json</string>
     <string name="gh_token" translatable="false">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</string>
     <!-- API Key untuk server privat (dipisah agar susah direverse) -->
     <string name="srv_p1" translatable="false">X-API</string>
