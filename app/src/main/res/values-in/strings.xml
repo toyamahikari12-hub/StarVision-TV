@@ -2,7 +2,7 @@
 <resources>
     <!-- App -->
     <string name="app_name">StarVision TV</string>
-    <string name="iptv_playlist" translatable="false">https://raw.githubusercontent.com/aurorasekai15-hub/SymphogearTV-Native/main/channels.json</string>
+    <string name="iptv_playlist" translatable="false">https://raw.githubusercontent.com/toyamahikari12-hub/StarVision-TV/main/channels.json</string>
     <string name="json_release" translatable="false">https://raw.githubusercontent.com/manakayuuna123-dot/AnimeTV/main/json/release.json</string>
     <string name="gh_contributors" translatable="false">https://api.github.com/repos/manakayuuna123-dot/AnimeTV/contributors</string>
     <string name="main_contributors">StarVision TV Team</string>
