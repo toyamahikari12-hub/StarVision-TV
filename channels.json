@@ -626,7 +626,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/DgC0xN3/animax.png",
-      "url": "https://nl.utako.moe/Animax/index.m3u8",
+      "url": "http://cdns.jp-primehome.com:8000/zhongying/live/playlist.m3u8?cid=bs15",
       "desc": "ANIMAX JAPAN HLS (dens.tv)",
       "tvgId": "Animax.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
