@@ -626,7 +626,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/DgC0xN3/animax.png",
-      "url": "https://vnpt.nekocdn.xyz/memfs/68ea67df-d4e1-44cb-bdb9-179dd01b7db4.m3u8?checkedby:iptvcat.com",
+      "url": "https://naori-test.netgenx.site/pxx.php?shk_cid=bs15#.m3u8",
       "desc": "ANIMAX JAPAN HLS (dens.tv)",
       "tvgId": "Animax.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -699,8 +699,8 @@
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/AT-X_logo.svg/2560px-AT-X_logo.svg.png",
-      "url": "https://nl.utako.moe/AT-X/index.m3u8",
+      "logo": "https://jp-epg-26f0ce.gitlab.io/logos/at_x.png",
+      "url": "https://haru.charandom.blog/stream/jp/at-x/stream-output.m3u8?mode=hls",
       "desc": "AT-X HLS",
       "tvgId": "AT-X.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
