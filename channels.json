@@ -156,7 +156,7 @@
       "drm": false,
       "type": "dash",
       "logo": "https://i.ibb.co.com/qjg9wCC/mnctv.png",
-      "url": "https://beetv.my.id/xstreamx/rctiplus.m3u8?ch=mnctv",
+      "url": "https://indihuy.streamized.net/atm/DASH/mnctv/manifest.mpd",
       "desc": "MNC TV DASH (IndiHome fallback)",
       "tvgId": "MNCTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
