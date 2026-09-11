@@ -156,14 +156,14 @@
       "drm": false,
       "type": "dash",
       "logo": "https://i.ibb.co.com/qjg9wCC/mnctv.png",
-      "url": "https://cdn10jtedge.indihometv.com/atm/DASH/mnctv/manifest.mpd",
+      "url": "https://beetv.my.id/xstreamx/rctiplus.m3u8?ch=mnctv",
       "desc": "MNC TV DASH (IndiHome fallback)",
       "tvgId": "MNCTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 108,
-      "name": "GTV (IHT)",
+      "name": "GTV (R+)",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
@@ -184,7 +184,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWXLEjqZOOO2LT5C_1aBWyMBW7K3X8UaK2r3jmKvNbuXaWpei7VO_9LR1lfKqXhTIvYjciKBzFsa2ENtKRmI5snupnZUB4zdLh-mzhgQwwryclFl-OCE-auGTDPhjOog0Wv36dnGXU1WJTG3T9yT-ZcWj7ddXMMZTLilzzt8rrZd7zLmHd221buxvteyRU/s700/GTV.png",
-      "url": "https://gtv-cutv.rctiplus.id/gtv-sdi.m3u8",
+      "url": "https://beetv.my.id/xstreamx/rctiplus.m3u8?ch=gtv",
       "desc": "GTV R+ HLS",
       "tvgId": "GTV R+.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
