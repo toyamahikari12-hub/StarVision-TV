@@ -159,7 +159,7 @@
       "drm": false,
       "type": "dash",
       "logo": "https://i.ibb.co.com/qjg9wCC/mnctv.png",
-      "url": "https://mnctv-linier.rctiplus.id/hdntl=exp=1789547489~acl=%2F*~data=hdntl~hmac=e36dd42d3827874389a977a605a0209d1ecfc02ff846f1cfb08e38bc5a7687d8/mnctv-sdi-avc1_1000000=17-mp4a_96000=1.m3u8",
+      "url": "http://beetv.my.id/xstreamx/rctiplus.m3u8?ch=mnctv",
       "desc": "MNC TV DASH (IndiHome fallback)",
       "tvgId": "MNCTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
