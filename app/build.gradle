@@ -164,6 +164,10 @@ dependencies {
     //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.17.1'
     //noinspection GradleDependency
+    // Dukungan RTSP - ExoPlayer otomatis pakai RtspMediaSource untuk URL berskema
+    // "rtsp://" begitu modul ini ada, tanpa perlu kode pemutar tambahan.
+    implementation 'com.google.android.exoplayer:exoplayer-rtsp:2.17.1'
+    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.17.1'
     //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:extension-okhttp:2.17.1'
