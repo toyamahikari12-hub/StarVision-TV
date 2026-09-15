@@ -3,6 +3,40 @@
 Aplikasi TV IPTV modern bertema Anime untuk Android.  
 Support **DASH + DRM** (ClearKey & Widevine).
 
+## 🔍 Auto-Deteksi Sistem Streaming
+
+Pemutar sekarang otomatis mengenali sistem/format streaming sebuah channel (HLS, DASH,
+SmoothStreaming, RTSP, atau progressive MP4/TS/MKV) langsung dari URL-nya - tidak perlu
+menulis kode pemutar baru tiap ada channel dengan sistem streaming baru:
+
+1. **Deteksi awal** (`StreamFormatDetector`) menebak format dari ekstensi/pola URL
+   (`.m3u8`, `.mpd`, `.ism`, `rtsp://`, parameter `type=m3u8`/`type=m3u_plus` yang umum
+   dipakai panel Xtream Codes, dll).
+2. **Fallback ladder otomatis** - kalau tebakan pertama ternyata salah (ExoPlayer gagal
+   parse manifest/container-nya), pemutar otomatis mencoba format lain secara berurutan
+   (HLS → DASH → SmoothStreaming → Progressive) sampai salah satu berhasil, tanpa perlu
+   restart manual.
+3. Format yang terbukti berhasil untuk sebuah channel "diingat" selama sesi berjalan,
+   supaya reconnect saat live stream putus-nyambung tidak menebak ulang dari awal.
+4. Track selector dikonfigurasi lebih toleran (`setAllowVideoMixedMimeTypeAdaptiveness`,
+   `setExceedRendererCapabilitiesIfNecessary`, `setEnableDecoderFallback`) supaya channel
+   dengan manifest berisi campuran codec (mis. rendition H.264 & HEVC/4K dalam satu
+   channel) tetap bisa memilih rendition yang kompatibel dengan perangkat, dan decoder
+   hardware yang gagal init otomatis mencoba decoder alternatif di perangkat.
+5. Dukungan **RTSP** ditambahkan (`exoplayer-rtsp`) - URL berskema `rtsp://` otomatis
+   ditangani tanpa kode tambahan.
+
+**Catatan jujur soal batasannya:** kalau error yang muncul persis "*Media mengandung
+track video & audio yang tidak didukung perangkat ini*", itu bukan soal salah tebak
+format lagi - itu artinya ExoPlayer BERHASIL baca manifest-nya tapi codec video/audio
+di dalam stream itu sendiri (mis. HEVC Main10, AV1, atau audio AC-3/E-AC-3/DTS) memang
+tidak punya decoder hardware/software di TV box tsb. Perbaikan di atas membantu kalau
+channel punya rendition lain yang kompatibel dalam manifest yang sama, tapi kalau
+seluruh stream cuma dikirim dalam satu codec yang memang tidak didukung perangkat,
+satu-satunya jalan adalah menambah modul software decoder ExoPlayer (mis.
+`extension-ffmpeg` untuk audio) yang harus di-build sendiri dari source dengan NDK -
+di luar cakupan patch ini karena butuh proses build native terpisah.
+
 [![Build AnimeTV APK](https://github.com/manakayuuna123-dot/AnimeTV/actions/workflows/build.yml/badge.svg)](https://github.com/manakayuuna123-dot/AnimeTV/actions/workflows/build.yml)
 
 ## Fitur Utama
