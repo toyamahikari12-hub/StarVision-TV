@@ -42,7 +42,6 @@ import com.animatv.player.model.Category
 import com.animatv.player.model.Channel
 import com.animatv.player.model.PlayData
 import com.animatv.player.model.Playlist
-import com.google.android.exoplayer2.util.MimeTypes
 import java.net.URLDecoder
 import java.util.*
 
@@ -61,6 +60,19 @@ class PlayerActivity : AppCompatActivity() {
     private var handlerInfo: Handler? = null
     private var errorCounter = 0
     private var isLocked = false
+
+    // ===== AUTO-DETEKSI SISTEM STREAMING (HLS/DASH/SmoothStreaming/RTSP/Progressive) =====
+    // Kalau tebakan format dari StreamFormatDetector meleset (channel pakai sistem yang
+    // belum umum), kita coba format lain di ladder ini secara otomatis - tanpa perlu
+    // menulis kode pemutar baru tiap ada channel dengan sistem streaming baru.
+    private var formatFallbackQueue: MutableList<String?>? = null // null = belum masuk mode fallback
+    private var hasReachedReadyThisAttempt = false
+    private var lastAttemptedMimeType: String? = null
+    // Ingat format yang TERBUKTI berhasil untuk sebuah URL, supaya kalau nanti live
+    // stream sempat putus & auto-retry, kita tidak menebak ulang dari nol (dan berisiko
+    // balik ke tebakan awal yang sempat salah) - langsung pakai format yang sudah terbukti.
+    private val knownGoodMimeType = HashMap<String, String?>()
+    private var currentCleanStreamUrl: String? = null
 
     // ===== BAGIAN 2: PLAYER CANGGIH =====
     // Sleep Timer
@@ -347,6 +359,13 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun playChannel() {
+        // Channel baru = reset state ladder auto-deteksi format
+        formatFallbackQueue = null
+        playChannel(overrideMimeType = null, isFormatFallbackAttempt = false)
+    }
+
+    private fun playChannel(overrideMimeType: String?, isFormatFallbackAttempt: Boolean) {
+        hasReachedReadyThisAttempt = false
         // Release player lama jika masih ada untuk cegah memory leak di Android 5
         if (player != null) {
             try {
@@ -388,16 +407,18 @@ class PlayerActivity : AppCompatActivity() {
             current?.drmName?.equals(it.name) == true
         }?.url
 
-        // Deteksi MimeType dari URL supaya ExoPlayer tahu format DASH vs HLS
+        // Auto-deteksi sistem streaming (HLS/DASH/SmoothStreaming/RTSP/Progressive).
+        // Prioritas: (1) kalau ini percobaan ladder fallback, paksa pakai kandidat yang
+        // diberikan (bisa null = progresif); (2) kalau URL ini sudah pernah terbukti
+        // jalan dengan format tertentu, langsung pakai itu; (3) baru tebak dari URL.
         val mimeType = when {
-            streamUrl.contains(".mpd", ignoreCase = true) -> MimeTypes.APPLICATION_MPD
-            streamUrl.contains("/dash", ignoreCase = true) -> MimeTypes.APPLICATION_MPD
-            streamUrl.contains(".m3u8", ignoreCase = true) -> MimeTypes.APPLICATION_M3U8
-            streamUrl.contains("playlist.m3u8", ignoreCase = true) -> MimeTypes.APPLICATION_M3U8
-            streamUrl.contains("master.m3u8", ignoreCase = true) -> MimeTypes.APPLICATION_M3U8
-            streamUrl.contains("index.m3u8", ignoreCase = true) -> MimeTypes.APPLICATION_M3U8
-            else -> null
+            isFormatFallbackAttempt -> overrideMimeType
+            knownGoodMimeType.containsKey(streamUrl) -> knownGoodMimeType[streamUrl]
+            else -> StreamFormatDetector.detect(streamUrl)
         }
+        lastAttemptedMimeType = mimeType
+        currentCleanStreamUrl = streamUrl
+        Log.d("PLAYER_FORMAT", "Channel='${current?.name}' guessedFormat=${StreamFormatDetector.label(mimeType)} fallbackAttempt=$isFormatFallbackAttempt")
 
         // HTTP factory dengan User-Agent dan Referer
         // Timeout lebih panjang untuk Android 5 dengan koneksi lambat
@@ -488,6 +509,17 @@ class PlayerActivity : AppCompatActivity() {
             parameters = ParametersBuilder(applicationContext)
                 .setMaxVideoSize(Int.MAX_VALUE, maxHeights[idx])
                 .setMaxVideoBitrate(maxBitrates[idx])
+                // Kalau manifest channel punya beberapa rendition dengan codec berbeda
+                // (mis. H.264 & HEVC dicampur di satu adaptation set - umum di channel
+                // yang baru ditambah rendition 4K/HEVC), izinkan ExoPlayer berpindah
+                // antar codec tsb alih-alih menolak semuanya.
+                .setAllowVideoMixedMimeTypeAdaptiveness(true)
+                .setAllowAudioMixedMimeTypeAdaptiveness(true)
+                // Tetap coba mainkan track meski secara resmi "melebihi kapasitas"
+                // renderer, karena banyak TV box tetap sanggup walau tidak terdaftar.
+                .setExceedRendererCapabilitiesIfNecessary(true)
+                .setExceedVideoConstraintsIfNecessary(true)
+                .setExceedAudioConstraintsIfNecessary(true)
                 .build()
         }
 
@@ -507,9 +539,16 @@ class PlayerActivity : AppCompatActivity() {
             .build()
 
         // enable extension renderer
-        // EXTENSION_RENDERER_MODE_OFF hemat RAM di Android 5 TV Box
+        // EXTENSION_RENDERER_MODE_OFF hemat RAM di Android 5 TV Box (tidak ada modul
+        // extension software decoder yang di-bundle, jadi mode ini tidak berpengaruh
+        // kalau nanti exoplayer-extension-ffmpeg dsb ditambahkan secara terpisah).
         val renderersFactory = DefaultRenderersFactory(this)
             .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF)
+            // Kalau decoder hardware "favorit" gagal init atau tidak mendukung profil
+            // tertentu (mis. HEVC Main10, atau profil H.264 High yang jarang), izinkan
+            // ExoPlayer coba decoder LAIN yang terdaftar di perangkat (termasuk decoder
+            // software bawaan Android) alih-alih langsung menyerah.
+            .setEnableDecoderFallback(true)
 
         // set player builder - selalu pakai loadControl yang stabil
         val playerBuilder = com.google.android.exoplayer2.ExoPlayer.Builder(this, renderersFactory)
@@ -644,6 +683,11 @@ class PlayerActivity : AppCompatActivity() {
             when (state) {
                 Player.STATE_READY -> {
                     errorCounter = 0
+                    // Format tebakan/fallback ini berhasil - keluar dari mode ladder
+                    // dan ingat formatnya supaya reconnect berikutnya tidak menebak ulang
+                    hasReachedReadyThisAttempt = true
+                    formatFallbackQueue = null
+                    currentCleanStreamUrl?.let { knownGoodMimeType[it] = lastAttemptedMimeType }
                     val catId = Playlist.cached.categories.indexOf(category)
                     val chId = category?.channels?.indexOf(current) ?: -1
                     preferences.watched = PlayData(catId, chId)
@@ -692,6 +736,41 @@ class PlayerActivity : AppCompatActivity() {
                 player?.seekToDefaultPosition()
                 player?.prepare()
                 return
+            }
+
+            // Error parsing manifest/container = tebakan sistem streaming (HLS/DASH/dst)
+            // kemungkinan meleset, BUKAN masalah jaringan. Kalau ini terjadi sebelum
+            // pernah sempat STATE_READY, coba format lain dari ladder secara otomatis -
+            // supaya channel dengan sistem streaming yang belum umum tetap punya
+            // kesempatan diputar tanpa perlu tambahan kode.
+            val isFormatError = error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED ||
+                    error.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED ||
+                    error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED ||
+                    error.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED
+
+            if (isFormatError && !hasReachedReadyThisAttempt) {
+                // Inisialisasi antrian percobaan pertama kali error format terjadi:
+                // semua kandidat di ladder KECUALI yang barusan dicoba dan gagal.
+                if (formatFallbackQueue == null) {
+                    formatFallbackQueue = StreamFormatDetector.FORMAT_FALLBACK_LADDER
+                        .filter { it != lastAttemptedMimeType }
+                        .toMutableList()
+                }
+                val queue = formatFallbackQueue
+                if (!queue.isNullOrEmpty()) {
+                    val nextMimeType = queue.removeAt(0)
+                    Log.w("PLAYER_FORMAT", "Format ${StreamFormatDetector.label(lastAttemptedMimeType)} gagal, " +
+                            "coba ${StreamFormatDetector.label(nextMimeType)} untuk channel '${current?.name}'")
+                    // Lepas player di loop berikutnya (bukan langsung di dalam callback
+                    // error milik player itu sendiri) supaya lebih aman dari reentrancy.
+                    Handler(Looper.getMainLooper()).post {
+                        if (isDestroyed) return@post
+                        try { player?.release() } catch (e: Exception) { /* abaikan */ }
+                        player = null
+                        playChannel(overrideMimeType = nextMimeType, isFormatFallbackAttempt = true)
+                    }
+                    return
+                }
             }
 
             // IO Error saat live stream = jaringan putus sebentar, retry otomatis
