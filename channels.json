@@ -140,7 +140,7 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/qjg9wCC/mnctv.png",
-      "url": "https://fta4-cdn-flr.visionplus.id/out/v1/d6b026ad50f14b7f9af5ddd5450007d4/index.mpd",
+      "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/d6b026ad50f14b7f9af5ddd5450007d4/index.mpd",
       "desc": "MNC TV DASH+ClearKey (Vision+)",
       "tvgId": "MNCTV.id",
       "drmType": "ClearKey",
