@@ -91,17 +91,20 @@
     },
     {
       "id": 104,
-      "name": "INDOSIAR (IHT)",
+      "name": "INDOSIAR (Vidio)",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
-      "drm": false,
-      "type": "hls",
+      "drm": true,
+      "type": "dash",
       "logo": "https://i.ibb.co.com/xjNQwrH/indosiar.png",
-      "url": "https://cdn10jtedge.indihometv.com/atm/DASH/indosiar/manifest.mpd",
-      "desc": "INDOSIAR HLS",
-      "tvgId": "Indosiar.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "url": "https://bonetvstream.asismuhammad8888.workers.dev/index.mpd?q=205&ext=dash&x=1785784982&k=90996156ceb656f93ecf5c718280db1cae90f9cd50ad646c28491977082e800f&sc=205",
+      "desc": "INDOSIAR DASH+Widevine",
+      "tvgId": "Indosiar.vidio",
+      "drmType": "Widevine",
+      "licUrl": "https://bonetvstream.asismuhammad8888.workers.dev/index.mpd?q=205&ext=drm&x=1785784982&k=90852beee7bc73f7ad9eddab2aed36921501a87afa24b23ee0adea3edde41197",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+      "ref": "https://www.vidio.com/"
     },
     {
       "id": 1051,
