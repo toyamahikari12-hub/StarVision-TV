@@ -156,7 +156,7 @@
       "drm": false,
       "type": "dash",
       "logo": "https://i.ibb.co.com/qjg9wCC/mnctv.png",
-      "url": "https://mncmedia.malingtv.workers.dev/mnctv.m3u8",
+      "url": "https://mnctv-linier.rctiplus.id/mnctv-sdi.m3u8?hdnts=exp=1785808865~hmac=116c601382f99b6011303d0ac695848261cfab3c09fb3eca653c6a75106297d8",
       "desc": "MNC TV DASH (IndiHome fallback)",
       "tvgId": "MNCTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
