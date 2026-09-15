@@ -1,0 +1,2591 @@
+package com.animatv.player
+
+import android.app.AlertDialog
+import android.content.*
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+import android.media.MediaDrm
+import android.media.AudioManager
+import android.provider.Settings
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.WindowManager
+import androidx.core.view.GestureDetectorCompat
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.*
+import android.widget.ImageButton
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.ParametersBuilder
+import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo
+import com.google.android.exoplayer2.upstream.DefaultAllocator
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.animatv.player.databinding.ActivityPlayerBinding
+import com.animatv.player.databinding.CustomControlBinding
+import com.animatv.player.dialog.TrackSelectionDialog
+import com.animatv.player.adapter.MiniChannelAdapter
+import com.animatv.player.extension.*
+import com.animatv.player.extra.*
+import com.animatv.player.extra.LocaleHelper
+import com.animatv.player.model.Category
+import com.animatv.player.model.Channel
+import com.animatv.player.model.PlayData
+import com.animatv.player.model.Playlist
+import java.net.URLDecoder
+import java.util.*
+
+class PlayerActivity : AppCompatActivity() {
+    private var doubleBackToExitPressedOnce = false
+    private val isTelevision by lazy { UiMode().isTelevision() }
+    private val preferences by lazy { Preferences() }
+    private val network by lazy { Network() }
+    private var category: Category? = null
+    private var current: Channel? = null
+    private var player: com.google.android.exoplayer2.ExoPlayer? = null
+    private lateinit var mediaItem: MediaItem
+    private lateinit var trackSelector: DefaultTrackSelector
+    private lateinit var bindingRoot: ActivityPlayerBinding
+    private lateinit var bindingControl: CustomControlBinding
+    private var handlerInfo: Handler? = null
+    private var errorCounter = 0
+    private var isLocked = false
+
+    // ===== AUTO-DETEKSI SISTEM STREAMING (HLS/DASH/SmoothStreaming/RTSP/Progressive) =====
+    // Kalau tebakan format dari StreamFormatDetector meleset (channel pakai sistem yang
+    // belum umum), kita coba format lain di ladder ini secara otomatis - tanpa perlu
+    // menulis kode pemutar baru tiap ada channel dengan sistem streaming baru.
+    private var formatFallbackQueue: MutableList<String?>? = null
+    private var hasReachedReadyThisAttempt = false
+    private var lastAttemptedMimeType: String? = null
+
+    // Ingat format yang TERBUKTI berhasil untuk sebuah URL, supaya kalau nanti live
+    // stream sempat putus & auto-retry, kita tidak menebak ulang dari nol
+    private val knownGoodMimeType = HashMap<String, String?>()
+    private var currentCleanStreamUrl: String? = null
+
+    // ===== BAGIAN 2: PLAYER CANGGIH =====
+    // Sleep Timer
+    // Auto Quality
+    private var autoQualityHandler =
+        android.os.Handler(android.os.Looper.getMainLooper())
+    private var lastBufferHealth = 100
+
+    private var sleepTimerHandler =
+        android.os.Handler(android.os.Looper.getMainLooper())
+    private var sleepTimerRunnable: Runnable? = null
+    private var sleepTimerSeconds = 0
+
+    // Playback Speed
+    private val speedLevels =
+        listOf(0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f)
+    private var speedIndex = 2
+
+    // Gesture Control
+    private var gestureDetector: GestureDetectorCompat? = null
+    private var gestureHandler =
+        android.os.Handler(android.os.Looper.getMainLooper())
+    private var initialBrightness = -1f
+    private var initialVolume = 0
+    private var gestureStartY = 0f
+    private var gestureStartX = 0f
+    private var isGestureBrightness = false
+    private var isGestureVolume = false
+
+    private var miniChannelAdapter: MiniChannelAdapter? = null
+    private var isMiniPanelVisible = false
+
+    // ── TV REMOTE SYSTEM ──
+    private val tvHost by lazy {
+        com.animatv.player.tv.TvPlayerHostImpl.create(
+            activity = this,
+            isControllerVisible = {
+                bindingRoot.playerView.isControllerVisible
+            },
+            isMiniPanelVisible = {
+                isMiniPanelVisible
+            },
+            isLocked = {
+                isLocked
+            },
+            isLive = {
+                player?.isCurrentMediaItemLive == true
+            },
+            isPlaying = {
+                player?.isPlaying == true
+            },
+            reverseNav = {
+                preferences.reverseNavigation
+            },
+            showController = {
+                bindingRoot.playerView.showController()
+            },
+            hideController = {
+                bindingRoot.playerView.hideController()
+            },
+            switchChannel = { mode ->
+                switchChannel(mode)
+            },
+            toggleMiniPanel = {
+                toggleMiniChannelPanel()
+            },
+            openTrackSelector = {
+                showTrackSelector()
+            },
+            showBtnLockOverlay = {
+                bindingRoot.btnLockOverlay.visibility = View.VISIBLE
+            },
+            jumpToChannel = { idx ->
+                category?.channels?.getOrNull(idx)?.let { ch ->
+                    current = ch
+                    errorCounter = 0
+                    player?.playWhenReady = false
+                    player?.release()
+                    playChannel()
+                    updateMiniChannelActive()
+                }
+            },
+            play = {
+                player?.play()
+            },
+            pause = {
+                player?.pause()
+            },
+            seekBack = {
+                player?.seekBack()
+            },
+            seekForward = {
+                player?.seekForward()
+            },
+        )
+    }
+
+    private val tvRemote by lazy {
+        com.animatv.player.tv.TvPlayerRemote(tvHost)
+    }
+
+    // ── END TV REMOTE SYSTEM ──
+
+    private val broadcastReceiver: BroadcastReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?
+            ) {
+                when (intent?.getStringExtra(PLAYER_CALLBACK)) {
+                    RETRY_PLAYBACK -> retryPlayback(true)
+                    CLOSE_PLAYER -> finish()
+                }
+            }
+        }
+
+    companion object {
+        var isFirst = true
+        var isPipMode = false
+
+        const val PLAYER_CALLBACK = "PLAYER_CALLBACK"
+        const val RETRY_PLAYBACK = "RETRY_PLAYBACK"
+        const val CLOSE_PLAYER = "CLOSE_PLAYER"
+
+        private const val CHANNEL_NEXT = 0
+        private const val CHANNEL_PREVIOUS = 1
+        private const val CATEGORY_UP = 2
+        private const val CATEGORY_DOWN = 3
+    }
+
+    override fun attachBaseContext(base: android.content.Context) {
+        val lang = LocaleHelper.getLanguageCode(base)
+        super.attachBaseContext(
+            LocaleHelper.setLocale(base, lang)
+        )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requestedOrientation =
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+
+        bindingRoot =
+            ActivityPlayerBinding.inflate(layoutInflater)
+
+        bindingControl =
+            CustomControlBinding.bind(
+                bindingRoot.root.findViewById(
+                    R.id.custom_control
+                )
+            )
+
+        setContentView(bindingRoot.root)
+
+        // set this is not first time
+        isFirst = false
+
+        // verify playlist
+        if (Playlist.cached.isCategoriesEmpty()) {
+            Log.e(
+                "PLAYER",
+                getString(R.string.player_no_playlist)
+            )
+
+            Toast.makeText(
+                this,
+                R.string.player_no_playlist,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            this.finish()
+            return
+        }
+
+        // get categories & channel to play
+        try {
+            val parcel: PlayData? =
+                if (
+                    android.os.Build.VERSION.SDK_INT >=
+                    android.os.Build.VERSION_CODES.TIRAMISU
+                ) {
+                    intent.getParcelableExtra(
+                        PlayData.VALUE,
+                        PlayData::class.java
+                    )
+                } else {
+                    @Suppress("DEPRECATION")
+                    intent.getParcelableExtra(
+                        PlayData.VALUE
+                    )
+                }
+
+            category =
+                parcel?.let {
+                    Playlist.cached.categories.getOrNull(
+                        it.catId
+                    )
+                }
+
+            current =
+                parcel?.let {
+                    category?.channels?.getOrNull(
+                        it.chId
+                    )
+                }
+
+        } catch (e: Exception) {
+
+            Log.e(
+                "PLAYER",
+                getString(R.string.player_playdata_error)
+            )
+
+            Toast.makeText(
+                this,
+                R.string.player_playdata_error,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            this.finish()
+            return
+        }
+
+        // verify
+        if (category == null || current == null) {
+            Log.e(
+                "PLAYER",
+                getString(R.string.player_no_channel)
+            )
+
+            Toast.makeText(
+                this,
+                R.string.player_no_channel,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            this.finish()
+            return
+        }
+
+        // set listener
+        bindingListener()
+
+        // play the channel
+        playChannel()
+
+        // local broadcast receiver to update playlist
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(
+                broadcastReceiver,
+                IntentFilter(PLAYER_CALLBACK)
+            )
+    }
+
+    private fun bindingListener() {
+
+        bindingRoot.playerView.apply {
+
+            setOnTouchListener(
+                object : OnSwipeTouchListener() {
+
+                    override fun onSwipeDown() {
+                        switchChannel(CATEGORY_UP)
+                    }
+
+                    override fun onSwipeUp() {
+                        switchChannel(CATEGORY_DOWN)
+                    }
+
+                    override fun onSwipeLeft() {
+                        switchChannel(CHANNEL_NEXT)
+                    }
+
+                    override fun onSwipeRight() {
+                        switchChannel(CHANNEL_PREVIOUS)
+                    }
+                }
+            )
+
+            setControllerVisibilityListener {
+
+                setChannelInformation(
+                    it == View.VISIBLE
+                )
+
+                if (!isLocked) {
+                    bindingRoot.btnMiniChannelToggle.visibility = it
+                }
+
+                if (!isLocked) {
+                    bindingControl.buttonLock.visibility = it
+                }
+            }
+        }
+
+        bindingControl.trackSelection.setOnClickListener {
+            showTrackSelector()
+        }
+
+        bindingControl.buttonExit.apply {
+            visibility =
+                if (isTelevision)
+                    View.GONE
+                else
+                    View.VISIBLE
+
+            setOnClickListener {
+                finish()
+            }
+        }
+
+        bindingControl.buttonPrevious.setOnClickListener {
+            switchChannel(CHANNEL_PREVIOUS)
+        }
+
+        bindingControl.buttonRewind.setOnClickListener {
+            player?.seekBack()
+        }
+
+        bindingControl.buttonForward.setOnClickListener {
+            player?.seekForward()
+        }
+
+        bindingControl.buttonNext.setOnClickListener {
+            switchChannel(CHANNEL_NEXT)
+        }
+
+        bindingControl.screenMode.setOnClickListener {
+            showScreenMenu(it)
+        }
+
+        bindingControl.trackSelection.setOnClickListener {
+            showTrackSelector()
+        }
+
+        // Tombol kunci di custom_control
+        bindingControl.buttonLock.apply {
+
+            visibility =
+                if (isTelevision)
+                    View.GONE
+                else
+                    View.VISIBLE
+
+            setOnClickListener {
+
+                (it as ImageButton).setImageResource(
+                    R.drawable.ic_lock
+                )
+
+                lockControl(true)
+            }
+        }
+
+        // Overlay tombol kunci TERPISAH
+        val handlerLockOverlay =
+            Handler(Looper.getMainLooper())
+
+        bindingRoot.btnLockOverlay.setOnClickListener {
+
+            (it as ImageButton).setImageResource(
+                R.drawable.ic_lock_open
+            )
+
+            lockControl(false)
+
+            bindingRoot.btnLockOverlay.visibility =
+                View.GONE
+        }
+
+        // Setup mini channel panel toggle button
+        bindingRoot.btnMiniChannelToggle.setOnClickListener {
+            toggleMiniChannelPanel()
+        }
+
+        // ===== BAGIAN 2: PLAYER CANGGIH =====
+        setupSleepTimer()
+        setupPlaybackSpeed()
+        setupDoubleTap()
+        setupGestureControl()
+        setupAutoQuality()
+    }
+
+    private fun setChannelInformation(visible: Boolean) {
+
+        if (isLocked) return
+
+        bindingRoot.layoutInfo.visibility =
+            if (visible && !isPipMode)
+                View.VISIBLE
+            else
+                View.INVISIBLE
+
+        if (isPipMode) return
+
+        if (
+            visible ==
+            bindingRoot.playerView.isControllerVisible
+        ) return
+
+        if (visible)
+            bindingRoot.playerView.clearFocus()
+        else
+            return
+
+        if (handlerInfo == null)
+            handlerInfo = Handler(Looper.getMainLooper())
+
+        handlerInfo?.removeCallbacksAndMessages(null)
+
+        handlerInfo?.postDelayed({
+
+            if (
+                bindingRoot.playerView.isControllerVisible
+            ) return@postDelayed
+
+            bindingRoot.layoutInfo.visibility =
+                View.INVISIBLE
+
+        }, bindingRoot.playerView.controllerShowTimeoutMs.toLong())
+    }
+
+    private fun lockControl(setLocked: Boolean) {
+
+        isLocked = setLocked
+
+        val visibility =
+            if (setLocked)
+                View.INVISIBLE
+            else
+                View.VISIBLE
+
+        bindingRoot.layoutInfo.visibility = visibility
+        bindingControl.buttonExit.visibility = visibility
+        bindingControl.layoutControl.visibility = visibility
+        bindingControl.screenMode.visibility = visibility
+        bindingControl.trackSelection.visibility = visibility
+        bindingControl.btnSpeed.visibility = visibility
+        bindingControl.btnSleep.visibility = visibility
+
+        bindingControl.buttonLock.visibility =
+            if (setLocked)
+                View.GONE
+            else
+                View.VISIBLE
+
+        bindingRoot.btnMiniChannelToggle.visibility =
+            if (setLocked)
+                View.GONE
+            else
+                View.VISIBLE
+
+        // Overlay kunci
+        bindingRoot.btnLockOverlay.visibility =
+            View.GONE
+
+        switchLiveOrVideo()
+    }
+
+    private fun switchLiveOrVideo() {
+        switchLiveOrVideo(false)
+    }
+
+    private fun switchLiveOrVideo(reset: Boolean) {
+
+        var visibility =
+            when {
+                reset -> View.GONE
+                isLocked -> View.INVISIBLE
+                player?.isCurrentMediaItemLive == true ->
+                    View.GONE
+                else ->
+                    View.VISIBLE
+            }
+
+        bindingControl.layoutSeekbar.visibility =
+            visibility
+
+        bindingControl.spacerControl.visibility =
+            visibility
+
+        // override visibility if not seekable
+        if (player?.isCurrentMediaItemSeekable == false) {
+            visibility = View.GONE
+        }
+
+        bindingControl.buttonRewind.visibility =
+            visibility
+
+        bindingControl.buttonForward.visibility =
+            visibility
+    }
+
+    private fun hexToBytes(hex: String): ByteArray {
+
+        val len = hex.length
+        val data = ByteArray(len / 2)
+
+        var i = 0
+
+        while (i < len) {
+
+            data[i / 2] =
+                (
+                    (
+                        Character.digit(hex[i], 16) shl 4
+                    ) +
+                    Character.digit(hex[i + 1], 16)
+                ).toByte()
+
+            i += 2
+        }
+
+        return data
+    }
+
+    private fun isDrmWidevineSupported(): Boolean {
+
+        if (
+            MediaDrm.isCryptoSchemeSupported(
+                C.WIDEVINE_UUID
+            )
+        ) {
+            return true
+        }
+
+        AlertDialog.Builder(this).apply {
+
+            setTitle(
+                R.string.player_playback_error
+            )
+
+            setMessage(
+                R.string.device_not_support_widevine
+            )
+
+            setCancelable(false)
+
+            setPositiveButton(
+                getString(R.string.btn_next_channel)
+            ) { _, _ ->
+                switchChannel(CHANNEL_NEXT)
+            }
+
+            setNegativeButton(
+                R.string.btn_close
+            ) { _, _ ->
+                finish()
+            }
+
+            create()
+            show()
+        }
+
+        return false
+    }
+
+    private fun playChannel() {
+
+        // Channel baru = reset state ladder auto-deteksi format
+        formatFallbackQueue = null
+
+        playChannel(
+            overrideMimeType = null,
+            isFormatFallbackAttempt = false
+        )
+    }
+
+    private fun playChannel(
+        overrideMimeType: String?,
+        isFormatFallbackAttempt: Boolean
+    ) {
+
+        hasReachedReadyThisAttempt = false
+
+        // Release player lama jika masih ada
+        if (player != null) {
+
+            try {
+                player?.release()
+            } catch (e: Exception) {
+
+                Log.w(
+                    "PLAYER",
+                    "release old player error: ${e.message}"
+                )
+            }
+
+            player = null
+        }
+
+        // reset view
+        switchLiveOrVideo(true)
+
+// set category & channel name
+        bindingRoot.categoryName.text = category?.name?.trim()
+        bindingRoot.channelName.text = current?.name?.trim()
+
+        // split streamurl with referer, user-agent
+        var streamUrl = URLDecoder.decode(current?.streamUrl, "utf-8")
+
+        var userAgent =
+            streamUrl.findPattern(".*user-agent=(.+?)(\\|.*)?")
+
+        val referer =
+            streamUrl.findPattern(".*referer=(.+?)(\\|.*)?")
+
+        // clean streamurl
+        streamUrl =
+            streamUrl.findPattern("(.+?)(\\|.*)?")
+                ?: streamUrl
+
+        // if null set User-Agent with existing resources
+        if (userAgent == null) {
+
+            val userAgents =
+                listOf(
+                    *resources.getStringArray(
+                        R.array.user_agent
+                    )
+                )
+
+            userAgent =
+                userAgents.firstOrNull {
+
+                    current?.streamUrl?.contains(
+                        it.substring(
+                            0,
+                            it.indexOf("/")
+                        ).lowercase(
+                            Locale.getDefault()
+                        )
+                    ) == true
+                }
+
+            if (userAgent.isNullOrEmpty()) {
+
+                userAgent =
+                    userAgents[
+                        Random().nextInt(
+                            userAgents.size
+                        )
+                    ]
+            }
+        }
+
+        // Ambil license DRM dari playlist
+        val drmLicense =
+            Playlist.cached.drmLicenses.firstOrNull {
+                current?.drmName?.equals(
+                    it.name
+                ) == true
+            }?.url
+
+        // Auto-deteksi sistem streaming
+        // HLS / DASH / SmoothStreaming / RTSP / Progressive
+        val mimeType =
+            when {
+
+                isFormatFallbackAttempt ->
+                    overrideMimeType
+
+                knownGoodMimeType.containsKey(
+                    streamUrl
+                ) ->
+                    knownGoodMimeType[
+                        streamUrl
+                    ]
+
+                else ->
+                    StreamFormatDetector.detect(
+                        streamUrl
+                    )
+            }
+
+        lastAttemptedMimeType = mimeType
+        currentCleanStreamUrl = streamUrl
+
+        Log.d(
+            "PLAYER_FORMAT",
+            "Channel='${current?.name}' " +
+                "guessedFormat=" +
+                "${StreamFormatDetector.label(mimeType)} " +
+                "fallbackAttempt=$isFormatFallbackAttempt"
+        )
+
+        // HTTP factory dengan User-Agent dan Referer
+        val httpDataSourceFactory =
+            DefaultHttpDataSource.Factory()
+                .setAllowCrossProtocolRedirects(true)
+                .setUserAgent(userAgent)
+                .setConnectTimeoutMs(15_000)
+                .setReadTimeoutMs(20_000)
+
+        if (referer != null) {
+
+            httpDataSourceFactory
+                .setDefaultRequestProperties(
+                    mapOf(
+                        Pair(
+                            "referer",
+                            referer
+                        )
+                    )
+                )
+        }
+
+        val dataSourceFactory =
+            DefaultDataSourceFactory(
+                this,
+                httpDataSourceFactory
+            )
+
+        // =========================================================
+        // DRM
+        // =========================================================
+
+        val isClearKey =
+            current?.drmName
+                ?.startsWith("clearkey_") == true
+
+        val isWidevine =
+            current?.drmName
+                ?.startsWith("widevine_") == true
+
+        val hasDrm =
+            !current?.drmName.isNullOrBlank() &&
+                !drmLicense.isNullOrBlank()
+
+        var drmSessionManager:
+            com.google.android.exoplayer2.drm.DrmSessionManager =
+            com.google.android.exoplayer2.drm.DrmSessionManager
+                .DRM_UNSUPPORTED
+
+        // =========================================================
+        // CLEARKEY
+        //
+        // drmLicense harus berupa URL license server.
+        // =========================================================
+
+        if (hasDrm && isClearKey) {
+
+            try {
+
+                val drmCallback =
+                    com.google.android.exoplayer2.drm.HttpMediaDrmCallback(
+                        drmLicense,
+                        httpDataSourceFactory
+                    )
+
+                // Header untuk request license
+                if (!userAgent.isNullOrBlank()) {
+
+                    drmCallback.setKeyRequestProperty(
+                        "User-Agent",
+                        userAgent
+                    )
+                }
+
+                if (!referer.isNullOrBlank()) {
+
+                    drmCallback.setKeyRequestProperty(
+                        "Referer",
+                        referer
+                    )
+                }
+
+                drmSessionManager =
+                    com.google.android.exoplayer2.drm.DefaultDrmSessionManager
+                        .Builder()
+                        .setUuidAndExoMediaDrmProvider(
+                            C.CLEARKEY_UUID,
+                            com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER
+                        )
+                        .setMultiSession(false)
+                        .build(
+                            drmCallback
+                        )
+
+                Log.d(
+                    "DRM_DEBUG",
+                    "ClearKey DrmSessionManager built successfully"
+                )
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "DRM_DEBUG",
+                    "ClearKey setup error: ${e.message}",
+                    e
+                )
+            }
+
+        // =========================================================
+        // WIDEVINE
+        // =========================================================
+
+        } else if (hasDrm && isWidevine) {
+
+            if (!isDrmWidevineSupported()) {
+
+                Log.e(
+                    "DRM_DEBUG",
+                    "Widevine tidak didukung perangkat"
+                )
+
+                Toast.makeText(
+                    applicationContext,
+                    "Widevine DRM tidak didukung perangkat ini",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                return
+            }
+
+            try {
+
+                val drmCallback =
+                    com.google.android.exoplayer2.drm.HttpMediaDrmCallback(
+                        drmLicense,
+                        httpDataSourceFactory
+                    )
+
+                // Header untuk request license
+                if (!userAgent.isNullOrBlank()) {
+
+                    drmCallback.setKeyRequestProperty(
+                        "User-Agent",
+                        userAgent
+                    )
+                }
+
+                if (!referer.isNullOrBlank()) {
+
+                    drmCallback.setKeyRequestProperty(
+                        "Referer",
+                        referer
+                    )
+                }
+
+                drmSessionManager =
+                    com.google.android.exoplayer2.drm.DefaultDrmSessionManager
+                        .Builder()
+                        .setUuidAndExoMediaDrmProvider(
+                            C.WIDEVINE_UUID,
+                            com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER
+                        )
+                        .setMultiSession(true)
+                        .build(
+                            drmCallback
+                        )
+
+                Log.d(
+                    "DRM_DEBUG",
+                    "Widevine DrmSessionManager built successfully"
+                )
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "DRM_DEBUG",
+                    "Widevine setup error: ${e.message}",
+                    e
+                )
+            }
+
+        // =========================================================
+        // DRM TERDETEKSI TAPI LICENSE TIDAK ADA
+        // =========================================================
+
+        } else if (
+            !current?.drmName.isNullOrBlank() &&
+            drmLicense.isNullOrBlank()
+        ) {
+
+            Log.e(
+                "DRM_DEBUG",
+                "DRM channel tetapi license tidak ditemukan"
+            )
+
+            Toast.makeText(
+                applicationContext,
+                "DRM license tidak ditemukan, coba refresh playlist",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        // =========================================================
+        // MEDIA ITEM
+        // =========================================================
+
+        mediaItem =
+            MediaItem.Builder()
+                .setUri(
+                    Uri.parse(
+                        streamUrl
+                    )
+                )
+                .also {
+
+                    if (mimeType != null) {
+
+                        it.setMimeType(
+                            mimeType
+                        )
+                    }
+                }
+                .build()
+
+        // =========================================================
+        // MEDIA SOURCE FACTORY
+        // =========================================================
+
+        val mediaSourceFactory =
+            DefaultMediaSourceFactory(
+                dataSourceFactory
+            )
+                .setDrmSessionManagerProvider {
+                    drmSessionManager
+                }
+
+        // create trackselector with resolution constraint
+        trackSelector =
+            DefaultTrackSelector(this).apply {
+
+                val maxHeights =
+                    listOf(
+                        360,
+                        720,
+                        1080,
+                        2160,
+                        Int.MAX_VALUE
+                    )
+
+                val maxBitrates =
+                    listOf(
+                        800_000,
+                        2_500_000,
+                        5_000_000,
+                        20_000_000,
+                        Int.MAX_VALUE
+                    )
+
+                val idx =
+                    preferences.resolutionIndex
+                        .coerceIn(
+                            0,
+                            maxHeights.size - 1
+                        )
+
+                parameters =
+                    ParametersBuilder(
+                        applicationContext
+                    )
+.setMaxVideoSize(
+                    Int.MAX_VALUE,
+                    maxHeights[idx]
+                )
+                .setMaxVideoBitrate(
+                    maxBitrates[idx]
+                )
+                // Kalau manifest channel punya beberapa rendition
+                // dengan codec berbeda, izinkan adaptasi antar codec.
+                .setAllowVideoMixedMimeTypeAdaptiveness(
+                    true
+                )
+                .setAllowAudioMixedMimeTypeAdaptiveness(
+                    true
+                )
+                // Tetap coba mainkan track meski renderer
+                // secara resmi menyatakan tidak mendukungnya.
+                .setExceedRendererCapabilitiesIfNecessary(
+                    true
+                )
+                .setExceedVideoConstraintsIfNecessary(
+                    true
+                )
+                .setExceedAudioConstraintsIfNecessary(
+                    true
+                )
+                .build()
+        }
+
+        // LoadControl yang stabil untuk Android 5
+        val loadControl: LoadControl =
+            DefaultLoadControl.Builder()
+                .setAllocator(
+                    DefaultAllocator(
+                        true,
+                        16
+                    )
+                )
+                .setBufferDurationsMs(
+                    3_000,
+                    15_000,
+                    1_500,
+                    3_000
+                )
+                .setTargetBufferBytes(
+                    4 * 1024 * 1024
+                )
+                .setPrioritizeTimeOverSizeThresholds(
+                    true
+                )
+                .build()
+
+        // Extension renderer
+        val renderersFactory =
+            DefaultRenderersFactory(this)
+                .setExtensionRendererMode(
+                    DefaultRenderersFactory
+                        .EXTENSION_RENDERER_MODE_OFF
+                )
+                .setEnableDecoderFallback(
+                    true
+                )
+
+        // Player builder
+        val playerBuilder =
+            com.google.android.exoplayer2.ExoPlayer
+                .Builder(
+                    this,
+                    renderersFactory
+                )
+                .setMediaSourceFactory(
+                    mediaSourceFactory
+                )
+                .setTrackSelector(
+                    trackSelector
+                )
+                .setLoadControl(
+                    loadControl
+                )
+
+        // Create player & listener
+        try {
+
+            player =
+                playerBuilder.build()
+
+            player?.addListener(
+                PlayerListener()
+            )
+
+            bindingRoot.playerView.player =
+                player
+
+            bindingRoot.playerView.resizeMode =
+                preferences.resizeMode
+
+            bindingRoot.playerView.requestFocus()
+
+            player?.playWhenReady = true
+
+            player?.setMediaItem(
+                mediaItem
+            )
+
+            player?.prepare()
+
+        } catch (e: Exception) {
+
+            android.util.Log.e(
+                "PLAYER",
+                "Build/play error: ${e.message}",
+                e
+            )
+
+            android.os.Handler(
+                android.os.Looper.getMainLooper()
+            ).postDelayed({
+
+                if (!isDestroyed) {
+                    retryPlayback(true)
+                }
+
+            }, 2000)
+        }
+    }
+
+    private fun switchChannel(
+        mode: Int
+    ): Boolean {
+
+        if (isLocked) return true
+
+        switchChannel(
+            mode,
+            false
+        )
+
+        bindingRoot.playerView.hideController()
+
+        return true
+    }
+
+    private fun switchChannel(
+        mode: Int,
+        lastCh: Boolean
+    ) {
+
+        val catId =
+            Playlist.cached.categories.indexOf(
+                category
+            )
+
+        val chId =
+            category?.channels?.indexOf(
+                current
+            ) ?: -1
+
+        when (mode) {
+
+            CATEGORY_UP -> {
+
+                val previous =
+                    catId - 1
+
+                if (previous > -1) {
+
+                    category =
+                        Playlist.cached.categories[
+                            previous
+                        ]
+
+                    current =
+                        if (lastCh) {
+
+                            category?.channels?.get(
+                                category?.channels
+                                    ?.size
+                                    ?.minus(1)
+                                    ?: 0
+                            )
+
+                        } else {
+
+                            category?.channels?.get(
+                                0
+                            )
+                        }
+
+                } else {
+
+                    Toast.makeText(
+                        this,
+                        R.string.top_category,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    return
+                }
+            }
+
+            CATEGORY_DOWN -> {
+
+                val next =
+                    catId + 1
+
+                if (
+                    next <
+                    Playlist.cached.categories.size
+                ) {
+
+                    category =
+                        Playlist.cached.categories[
+                            next
+                        ]
+
+                    current =
+                        category?.channels?.get(
+                            0
+                        )
+
+                } else {
+
+                    Toast.makeText(
+                        this,
+                        R.string.bottom_category,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    return
+                }
+            }
+
+            CHANNEL_PREVIOUS -> {
+
+                val previous =
+                    chId - 1
+
+                if (previous > -1) {
+
+                    current =
+                        category?.channels?.get(
+                            previous
+                        )
+
+                } else {
+
+                    switchChannel(
+                        CATEGORY_UP,
+                        true
+                    )
+
+                    return
+                }
+            }
+
+            CHANNEL_NEXT -> {
+
+                val next =
+                    chId + 1
+
+                if (
+                    next <
+                    (category?.channels?.size ?: 0)
+                ) {
+
+                    current =
+                        category?.channels?.get(
+                            next
+                        )
+
+                } else {
+
+                    switchChannel(
+                        CATEGORY_DOWN
+                    )
+
+                    return
+                }
+            }
+        }
+
+        errorCounter = 0
+
+        try {
+
+            player?.playWhenReady = false
+            player?.stop()
+            player?.clearMediaItems()
+
+        } catch (e: Exception) {
+
+            Log.w(
+                "PLAYER",
+                "switchChannel stop error: ${e.message}"
+            )
+        }
+
+        playChannel()
+    }
+
+    private fun retryPlayback(
+        force: Boolean
+    ) {
+
+        if (force) {
+
+            if (player == null) {
+
+                playChannel()
+
+                return
+            }
+
+            try {
+
+                player?.playWhenReady = true
+
+                player?.setMediaItem(
+                    mediaItem
+                )
+
+                player?.prepare()
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "PLAYER",
+                    "retryPlayback error: ${e.message}"
+                )
+
+                player?.release()
+
+                player = null
+
+                playChannel()
+            }
+
+            return
+        }
+
+        AsyncSleep().task(
+            object : AsyncSleep.Task {
+
+                override fun onFinish() {
+                    retryPlayback(true)
+                }
+            }
+        ).start(2)
+    }
+
+    private inner class PlayerListener :
+        Player.Listener {
+
+        override fun onPlaybackStateChanged(
+            state: Int
+        ) {
+
+            val trackHaveContent =
+                TrackSelectionDialog
+                    .willHaveContent(
+                        trackSelector
+                    )
+
+            bindingControl.trackSelection.visibility =
+                if (trackHaveContent)
+                    View.VISIBLE
+                else
+                    View.GONE
+
+            when (state) {
+
+                Player.STATE_READY -> {
+
+                    errorCounter = 0
+
+                    hasReachedReadyThisAttempt =
+                        true
+
+                    formatFallbackQueue =
+                        null
+
+                    currentCleanStreamUrl?.let {
+
+                        knownGoodMimeType[it] =
+                            lastAttemptedMimeType
+                    }
+
+                    val catId =
+                        Playlist.cached.categories
+                            .indexOf(category)
+
+                    val chId =
+                        category?.channels
+                            ?.indexOf(current)
+                            ?: -1
+
+                    preferences.watched =
+                        PlayData(
+                            catId,
+                            chId
+                        )
+
+                    switchLiveOrVideo()
+
+                    updateMiniChannelActive()
+
+                    val mappedTrackInfo =
+                        trackSelector
+                            .currentMappedTrackInfo
+
+                    if (mappedTrackInfo != null) {
+
+                        val isVideoProblem =
+                            mappedTrackInfo.getTypeSupport(
+                                C.TRACK_TYPE_VIDEO
+                            ) ==
+                            MappedTrackInfo
+                                .RENDERER_SUPPORT_UNSUPPORTED_TRACKS
+
+                        val isAudioProblem =
+                            mappedTrackInfo.getTypeSupport(
+                                C.TRACK_TYPE_AUDIO
+                            ) ==
+                            MappedTrackInfo
+                                .RENDERER_SUPPORT_UNSUPPORTED_TRACKS
+
+                        if (
+                            isVideoProblem ||
+                            isAudioProblem
+                        ) {
+
+                            val problem =
+                                when {
+
+                                    isVideoProblem &&
+                                    isAudioProblem ->
+                                        "video & audio"
+
+                                    isVideoProblem ->
+                                        "video"
+
+                                    else ->
+                                        "audio"
+                                }
+
+                            val msg =
+                                String.format(
+                                    getString(
+                                        R.string.error_unsupported
+                                    ),
+                                    problem
+                                )
+
+                            if (isVideoProblem) {
+
+                                showMessage(
+                                    msg,
+                                    false
+                                )
+
+                            } else {
+
+                                Toast.makeText(
+                                    applicationContext,
+                                    msg,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    }
+                }
+
+                Player.STATE_ENDED -> {
+
+                    val isLive =
+                        player
+                            ?.isCurrentMediaItemLive
+                            == true
+
+                    if (!isLive) {
+                        retryPlayback(true)
+                    }
+                }
+
+                else -> {
+                }
+            }
+        }
+
+        override fun onIsPlayingChanged(
+            isPlaying: Boolean
+        ) {
+
+            super.onIsPlayingChanged(
+                isPlaying
+            )
+
+            if (isPlaying) {
+                setChannelInformation(true)
+            }
+        }
+
+        override fun onPlayerError(
+            error: PlaybackException
+        ) {
+
+            val errorMsg =
+                error.message
+                    ?: "Unknown error"
+
+            Log.e(
+                "PLAYER_ERROR",
+                "code=${error.errorCode} " +
+                    "name=${error.errorCodeName} " +
+                    "msg=$errorMsg"
+            )
+
+            if (
+                error.errorCode ==
+                PlaybackException
+                    .ERROR_CODE_BEHIND_LIVE_WINDOW
+            ) {
+
+                player?.seekToDefaultPosition()
+                player?.prepare()
+
+                return
+            }
+
+            val isFormatError =
+                error.errorCode ==
+                    PlaybackException
+                        .ERROR_CODE_PARSING_CONTAINER_MALFORMED ||
+                error.errorCode ==
+                    PlaybackException
+                        .ERROR_CODE_PARSING_MANIFEST_MALFORMED ||
+                error.errorCode ==
+                    PlaybackException
+                        .ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED ||
+                error.errorCode ==
+                    PlaybackException
+                        .ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED
+
+            if (
+                isFormatError &&
+                !hasReachedReadyThisAttempt
+            ) {
+
+                if (
+                    formatFallbackQueue == null
+                ) {
+
+                    formatFallbackQueue =
+                        StreamFormatDetector
+                            .FORMAT_FALLBACK_LADDER
+                            .filter {
+                                it !=
+                                    lastAttemptedMimeType
+                            }
+                            .toMutableList()
+                }
+
+                val queue =
+                    formatFallbackQueue
+
+                if (
+                    !queue.isNullOrEmpty()
+                ) {
+
+                    val nextMimeType =
+                        queue.removeAt(0)
+
+                    Log.w(
+                        "PLAYER_FORMAT",
+                        "Format ${
+                            StreamFormatDetector.label(
+                                lastAttemptedMimeType
+                            )
+                        } gagal, coba ${
+                            StreamFormatDetector.label(
+                                nextMimeType
+                            )
+                        } untuk channel '${
+                            current?.name
+                        }'"
+                    )
+
+                    Handler(
+                        Looper.getMainLooper()
+                    ).post {
+
+                        if (isDestroyed) {
+                            return@post
+                        }
+
+                        try {
+                            player?.release()
+                        } catch (
+                            e: Exception
+                        ) {
+                        }
+
+                        player = null
+
+                        playChannel(
+                            overrideMimeType =
+                                nextMimeType,
+                            isFormatFallbackAttempt =
+                                true
+                        )
+                    }
+
+                    return
+                }
+            }
+
+            val isIoError =
+                error.errorCode >=
+                    PlaybackException
+                        .ERROR_CODE_IO_UNSPECIFIED &&
+                error.errorCode <=
+                    PlaybackException
+                        .ERROR_CODE_IO_NO_PERMISSION
+
+            val isLive =
+                player?.isCurrentMediaItemLive
+                    ?: false
+
+            val maxRetry =
+                if (isLive)
+                    15
+                else
+                    8
+
+            if (
+                errorCounter < maxRetry &&
+                network.isConnected()
+            ) {
+
+                errorCounter++
+
+                val delaySeconds =
+                    when {
+
+                        errorCounter <= 3 ->
+                            2
+
+                        errorCounter <= 8 ->
+                            4
+
+                        else ->
+                            6
+                    }
+
+                AsyncSleep().task(
+                    object :
+                        AsyncSleep.Task {
+
+                        override fun onFinish() {
+                            retryPlayback(true)
+                        }
+                    }
+                ).start(
+                    delaySeconds
+                )
+
+            } else {
+
+                showMessage(
+                    String.format(
+                        getString(
+                            R.string.player_error_message
+                        ),
+                        error.errorCode,
+                        error.errorCodeName,
+                        errorMsg
+                    ),
+                    true
+                )
+            }
+        }
+    }
+
+    private fun showInfo(
+        message: String
+    ) {
+
+        android.widget.Toast.makeText(
+            this,
+            message,
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun showMessage(
+        message: String,
+        autoretry: Boolean
+    ) {
+
+        val waitInSecond = 30
+
+        val btnRetryText =
+            if (autoretry) {
+
+                String.format(
+                    getString(
+                        R.string.btn_retry_count
+                    ),
+                    waitInSecond
+                )
+
+            } else {
+
+                getString(
+                    R.string.btn_retry
+                )
+            }
+
+        val builder =
+            AlertDialog.Builder(this).apply {
+
+                setTitle(
+                    R.string.player_playback_error
+                )
+
+                setMessage(message)
+
+                setCancelable(false)
+
+                setNegativeButton(
+                    getString(
+                        R.string.btn_next_channel
+                    )
+                ) { di, _ ->
+
+                    switchChannel(
+                        CHANNEL_NEXT
+                    )
+
+                    di.dismiss()
+                }
+
+                setPositiveButton(
+                    btnRetryText
+                ) { di, _ ->
+
+                    retryPlayback(true)
+
+                    di.dismiss()
+                }
+
+                setNeutralButton(
+                    R.string.btn_close
+                ) { di, _ ->
+
+                    di.dismiss()
+                    finish()
+                }
+
+                create()
+            }
+
+        val dialog =
+            builder.show()
+
+        if (!autoretry) return
+
+        AsyncSleep().task(
+            object :
+                AsyncSleep.Task {
+
+                override fun onCountDown(
+                    count: Int
+                ) {
+
+                    val text =
+                        if (count <= 0) {
+
+                            getString(
+                                R.string.btn_retry
+                            )
+
+                        } else {
+
+                            String.format(
+                                getString(
+                                    R.string.btn_retry_count
+                                ),
+                                count
+                            )
+                        }
+
+                    dialog.getButton(
+                        AlertDialog.BUTTON_POSITIVE
+                    ).text = text
+                }
+
+                override fun onFinish() {
+
+                    dialog.dismiss()
+
+                    retryPlayback(true)
+                }
+            }
+        ).start(
+            waitInSecond
+        )
+    }
+
+    private fun showTrackSelector(): Boolean {
+
+        TrackSelectionDialog
+            .createForTrackSelector(
+                trackSelector
+            ) { }
+            .show(
+                supportFragmentManager,
+                "TrackSelection"
+            )
+
+        return true
+    }
+
+    // ============================================================
+    // BAGIAN 2: PLAYER CANGGIH
+    // ============================================================
+
+    private fun setupSleepTimer() {
+
+        bindingControl.btnSleep?.setOnClickListener {
+            showSleepTimerMenu()
+        }
+    }
+
+    private fun showSleepTimerMenu() {
+
+        val options =
+            arrayOf(
+                "Matikan Timer",
+                "Tidur 15 menit",
+                "Tidur 30 menit",
+                "Tidur 45 menit",
+                "Tidur 1 jam",
+                "Tidur 2 jam"
+            )
+
+        val minutes =
+            listOf(
+                0,
+                15,
+                30,
+                45,
+                60,
+                120
+            )
+
+        androidx.appcompat.app.AlertDialog
+            .Builder(this)
+            .setTitle("Sleep Timer")
+            .setItems(
+                options
+            ) { _, idx ->
+
+                setSleepTimer(
+                    minutes[idx]
+                )
+            }
+            .show()
+    }
+
+    private fun setSleepTimer(
+        minutes: Int
+    ) {
+
+        sleepTimerRunnable?.let {
+            sleepTimerHandler
+                .removeCallbacks(it)
+        }
+
+        sleepTimerRunnable = null
+
+        if (minutes == 0) {
+
+            bindingControl
+                .txtSleepTimer
+                ?.visibility =
+                View.GONE
+
+            return
+        }
+
+        sleepTimerSeconds =
+            minutes * 60
+
+        bindingControl
+            .txtSleepTimer
+            ?.visibility =
+            View.VISIBLE
+
+        updateSleepTimerDisplay()
+
+        sleepTimerRunnable =
+            object : Runnable {
+
+                override fun run() {
+
+                    sleepTimerSeconds--
+
+                    if (
+                        sleepTimerSeconds <= 0
+                    ) {
+
+                        player?.pause()
+
+                        finish()
+
+                    } else {
+
+                        updateSleepTimerDisplay()
+
+                        sleepTimerHandler
+                            .postDelayed(
+                                this,
+                                1000
+                            )
+                    }
+                }
+            }
+
+        sleepTimerHandler.postDelayed(
+            sleepTimerRunnable ?: return,
+            1000
+        )
+    }
+
+    private fun updateSleepTimerDisplay() {
+
+        val mins =
+            sleepTimerSeconds / 60
+
+        val secs =
+            sleepTimerSeconds % 60
+
+        bindingControl
+            .txtSleepTimer
+            ?.text =
+            "ZZZ %02d:%02d".format(
+                mins,
+                secs
+            )
+    }
+
+    private fun setupPlaybackSpeed() {
+
+        bindingControl
+            .btnSpeed
+            ?.setOnClickListener {
+
+                speedIndex =
+                    (
+                        speedIndex + 1
+                    ) % speedLevels.size
+
+                val speed =
+                    speedLevels[
+                        speedIndex
+                    ]
+
+                player?.setPlaybackSpeed(
+                    speed
+                )
+
+                val label =
+                    if (speed == 1.0f)
+                        "1x"
+                    else
+                        "${speed}x"
+
+                bindingControl
+                    .btnSpeed
+                    ?.text =
+                    label
+
+                showInfo(
+                    "Kecepatan: $label"
+                )
+            }
+    }
+
+    private fun setupDoubleTap() {
+
+        val screenWidth =
+            resources.displayMetrics
+                .widthPixels
+
+        val handlerLockBtn =
+            Handler(
+                Looper.getMainLooper()
+            )
+
+        bindingRoot.playerView
+            .setOnTouchListener { _, event ->
+
+                if (isLocked) {
+
+                    if (
+                        event.action ==
+                        MotionEvent.ACTION_UP
+                    ) {
+
+                        bindingRoot
+                            .btnLockOverlay
+                            .setImageResource(
+                                R.drawable.ic_lock
+                            )
+
+                        bindingRoot
+                            .btnLockOverlay
+                            .visibility =
+                            View.VISIBLE
+
+                        handlerLockBtn
+                            .removeCallbacksAndMessages(
+                                null
+                            )
+
+                        handlerLockBtn
+                            .postDelayed({
+
+                                bindingRoot
+                                    .btnLockOverlay
+                                    .visibility =
+                                    View.GONE
+
+                            }, 3000)
+                    }
+
+                    return@setOnTouchListener true
+                }
+
+                gestureDetector
+                    ?.onTouchEvent(event)
+
+                handleGestureEvent(
+                    event,
+                    screenWidth
+                )
+
+                false
+            }
+
+        gestureDetector =
+            GestureDetectorCompat(
+                this,
+                object :
+                    GestureDetector
+                        .SimpleOnGestureListener() {
+
+                    override fun onDoubleTap(
+                        e: MotionEvent
+                    ): Boolean {
+
+                        val width =
+                            resources.displayMetrics
+                                .widthPixels
+
+                        if (
+                            e.x <
+                            width / 2
+                        ) {
+
+                            player?.seekBack()
+
+                            showDoubleTapFeedback(
+                                false
+                            )
+
+                        } else {
+
+                            player?.seekForward()
+
+                            showDoubleTapFeedback(
+                                true
+                            )
+                        }
+
+                        return true
+                    }
+                }
+            )
+    }
+
+    private fun showDoubleTapFeedback(
+        isForward: Boolean
+    ) {
+
+        val view =
+            if (isForward)
+                bindingControl.txtDoubleTapRight
+            else
+                bindingControl.txtDoubleTapLeft
+
+        view?.visibility =
+            View.VISIBLE
+
+        view?.animate()
+            ?.alpha(1f)
+            ?.setDuration(100)
+            ?.withEndAction {
+
+                view.animate()
+                    ?.alpha(0f)
+                    ?.setDuration(400)
+                    ?.withEndAction {
+
+                        view.visibility =
+                            View.GONE
+
+                        view.alpha = 1f
+                    }
+                    ?.start()
+            }
+            ?.start()
+    }
+
+    private fun setupGestureControl() {
+
+        try {
+
+            initialBrightness =
+                Settings.System.getInt(
+                    contentResolver,
+                    Settings.System.SCREEN_BRIGHTNESS
+                ) / 255f
+
+        } catch (
+            e: Exception
+        ) {
+
+            initialBrightness =
+                0.5f
+        }
+
+        val audioManager =
+            getSystemService(
+                AUDIO_SERVICE
+            ) as AudioManager
+
+        initialVolume =
+            audioManager.getStreamVolume(
+                AudioManager.STREAM_MUSIC
+            )
+    }
+
+    private fun handleGestureEvent(
+        event: MotionEvent,
+        screenWidth: Int
+    ) {
+
+        val audioManager =
+            getSystemService(
+                AUDIO_SERVICE
+            ) as AudioManager
+
+        when (event.action) {
+
+            MotionEvent.ACTION_DOWN -> {
+
+                gestureStartY =
+                    event.y
+
+                gestureStartX =
+                    event.x
+
+                isGestureBrightness = false
+                isGestureVolume = false
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+
+                val deltaY =
+                    gestureStartY - event.y
+
+                val deltaX =
+                    kotlin.math.abs(
+                        event.x -
+                            gestureStartX
+                    )
+
+                if (
+                    deltaX >
+                    kotlin.math.abs(deltaY)
+                ) {
+                    return
+                }
+
+                if (
+                    !isGestureBrightness &&
+                    !isGestureVolume
+                ) {
+
+                    if (
+                        gestureStartX <
+                        screenWidth / 2
+                    ) {
+
+                        isGestureBrightness =
+                            true
+
+                    } else {
+
+                        isGestureVolume =
+                            true
+                    }
+                }
+
+                val sensitivity =
+                    1000f
+
+                val change =
+                    deltaY /
+                        sensitivity
+
+                if (
+                    isGestureBrightness
+                ) {
+
+                    val value =
+                        (
+                            initialBrightness +
+                                change
+                        ).coerceIn(
+                            0f,
+                            1f
+                        )
+
+                    try {
+
+                        val lp =
+                            window.attributes
+
+                        lp.screenBrightness =
+                            value
+
+                        window.attributes =
+                            lp
+
+                    } catch (
+                        e: Exception
+                    ) {
+                    }
+
+                } else if (
+                    isGestureVolume
+                ) {
+
+                    val maxVolume =
+                        audioManager
+                            .getStreamMaxVolume(
+                                AudioManager
+                                    .STREAM_MUSIC
+                            )
+
+                    val newVolume =
+                        (
+                            initialVolume +
+                                (
+                                    change *
+                                    maxVolume
+                                )
+                        ).toInt()
+                            .coerceIn(
+                                0,
+                                maxVolume
+                            )
+
+                    audioManager.setStreamVolume(
+                        AudioManager
+                            .STREAM_MUSIC,
+                        newVolume,
+                        0
+                    )
+                }
+            }
+
+            MotionEvent.ACTION_UP -> {
+
+                isGestureBrightness =
+                    false
+
+                isGestureVolume =
+                    false
+            }
+        }
+    }
+
+    // ===== 5. AUTO QUALITY =====
+
+    private fun setupAutoQuality() {
+
+        autoQualityHandler.postDelayed(
+            object : Runnable {
+
+                override fun run() {
+
+                    try {
+
+                        if (
+                            player != null &&
+                            player?.isPlaying == true
+                        ) {
+
+                            val buffered =
+                                player
+                                    ?.bufferedPercentage
+                                    ?: 0
+
+                            lastBufferHealth =
+                                buffered
+                        }
+
+                    } catch (
+                        e: Exception
+                    ) {
+                    }
+
+                    autoQualityHandler
+                        .postDelayed(
+                            this,
+                            5000
+                        )
+                }
+            },
+            5000
+        )
+    }
+
+    // ============================================================
+    // MINI CHANNEL PANEL
+    // ============================================================
+
+    private fun toggleMiniChannelPanel() {
+
+        isMiniPanelVisible =
+            !isMiniPanelVisible
+
+        bindingRoot
+            .miniChannelPanel
+            ?.visibility =
+            if (isMiniPanelVisible)
+                View.VISIBLE
+            else
+                View.GONE
+
+        if (
+            isMiniPanelVisible
+        ) {
+
+            setupMiniChannelAdapter()
+        }
+    }
+
+    private fun setupMiniChannelAdapter() {
+
+        val channels =
+            category?.channels
+                ?: return
+
+        if (
+            miniChannelAdapter == null
+        ) {
+
+            miniChannelAdapter =
+                MiniChannelAdapter(
+                    channels
+                ) { channel ->
+
+                    current =
+                        channel
+
+                    errorCounter = 0
+
+                    player?.playWhenReady =
+                        false
+
+                    player?.release()
+
+                    playChannel()
+
+                    updateMiniChannelActive()
+                }
+
+            bindingRoot
+                .miniChannelRecyclerView
+                ?.adapter =
+                miniChannelAdapter
+        }
+    }
+
+    private fun updateMiniChannelActive() {
+
+        try {
+
+            miniChannelAdapter
+                ?.setCurrentChannel(
+                    current
+                )
+
+        } catch (
+            e: Exception
+        ) {
+
+            Log.w(
+                "PLAYER",
+                "Update mini channel error: ${
+                    e.message
+                }"
+            )
+        }
+    }
+
+    // ============================================================
+    // SCREEN MODE
+    // ============================================================
+
+    private fun showScreenMenu(
+        anchor: View
+    ) {
+
+        val popup =
+            PopupMenu(
+                this,
+                anchor
+            )
+
+        popup.menu.add(
+            "Fit"
+        )
+
+        popup.menu.add(
+            "Fill"
+        )
+
+        popup.menu.add(
+            "Zoom"
+        )
+
+        popup.setOnMenuItemClickListener {
+
+            when (it.title.toString()) {
+
+                "Fit" -> {
+
+                    bindingRoot
+                        .playerView
+                        .resizeMode =
+                        androidx.media3.ui
+                            .AspectRatioFrameLayout
+                            .RESIZE_MODE_FIT
+
+                    true
+                }
+
+                "Fill" -> {
+
+                    bindingRoot
+                        .playerView
+                        .resizeMode =
+                        androidx.media3.ui
+                            .AspectRatioFrameLayout
+                            .RESIZE_MODE_FILL
+
+                    true
+                }
+
+                "Zoom" -> {
+
+                    bindingRoot
+                        .playerView
+                        .resizeMode =
+                        androidx.media3.ui
+                            .AspectRatioFrameLayout
+                            .RESIZE_MODE_ZOOM
+
+                    true
+                }
+
+                else ->
+                    false
+            }
+        }
+
+        popup.show()
+    }
+
+    override fun onPause() {
+
+        super.onPause()
+
+        if (
+            isPipMode
+        ) {
+            player?.playWhenReady =
+                true
+        }
+    }
+
+    override fun onResume() {
+
+        super.onResume()
+
+        if (
+            !isPipMode
+        ) {
+            player?.playWhenReady =
+                true
+        }
+    }
+
+    override fun onDestroy() {
+
+        try {
+
+            sleepTimerRunnable?.let {
+                sleepTimerHandler
+                    .removeCallbacks(it)
+            }
+
+            autoQualityHandler
+                .removeCallbacksAndMessages(
+                    null
+                )
+
+            gestureHandler
+                .removeCallbacksAndMessages(
+                    null
+                )
+
+            LocalBroadcastManager
+                .getInstance(this)
+                .unregisterReceiver(
+                    broadcastReceiver
+                )
+
+            player?.release()
+
+            player = null
+
+        } catch (
+            e: Exception
+        ) {
+
+            Log.e(
+                "PLAYER",
+                "onDestroy error: ${e.message}"
+            )
+        }
+
+        super.onDestroy()
+    }
+}
