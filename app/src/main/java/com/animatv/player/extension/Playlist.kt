@@ -10,38 +10,53 @@ fun List<M3U>?.toPlaylist(): Playlist? {
 
     val playlist = Playlist()
 
-    // FIXED: LinkedHashMap supaya urutan kategori tidak acak
-    val linkedMap = LinkedHashMap<String, ArrayList<Channel>>()
-    val hashSet = HashSet<DrmLicense>()
-    val drms = ArrayList<DrmLicense>()
-    val cats = ArrayList<Category>()
+    val linkedMap =
+        LinkedHashMap<String, ArrayList<Channel>>()
+
+    val hashSet =
+        HashSet<DrmLicense>()
+
+    val drms =
+        ArrayList<DrmLicense>()
+
+    val cats =
+        ArrayList<Category>()
 
     for (item in this) {
-        val urls = item.streamUrl ?: continue
+
+        val urls =
+            item.streamUrl ?: continue
 
         for (i in urls.indices) {
 
             if (!item.licenseKey.isNullOrEmpty()) {
-                val drm = DrmLicense()
-                drm.name = item.licenseName
-                drm.url = item.licenseKey
 
-                if (hashSet.none { d ->
-                        d.name == item.licenseName
+                val drm = DrmLicense()
+
+                drm.name =
+                    item.licenseName
+
+                drm.url =
+                    item.licenseKey
+
+                if (
+                    hashSet.none {
+                        d -> d.name == item.licenseName
                     }
                 ) {
                     hashSet.add(drm)
                 }
             }
 
-            // getOrPut: kategori sama langsung masuk list yang sama
-            val map = linkedMap.getOrPut(
-                item.groupName.toString()
-            ) {
-                ArrayList()
-            }
+            val map =
+                linkedMap.getOrPut(
+                    item.groupName.toString()
+                ) {
+                    ArrayList()
+                }
 
-            val ch = Channel()
+            val ch =
+                Channel()
 
             ch.name =
                 if (i > 0) {
@@ -50,8 +65,11 @@ fun List<M3U>?.toPlaylist(): Playlist? {
                     item.channelName
                 }
 
-            ch.streamUrl = urls[i]
-            ch.drmName = item.licenseName
+            ch.streamUrl =
+                urls[i]
+
+            ch.drmName =
+                item.licenseName
 
             map.add(ch)
         }
@@ -59,27 +77,35 @@ fun List<M3U>?.toPlaylist(): Playlist? {
 
     for (entry in linkedMap) {
 
-        val category = Category()
+        val category =
+            Category()
 
-        category.name = entry.key
-        category.channels = entry.value
+        category.name =
+            entry.key
+
+        category.channels =
+            entry.value
 
         cats.add(category)
     }
 
-    playlist.categories = cats
+    playlist.categories =
+        cats
 
     drms.addAll(hashSet)
 
-    playlist.drmLicenses = drms
+    playlist.drmLicenses =
+        drms
 
     return playlist
 }
 
 
 fun Playlist?.sortCategories() {
+
     this?.categories?.sortBy {
-        category -> category.name?.lowercase()
+        category ->
+        category.name?.lowercase()
     }
 }
 
@@ -93,7 +119,8 @@ fun Playlist?.sortChannels() {
         this.categories[catId]
             .channels
             ?.sortBy {
-                channel -> channel.name?.lowercase()
+                channel ->
+                channel.name?.lowercase()
             }
     }
 }
@@ -115,10 +142,9 @@ fun Playlist?.trimChannelWithEmptyStreamUrl() {
 }
 
 
-// FIXED: mergeWith
-// Kategori dengan nama sama DIGABUNG,
-// bukan dibuat menjadi kategori duplikat.
-fun Playlist?.mergeWith(playlist: Playlist?) {
+fun Playlist?.mergeWith(
+    playlist: Playlist?
+) {
 
     if (playlist == null) return
 
@@ -127,10 +153,13 @@ fun Playlist?.mergeWith(playlist: Playlist?) {
         val existing =
             this?.categories?.firstOrNull {
 
-                it.name?.trim()?.lowercase() ==
-                        incomingCat.name
-                            ?.trim()
-                            ?.lowercase()
+                it.name
+                    ?.trim()
+                    ?.lowercase() ==
+
+                    incomingCat.name
+                        ?.trim()
+                        ?.lowercase()
             }
 
         if (existing != null) {
@@ -242,89 +271,15 @@ fun String?.toPlaylist(): Playlist? {
 
 
     // ==========================================
-    // JSON PLAYLIST
+    // JSON PLAYLIST BIASA
     // ==========================================
 
     try {
 
-        val playlist =
-            Gson().fromJson(
-                this,
-                Playlist::class.java
-            )
-
-        /*
-         * channel.json menggunakan:
-         *
-         * "url": "http://....m3u8"
-         * "ua": "Mozilla/5.0 ..."
-         * "referrer": "https://...."
-         *
-         * Channel.kt harus sudah memiliki:
-         *
-         * @SerializedName(
-         *     value = "stream_url",
-         *     alternate = ["url"]
-         * )
-         * var streamUrl: String?
-         *
-         * @SerializedName("ua")
-         * var userAgent: String?
-         *
-         * @SerializedName(
-         *     value = "referrer",
-         *     alternate = ["referer"]
-         * )
-         * var referrer: String?
-         */
-
-        playlist?.categories?.forEach { category ->
-
-            category.channels?.forEach { channel ->
-
-                var url =
-                    channel.streamUrl?.trim()
-
-                if (!url.isNullOrEmpty()) {
-
-                    // ==================================
-                    // USER-AGENT
-                    // ==================================
-
-                    if (
-                        !channel.userAgent
-                            .isNullOrBlank()
-                    ) {
-
-                        url +=
-                            "|User-Agent=" +
-                            channel.userAgent
-                    }
-
-
-                    // ==================================
-                    // REFERER
-                    // ==================================
-
-                    if (
-                        !channel.referrer
-                            .isNullOrBlank()
-                    ) {
-
-                        url +=
-                            "|referer=" +
-                            channel.referrer
-                    }
-
-
-                    // Simpan kembali URL
-                    // beserta metadata header.
-                    channel.streamUrl = url
-                }
-            }
-        }
-
-        return playlist
+        return Gson().fromJson(
+            this,
+            Playlist::class.java
+        )
 
     } catch (e: JsonParseException) {
 
@@ -363,97 +318,11 @@ fun Playlist?.isCategoriesEmpty(): Boolean {
 fun String?.toSymphogearPlaylist(): Playlist? {
 
     if (this.isNullOrBlank()) {
+
         return null
     }
 
     return com.animatv.player.extra
         .SymphogearJsonConverter
         .convert(this)
-}
-    for (entry in linkedMap) {
-        val category = Category()
-        category.name = entry.key
-        category.channels = entry.value
-        cats.add(category)
-    }
-    playlist.categories = cats
-    drms.addAll(hashSet)
-    playlist.drmLicenses = drms
-    return playlist
-}
-
-fun Playlist?.sortCategories() {
-    this?.categories?.sortBy { category -> category.name?.lowercase() }
-}
-
-fun Playlist?.sortChannels() {
-    if (this == null) return
-    for (catId in this.categories.indices) {
-        this.categories[catId].channels?.sortBy { channel -> channel.name?.lowercase() }
-    }
-}
-
-fun Playlist?.trimChannelWithEmptyStreamUrl() {
-    if (this == null) return
-    for (catId in this.categories.indices) {
-        this.categories[catId].channels?.removeAll { channel -> channel.streamUrl.isNullOrBlank() }
-    }
-}
-
-// FIXED: mergeWith — kategori nama sama DIGABUNG, bukan jadi duplikat
-// Bug lama: "Nasional" dari 2 sumber = 2 kategori terpisah → catId index kacau → channel gagal diputar
-fun Playlist?.mergeWith(playlist: Playlist?) {
-    if (playlist == null) return
-    for (incomingCat in playlist.categories) {
-        val existing = this?.categories?.firstOrNull {
-            it.name?.trim()?.lowercase() == incomingCat.name?.trim()?.lowercase()
-        }
-        if (existing != null) {
-            existing.channels?.addAll(incomingCat.channels ?: ArrayList())
-        } else {
-            this?.categories?.add(incomingCat)
-        }
-    }
-    for (incomingDrm in playlist.drmLicenses) {
-        if (this?.drmLicenses?.none { it.name == incomingDrm.name } == true) {
-            this.drmLicenses.add(incomingDrm)
-        }
-    }
-}
-
-fun Playlist?.insertFavorite(channels: ArrayList<Channel>) {
-    if (this == null) return
-    if (this.categories[0].isFavorite())
-        this.categories[0].channels = channels
-    else
-        this.categories.addFavorite(channels)
-}
-
-fun Playlist?.removeFavorite() {
-    if (this == null) return
-    if (this.categories[0].isFavorite())
-        this.categories.removeAt(0)
-}
-
-fun String?.toPlaylist(): Playlist? {
-    try {
-        if (com.animatv.player.extra.SymphogearJsonConverter.isSymphogearFormat(this ?: "")) {
-            val result = com.animatv.player.extra.SymphogearJsonConverter.convert(this ?: "")
-            if (result != null && !result.isCategoriesEmpty()) return result
-        }
-    } catch (e: Exception) { e.printStackTrace() }
-    try { return Gson().fromJson(this, Playlist::class.java) }
-    catch (e: JsonParseException) { e.printStackTrace() }
-    try { return M3uTool.parse(this).toPlaylist() }
-    catch (e: Exception) { e.printStackTrace() }
-    return null
-}
-
-fun Playlist?.isCategoriesEmpty(): Boolean {
-    return this?.categories?.isEmpty() == true
-}
-
-fun String?.toSymphogearPlaylist(): Playlist? {
-    if (this.isNullOrBlank()) return null
-    return com.animatv.player.extra.SymphogearJsonConverter.convert(this)
 }
