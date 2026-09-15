@@ -112,7 +112,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/k3S01Fh/transtv.png",
-      "url": "https://video.detik.com/transtv/smil:transtv.smil/playlist.m3u8",
+      "url": "https://video.detik.com/transtv/smil:transtv.smil/chunklist.m3u8",
       "desc": "TRANS TV HLS (Detik)",
       "tvgId": "TransTV.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -126,7 +126,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/V37y7jf/trans7.png",
-      "url": "http://013tv.com:8080/F33848/cbd9779b/162502",
+      "url": "https://video.detik.com/trans7/smil:trans7.smil/chunklist.m3u8",
       "desc": "TRANS7 HLS (Detik)",
       "tvgId": "Trans7.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
