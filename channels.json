@@ -63,14 +63,14 @@
     },
     {
       "id": 1021,
-      "name": "RCTI (IHT)",
+      "name": "RCTI",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
       "type": "dash",
       "logo": "https://i.ibb.co.com/dM0SYrN/rcti.png",
-      "url": "https://cdn10jtedge.indihometv.com/atm/DASH/rcti/manifest.mpd",
+      "url": "https://mncmedia.malingtv.workers.dev/rcti.m3u8",
       "desc": "RCTI DASH (IndiHome fallback)",
       "tvgId": "RCTI.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -112,7 +112,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/k3S01Fh/transtv.png",
-      "url": "https://video.detik.com/transtv/smil:transtv.smil/chunklist.m3u8",
+      "url": "http://119.82.250.109:8080/nl.m3u8?id=1145",
       "desc": "TRANS TV HLS (Detik)",
       "tvgId": "TransTV.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -149,14 +149,14 @@
     },
     {
       "id": 1071,
-      "name": "MNCTV (IHT)",
+      "name": "MNCTV",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
       "type": "dash",
       "logo": "https://i.ibb.co.com/qjg9wCC/mnctv.png",
-      "url": "https://indihuy.streamized.net/atm/DASH/mnctv/manifest.mpd",
+      "url": "https://mncmedia.malingtv.workers.dev/mnctv.m3u8",
       "desc": "MNC TV DASH (IndiHome fallback)",
       "tvgId": "MNCTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
