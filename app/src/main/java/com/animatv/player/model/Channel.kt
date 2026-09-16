@@ -13,7 +13,7 @@ class Channel {
     @SerializedName(value = "drmType", alternate = ["drm_name", "drmName"])
     var drmName: String? = null
 
-    // FIX: field "type" dari JSON (dash/hls/ss/dll) sebelumnya tidak dipetakan
+    // FIX: field "type" dari JSON (dash/hls/ss/dll)
     @SerializedName("type")
     var streamType: String? = null
 
@@ -25,7 +25,6 @@ class Channel {
     @SerializedName("referrer")
     var referrer: String? = null
 
-    // FIX: license inline (hex kid:key) dari JSON channel
     @SerializedName("licenseKey")
     var licenseKey: String? = null
 
