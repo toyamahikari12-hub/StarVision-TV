@@ -24,7 +24,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.MimeTypes
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.ParametersBuilder
@@ -62,7 +61,7 @@ class PlayerActivity : AppCompatActivity() {
     private var errorCounter = 0
     private var isLocked = false
 
-    // ===== AUTO-DETEKSI SISTEM STREAMING (HLS/DASH/SmoothStreaming/RTSP/Progressive) =====
+    // ===== AUTO-DETEKSI SISTEM STREAMING =====
     private var formatFallbackQueue: MutableList<String?>? = null
     private var hasReachedReadyThisAttempt = false
     private var lastAttemptedMimeType: String? = null
@@ -371,7 +370,6 @@ class PlayerActivity : AppCompatActivity() {
                     continue
                 }
 
-                // >>> KONVERSI PENTING: hex -> Base64 URL-Safe <<<
                 val kidB64 = android.util.Base64.encodeToString(
                     hexToBytes(kidHex),
                     android.util.Base64.NO_PADDING or
@@ -427,11 +425,11 @@ class PlayerActivity : AppCompatActivity() {
 
         streamUrl = streamUrl.findPattern("(.+?)(\\|.*)?") ?: streamUrl
 
-        // FIX: prioritas User-Agent dari field JSON channel ("ua")
+        // Prioritas User-Agent dari field JSON channel ("ua")
         if (userAgent.isNullOrEmpty()) {
             userAgent = current?.userAgent
         }
-        // FIX: prioritas Referer dari field JSON channel
+        // Prioritas Referer dari field JSON channel
         if (referer.isNullOrEmpty()) {
             referer = current?.referrer
         }
@@ -448,7 +446,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        // FIX: license diambil dari cache ATAU langsung dari field inline channel
+        // License diambil dari cache ATAU langsung dari field inline channel
         val drmLicense = Playlist.cached.drmLicenses.firstOrNull {
             current?.drmName?.equals(it.name, ignoreCase = true) == true
         }?.url ?: current?.licenseKey
@@ -465,17 +463,14 @@ class PlayerActivity : AppCompatActivity() {
         Log.d("DRM_DEBUG", "origin    = ${current?.origin}")
         // ====================================
 
-        // Auto-deteksi format. Prioritas:
-        // (1) fallback ladder attempt -> paksa kandidat
-        // (2) sudah pernah sukses -> pakai yang terbukti
-        // (3) channel punya field "type" eksplisit -> pakai itu
-        // (4) tebak dari URL
+        // Format MIME: pakai string literal, tidak bergantung ke class MimeTypes
+        // supaya kompatibel dengan berbagai versi ExoPlayer.
         val mimeTypeFromField = when (current?.streamType?.lowercase(Locale.US)) {
-            "dash", "mpd" -> MimeTypes.APPLICATION_MPD
-            "hls", "m3u8" -> MimeTypes.APPLICATION_M3U8
-            "ss", "smoothstreaming" -> MimeTypes.APPLICATION_SS
-            "rtsp" -> MimeTypes.APPLICATION_RTSP
-            "progressive", "mp4", "ts" -> MimeTypes.APPLICATION_MP4
+            "dash", "mpd" -> "application/dash+xml"
+            "hls", "m3u8" -> "application/x-mpegURL"
+            "ss", "smoothstreaming" -> "application/vnd.ms-sstr+xml"
+            "rtsp" -> "application/x-rtsp"
+            "progressive", "mp4", "ts" -> "video/mp4"
             else -> null
         }
 
@@ -487,7 +482,7 @@ class PlayerActivity : AppCompatActivity() {
         }
         lastAttemptedMimeType = mimeType
         currentCleanStreamUrl = streamUrl
-        Log.d("PLAYER_FORMAT", "Channel='${current?.name}' format=${StreamFormatDetector.label(mimeType)} (fromField=${current?.streamType}) fallback=$isFormatFallbackAttempt")
+        Log.d("PLAYER_FORMAT", "Channel='${current?.name}' format=$mimeType (fromField=${current?.streamType}) fallback=$isFormatFallbackAttempt")
 
         val httpDataSourceFactory = DefaultHttpDataSource.Factory()
             .setAllowCrossProtocolRedirects(true)
@@ -495,10 +490,11 @@ class PlayerActivity : AppCompatActivity() {
             .setConnectTimeoutMs(15_000)
             .setReadTimeoutMs(20_000)
 
-        // FIX: kirim header Referer + Origin (banyak CDN cubmu butuh Origin)
+        // Kirim header Referer + Origin (banyak CDN cubmu butuh Origin)
         val headers = mutableMapOf<String, String>()
         if (!referer.isNullOrEmpty()) headers["Referer"] = referer
-        if (!current?.origin.isNullOrEmpty()) headers["Origin"] = current!!.origin!!
+        val origin = current?.origin
+        if (!origin.isNullOrEmpty()) headers["Origin"] = origin
         if (headers.isNotEmpty()) httpDataSourceFactory.setDefaultRequestProperties(headers)
 
         val dataSourceFactory = DefaultDataSourceFactory(this, httpDataSourceFactory)
@@ -807,8 +803,8 @@ class PlayerActivity : AppCompatActivity() {
                 val queue = formatFallbackQueue
                 if (!queue.isNullOrEmpty()) {
                     val nextMimeType = queue.removeAt(0)
-                    Log.w("PLAYER_FORMAT", "Format ${StreamFormatDetector.label(lastAttemptedMimeType)} gagal, " +
-                            "coba ${StreamFormatDetector.label(nextMimeType)} untuk channel '${current?.name}'")
+                    Log.w("PLAYER_FORMAT", "Format $lastAttemptedMimeType gagal, " +
+                            "coba $nextMimeType untuk channel '${current?.name}'")
                     Handler(Looper.getMainLooper()).post {
                         if (isDestroyed) return@post
                         try { player?.release() } catch (e: Exception) { }
@@ -819,10 +815,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
 
-            val isIoError = error.errorCode >= PlaybackException.ERROR_CODE_IO_UNSPECIFIED &&
-                            error.errorCode <= PlaybackException.ERROR_CODE_IO_NO_PERMISSION
             val isLive = player?.isCurrentMediaItemLive ?: false
-
             val maxRetry = if (isLive) 15 else 8
 
             if (errorCounter < maxRetry && network.isConnected()) {
