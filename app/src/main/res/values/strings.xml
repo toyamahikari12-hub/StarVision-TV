@@ -3,7 +3,7 @@
     <!-- App -->
     <string name="app_name">StarVision TV</string>
     <string name="iptv_playlist" translatable="false">https://raw.githubusercontent.com/toyamahikari12-hub/StarVision-TV/main/channels.json</string>
-    <string name="gh_token" translatable="false">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</string>
+    <string name="gh_token" translatable="false">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</string>
     <!-- API Key untuk server privat (dipisah agar susah direverse) -->
     <string name="srv_p1" translatable="false">X-API</string>
     <string name="srv_p2" translatable="false">-Key</string>
