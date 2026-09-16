@@ -358,6 +358,73 @@ class PlayerActivity : AppCompatActivity() {
         return false
     }
 
+    /**
+     * Bangun JSON license ClearKey (W3C EME) dari string hex "kid:key" atau
+     * beberapa pasang dipisah , / ; atau spasi.
+     * Return null kalau tidak ada pair valid -> caller wajib handle.
+     */
+    private fun buildClearKeyLicenseJson(license: String): ByteArray? {
+        try {
+            // Pisah per pair. Dukung separator , / ; dan whitespace.
+            val pairs = license.split(Regex("[,/;\\s]+"))
+                .map { it.trim() }
+                .filter { it.isNotEmpty() && it.contains(":") }
+
+            if (pairs.isEmpty()) {
+                Log.w("DRM_DEBUG", "Tidak ada pair kid:key di '$license'")
+                return null
+            }
+
+            val keysJson = StringBuilder("{\"keys\":[")
+            var count = 0
+
+            for (pair in pairs) {
+                val colonIdx = pair.indexOf(':')
+                if (colonIdx <= 0) continue
+
+                val kidHex = pair.substring(0, colonIdx).trim()
+                val keyHex = pair.substring(colonIdx + 1).trim()
+
+                // Validasi: KID & KEY harus hex 32 karakter (128-bit)
+                if (kidHex.length != 32 || keyHex.length != 32) {
+                    Log.w("DRM_DEBUG", "Panjang invalid kid=${kidHex.length} key=${keyHex.length} pada '$pair'")
+                    continue
+                }
+                val isHex = { s: String -> s.all { it.isDigit() || it in 'a'..'f' || it in 'A'..'F' } }
+                if (!isHex(kidHex) || !isHex(keyHex)) {
+                    Log.w("DRM_DEBUG", "Bukan hex: '$pair'")
+                    continue
+                }
+
+                val kidB64 = android.util.Base64.encodeToString(
+                    hexToBytes(kidHex),
+                    android.util.Base64.NO_PADDING or
+                            android.util.Base64.URL_SAFE or
+                            android.util.Base64.NO_WRAP)
+                val keyB64 = android.util.Base64.encodeToString(
+                    hexToBytes(keyHex),
+                    android.util.Base64.NO_PADDING or
+                            android.util.Base64.URL_SAFE or
+                            android.util.Base64.NO_WRAP)
+
+                if (count > 0) keysJson.append(",")
+                keysJson.append("{\"kty\":\"oct\",\"kid\":\"$kidB64\",\"k\":\"$keyB64\"}")
+                count++
+            }
+
+            keysJson.append("],\"type\":\"temporary\"}")
+
+            if (count == 0) return null
+
+            val json = keysJson.toString()
+            Log.d("DRM_DEBUG", "ClearKey JSON ($count keys): $json")
+            return json.toByteArray(Charsets.UTF_8)
+        } catch (e: Exception) {
+            Log.e("DRM_DEBUG", "buildClearKeyLicenseJson error", e)
+            return null
+        }
+    }
+
     private fun playChannel() {
         // Channel baru = reset state ladder auto-deteksi format
         formatFallbackQueue = null
@@ -430,66 +497,85 @@ class PlayerActivity : AppCompatActivity() {
         if (referer != null) httpDataSourceFactory.setDefaultRequestProperties(mapOf(Pair("referer", referer)))
         val dataSourceFactory = DefaultDataSourceFactory(this, httpDataSourceFactory)
 
-        // Build DrmSessionManager dan MediaItem sesuai tipe DRM
-        val isClearKey = current?.drmName?.startsWith("clearkey_") == true
-        val isWidevine = current?.drmName?.startsWith("widevine_") == true
-        val hasDrm = !current?.drmName.isNullOrBlank() && !drmLicense.isNullOrBlank()
+        // ================================================================
+        // Build DrmSessionManager sesuai tipe DRM
+        // ================================================================
+        val drmName = current?.drmName?.lowercase(Locale.US).orEmpty()
+        val isClearKey = drmName.contains("clearkey") || drmName.contains("clear_key") || drmName == "ck"
+        val isWidevine = drmName.contains("widevine") || drmName == "wv"
+        val hasDrm = drmName.isNotBlank() && !drmLicense.isNullOrBlank()
 
         var drmSessionManager: com.google.android.exoplayer2.drm.DrmSessionManager =
             com.google.android.exoplayer2.drm.DrmSessionManager.DRM_UNSUPPORTED
 
-        if (hasDrm && isClearKey && !drmLicense.isNullOrBlank()) {
-            // ClearKey: build JSON response langsung, pakai LocalMediaDrmCallback
-            // Ini cara yang benar - tidak butuh network request untuk license
+        if (hasDrm && isClearKey) {
+            // Bersihkan suffix Kodi-style: "kid:key|User-Agent=xxx" -> "kid:key"
+            val rawLicense = drmLicense!!.substringBefore("|").trim()
+            val looksLikeUrl = rawLicense.startsWith("http://", true) ||
+                    rawLicense.startsWith("https://", true)
+
             try {
-                fun hexToBytes(hex: String): ByteArray {
-                    val len = hex.length
-                    val data = ByteArray(len / 2)
-                    for (i in 0 until len / 2)
-                        data[i] = ((Character.digit(hex[i * 2], 16) shl 4) + Character.digit(hex[i * 2 + 1], 16)).toByte()
-                    return data
-                }
-                val pairs = drmLicense.split(",")
-                val keysJson = StringBuilder("{\"keys\":[")
-                pairs.forEachIndexed { i, pair ->
-                    val kv = pair.trim().split(":")
-                    if (kv.size == 2) {
-                        val kidB64 = android.util.Base64.encodeToString(
-                            hexToBytes(kv[0].trim()),
-                            android.util.Base64.NO_PADDING or android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
-                        val keyB64 = android.util.Base64.encodeToString(
-                            hexToBytes(kv[1].trim()),
-                            android.util.Base64.NO_PADDING or android.util.Base64.URL_SAFE or android.util.Base64.NO_WRAP)
-                        if (i > 0) keysJson.append(",")
-                        keysJson.append("{\"kty\":\"oct\",\"kid\":\"$kidB64\",\"k\":\"$keyB64\"}")
+                if (looksLikeUrl) {
+                    // ClearKey yang ternyata license server URL
+                    val drmCallback = com.google.android.exoplayer2.drm.HttpMediaDrmCallback(
+                        rawLicense, httpDataSourceFactory)
+                    drmSessionManager = com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Builder()
+                        .setUuidAndExoMediaDrmProvider(
+                            C.CLEARKEY_UUID,
+                            com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER)
+                        .setMultiSession(true)
+                        .build(drmCallback)
+                    Log.d("DRM_DEBUG", "ClearKey via URL: $rawLicense")
+                } else {
+                    // ClearKey hex pairs langsung
+                    val licenseBytes = buildClearKeyLicenseJson(rawLicense)
+                    if (licenseBytes == null) {
+                        Log.e("DRM_DEBUG", "ClearKey parse FAILED: $rawLicense")
+                        Toast.makeText(
+                            applicationContext,
+                            "ClearKey license tidak valid (harus hex kid:key): $rawLicense",
+                            Toast.LENGTH_LONG).show()
+                    } else {
+                        val drmCallback =
+                            com.google.android.exoplayer2.drm.LocalMediaDrmCallback(licenseBytes)
+                        drmSessionManager = com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Builder()
+                            .setUuidAndExoMediaDrmProvider(
+                                C.CLEARKEY_UUID,
+                                com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER)
+                            .setMultiSession(true)  // multiSession WAJIB true utk ClearKey multi-KID
+                            .build(drmCallback)
+                        Log.d("DRM_DEBUG", "ClearKey direct OK: $rawLicense")
                     }
                 }
-                keysJson.append("],\"type\":\"temporary\"}")
-                val licenseBytes = keysJson.toString().toByteArray(Charsets.UTF_8)
-                // LocalMediaDrmCallback: langsung inject license JSON tanpa network
-                val drmCallback = com.google.android.exoplayer2.drm.LocalMediaDrmCallback(licenseBytes)
-                drmSessionManager = com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Builder()
-                    .setUuidAndExoMediaDrmProvider(C.CLEARKEY_UUID, com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER)
-                    .setMultiSession(false)
-                    .build(drmCallback)
-                Log.d("DRM_DEBUG", "ClearKey DrmSessionManager built OK")
             } catch (e: Exception) {
-                Log.e("DRM_DEBUG", "ClearKey build error: ${e.message}")
+                Log.e("DRM_DEBUG", "ClearKey build error", e)
+                Toast.makeText(applicationContext,
+                    "ClearKey gagal inisialisasi: ${e.message}", Toast.LENGTH_LONG).show()
             }
         } else if (hasDrm && isWidevine) {
             if (!isDrmWidevineSupported()) return
-            // Widevine: pakai HttpMediaDrmCallback dengan license server URL
-            val drmCallback = com.google.android.exoplayer2.drm.HttpMediaDrmCallback(
-                drmLicense, httpDataSourceFactory)
-            drmSessionManager = com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Builder()
-                .setUuidAndExoMediaDrmProvider(C.WIDEVINE_UUID, com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER)
-                .setMultiSession(true)
-                .build(drmCallback)
-            Log.d("DRM_DEBUG", "Widevine DrmSessionManager built, licUrl=$drmLicense")
-        } else if (!current?.drmName.isNullOrBlank() && drmLicense == null) {
-            Log.e("DRM_DEBUG", "DRM channel but license NOT FOUND!")
-            Toast.makeText(applicationContext, "DRM license tidak ditemukan, coba refresh playlist", Toast.LENGTH_LONG).show()
+            try {
+                val rawLicense = drmLicense!!.substringBefore("|").trim()
+                val drmCallback = com.google.android.exoplayer2.drm.HttpMediaDrmCallback(
+                    rawLicense, httpDataSourceFactory)
+                drmSessionManager = com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Builder()
+                    .setUuidAndExoMediaDrmProvider(
+                        C.WIDEVINE_UUID,
+                        com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER)
+                    .setMultiSession(true)
+                    .build(drmCallback)
+                Log.d("DRM_DEBUG", "Widevine OK, url=$rawLicense")
+            } catch (e: Exception) {
+                Log.e("DRM_DEBUG", "Widevine build error", e)
+            }
+        } else if (drmName.isNotBlank() && drmLicense == null) {
+            Log.e("DRM_DEBUG", "DRM channel ($drmName) but license NOT FOUND!")
+            Toast.makeText(applicationContext,
+                "DRM license tidak ditemukan, coba refresh playlist", Toast.LENGTH_LONG).show()
         }
+        // ================================================================
+        // END DRM
+        // ================================================================
 
         // MediaItem - cukup set URI dan MimeType, DRM dihandle lewat DrmSessionManager
         mediaItem = MediaItem.Builder()
