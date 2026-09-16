@@ -527,8 +527,17 @@ class PlayerActivity : AppCompatActivity() {
         }
         lastAttemptedMimeType = mimeType
         currentCleanStreamUrl = streamUrl
-        Log.d("PLAYER_FORMAT", "Channel='${current?.name}' format=$mimeType (fromField=${current?.streamType}) fallback=$isFormatFallbackAttempt")
 
+        Log.d("PLAYER_DEBUG", "========== REQUEST DEBUG ==========")
+        Log.d("PLAYER_DEBUG", "channel   = ${current?.name}")
+        Log.d("PLAYER_DEBUG", "streamUrl = $streamUrl")
+        Log.d("PLAYER_DEBUG", "userAgent = $userAgent")
+        Log.d("PLAYER_DEBUG", "referer   = $referer")
+        Log.d("PLAYER_DEBUG", "origin    = ${current?.origin}")
+        Log.d("PLAYER_DEBUG", "===================================")
+
+        Log.d("PLAYER_FORMAT", "Channel='${current?.name}' format=$mimeType (fromField=${current?.streamType}) fallback=$isFormatFallbackAttempt")
+       
         val httpDataSourceFactory = DefaultHttpDataSource.Factory()
             .setAllowCrossProtocolRedirects(true)
             .setUserAgent(userAgent)
