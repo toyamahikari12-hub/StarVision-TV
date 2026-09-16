@@ -9,29 +9,36 @@ import com.animatv.player.model.DrmLicense
 import com.animatv.player.model.Playlist
 
 object SymphogearJsonConverter {
+
     private const val TAG = "SymphogearConverter"
 
-    // Mapping cat key -> nama tampil di sidebar
-    private val CAT_NAMES = mapOf(
-        "nasional"                to "NASIONAL",
-        "movies & entertainment"  to "MOVIES & ENTERTAINMENT",
-        "daerah"                  to "DAERAH",
-        "kids"                    to "KIDS",
-        "anime"                   to "ANIME",
-        "jepang"                  to "JEPANG",
-        "sport"                   to "SPORT",
+    // ================================================================
+    // CATEGORY NAMES
+    // ================================================================
 
-        // legacy keys
-        "berita"                  to "BERITA",
-        "hiburan"                 to "HIBURAN",
-        "olahraga"                to "OLAHRAGA",
-        "internasional"           to "INTERNASIONAL",
-        "vision"                  to "VISION+",
-        "indihome"                to "INDIHOME",
-        "custom"                  to "CUSTOM"
+    private val CAT_NAMES = mapOf(
+        "nasional" to "NASIONAL",
+        "movies & entertainment" to "MOVIES & ENTERTAINMENT",
+        "daerah" to "DAERAH",
+        "kids" to "KIDS",
+        "anime" to "ANIME",
+        "jepang" to "JEPANG",
+        "sport" to "SPORT",
+
+        // legacy
+        "berita" to "BERITA",
+        "hiburan" to "HIBURAN",
+        "olahraga" to "OLAHRAGA",
+        "internasional" to "INTERNASIONAL",
+        "vision" to "VISION+",
+        "indihome" to "INDIHOME",
+        "custom" to "CUSTOM"
     )
 
-    // Urutan sidebar sesuai permintaan
+    // ================================================================
+    // CATEGORY ORDER
+    // ================================================================
+
     private val ORDERED_CATS = listOf(
         "nasional",
         "movies & entertainment",
@@ -51,11 +58,27 @@ object SymphogearJsonConverter {
         "custom"
     )
 
-    fun convert(jsonString: String): Playlist? {
-        return try {
-            val root = JsonParser.parseString(jsonString).asJsonObject
+    // ================================================================
+    // CONVERTER
+    // ================================================================
 
-            if (!root.has("channels")) return null
+    fun convert(jsonString: String): Playlist? {
+
+        return try {
+
+            val root =
+                JsonParser
+                    .parseString(jsonString)
+                    .asJsonObject
+
+            // Format Symphogear harus mempunyai "channels"
+            if (!root.has("channels")) {
+                Log.e(
+                    TAG,
+                    "JSON tidak mempunyai field 'channels'"
+                )
+                return null
+            }
 
             val channelsArray: JsonArray =
                 root.getAsJsonArray("channels")
@@ -68,150 +91,247 @@ object SymphogearJsonConverter {
             val drmMap =
                 LinkedHashMap<String, String>()
 
-            // Reset menu manager sebelum parsing
-            com.animatv.player.extra.MenuManager.clearJsonMenus()
+            // ========================================================
+            // RESET MENU
+            // ========================================================
 
-            // Parse array "menus" jika ada
+            com.animatv.player.extra.MenuManager
+                .clearJsonMenus()
+
+            // ========================================================
+            // PARSE MENUS
+            // ========================================================
+
             val menuLabelMap =
                 mutableMapOf<String, String>()
 
             if (root.has("menus")) {
+
                 try {
-                    root.getAsJsonArray("menus").forEach { menuEl ->
 
-                        val menuObj = menuEl.asJsonObject
+                    root.getAsJsonArray("menus")
+                        .forEach { menuEl ->
 
-                        val menuId =
-                            menuObj.get("id")?.asString
-                                ?: return@forEach
+                            val menuObj =
+                                menuEl.asJsonObject
 
-                        val menuLabel =
-                            menuObj.get("label")?.asString
-                                ?: menuId.uppercase()
+                            val menuId =
+                                menuObj
+                                    .get("id")
+                                    ?.asString
+                                    ?: return@forEach
 
-                        menuLabelMap[
-                            menuId.lowercase()
-                        ] = menuLabel
-                    }
+                            val menuLabel =
+                                menuObj
+                                    .get("label")
+                                    ?.asString
+                                    ?: menuId.uppercase()
+
+                            menuLabelMap[
+                                menuId.lowercase()
+                            ] = menuLabel
+                        }
+
                 } catch (e: Exception) {
-                    // Abaikan error menu
+
+                    Log.w(
+                        TAG,
+                        "Gagal membaca menus: ${e.message}"
+                    )
                 }
             }
 
-            // Parse semua channel
+            // ========================================================
+            // PARSE CHANNELS
+            // ========================================================
+
             for (element in channelsArray) {
 
-                val obj = element.asJsonObject
+                try {
 
-                val name =
-                    obj.get("name")?.asString
-                        ?: continue
+                    val obj =
+                        element.asJsonObject
 
-                val url =
-                    obj.get("url")?.asString
-                        ?: continue
+                    // ------------------------------------------------
+                    // BASIC DATA
+                    // ------------------------------------------------
 
-                val cat =
-                    obj.get("cat")?.asString
-                        ?: "nasional"
+                    val name =
+                        obj.get("name")
+                            ?.asString
+                            ?: continue
 
-                val menuId =
-                    obj.get("menu")?.asString
+                    val url =
+                        obj.get("url")
+                            ?.asString
+                            ?: continue
 
-                val hasDrm =
-                    obj.get("drm")?.asBoolean
-                        ?: false
+                    val cat =
+                        obj.get("cat")
+                            ?.asString
+                            ?: "nasional"
 
-                val drmType =
-                    obj.get("drmType")?.asString
-                        ?: "ClearKey"
+                    val menuId =
+                        obj.get("menu")
+                            ?.asString
 
-                val licUrl =
-                    obj.get("licUrl")?.asString
+                    // ------------------------------------------------
+                    // DRM DATA
+                    // ------------------------------------------------
 
-                val licenseKey =
-                    obj.get("licenseKey")?.asString
+                    val hasDrm =
+                        obj.get("drm")
+                            ?.asBoolean
+                            ?: false
 
-                // User-Agent
-                val ua =
-                    obj.get("ua")?.asString
+                    val drmType =
+                        obj.get("drmType")
+                            ?.asString
+                            ?: "ClearKey"
 
-                // =====================================================
-                // REFERER SUPPORT
-                //
-                // Mendukung:
-                // "referrer": "https://..."
-                // "referer":  "https://..."
-                // "ref":      "https://..."
-                // =====================================================
-                val ref = when {
+                    val licUrl =
+                        obj.get("licUrl")
+                            ?.asString
 
-                    obj.has("referrer") &&
-                            !obj.get("referrer").isJsonNull ->
-                        obj.get("referrer").asString
+                    val licenseKey =
+                        obj.get("licenseKey")
+                            ?.asString
 
-                    obj.has("referer") &&
-                            !obj.get("referer").isJsonNull ->
-                        obj.get("referer").asString
+                    // ------------------------------------------------
+                    // USER AGENT
+                    // ------------------------------------------------
 
-                    obj.has("ref") &&
-                            !obj.get("ref").isJsonNull ->
-                        obj.get("ref").asString
+                    val ua =
+                        obj.get("ua")
+                            ?.asString
 
-                    else ->
-                        null
-                }
+                    // ------------------------------------------------
+                    // REFERER
+                    //
+                    // Support:
+                    // referrer
+                    // referer
+                    // ref
+                    // ------------------------------------------------
 
-                val logo =
-                    obj.get("logo")?.asString
+                    val ref =
+                        when {
 
-                // Buat object Channel
-                val channel = Channel()
+                            obj.has("referrer") &&
+                                    !obj.get("referrer").isJsonNull ->
 
-                channel.name = name
+                                obj.get("referrer")
+                                    .asString
 
-                // =====================================================
-                // BANGUN STREAM URL
-                //
-                // Format yang dibaca PlayerActivity:
-                //
-                // URL|user-agent=UA|referer=REF
-                // =====================================================
+                            obj.has("referer") &&
+                                    !obj.get("referer").isJsonNull ->
 
-                val streamUrl =
-                    StringBuilder(url)
+                                obj.get("referer")
+                                    .asString
 
-                val headers =
-                    mutableListOf<String>()
+                            obj.has("ref") &&
+                                    !obj.get("ref").isJsonNull ->
 
-                if (!ua.isNullOrBlank()) {
-                    headers.add(
-                        "user-agent=$ua"
-                    )
-                }
+                                obj.get("ref")
+                                    .asString
 
-                if (!ref.isNullOrBlank()) {
-                    headers.add(
-                        "referer=$ref"
-                    )
-                }
+                            else -> null
+                        }
 
-                if (headers.isNotEmpty()) {
-                    streamUrl.append(
-                        "|${headers.joinToString("|")}"
-                    )
-                }
+                    // ------------------------------------------------
+                    // ORIGIN
+                    // ------------------------------------------------
 
-                channel.streamUrl =
-                    streamUrl.toString()
+                    val origin =
+                        obj.get("origin")
+                            ?.asString
 
-                channel.logo = logo
+                    // ------------------------------------------------
+                    // LOGO
+                    // ------------------------------------------------
 
-                // =====================================================
-                // DRM
-                // =====================================================
+                    val logo =
+                        obj.get("logo")
+                            ?.asString
 
-                if (hasDrm && !licUrl.isNullOrBlank()) {
+                    // =================================================
+                    // CREATE CHANNEL
+                    // =================================================
+
+                    val channel =
+                        Channel()
+
+                    channel.name =
+                        name
+
+                    channel.logo =
+                        logo
+
+                    // =================================================
+                    // SIMPAN FIELD TAMBAHAN
+                    // =================================================
+
+                    channel.userAgent =
+                        ua
+
+                    channel.referrer =
+                        ref
+
+                    channel.licenseKey =
+                        licenseKey
+
+                    channel.origin =
+                        origin
+
+                    // =================================================
+                    // BUILD STREAM URL
+                    //
+                    // PlayerActivity membaca:
+                    //
+                    // URL
+                    // |user-agent=...
+                    // |referer=...
+                    // =================================================
+
+                    val streamUrl =
+                        StringBuilder(url)
+
+                    val headers =
+                        mutableListOf<String>()
+
+                    if (!ua.isNullOrBlank()) {
+
+                        headers.add(
+                            "user-agent=$ua"
+                        )
+                    }
+
+                    if (!ref.isNullOrBlank()) {
+
+                        headers.add(
+                            "referer=$ref"
+                        )
+                    }
+
+                    if (headers.isNotEmpty()) {
+
+                        streamUrl.append(
+                            "|${headers.joinToString("|")}"
+                        )
+                    }
+
+                    channel.streamUrl =
+                        streamUrl.toString()
+
+                    // =================================================
+                    // DRM
+                    //
+                    // Untuk konten ClearKey yang memang berizin,
+                    // licenseKey dapat digunakan sebagai sumber
+                    // kredensial DRM.
+                    //
+                    // Widevine tetap menggunakan licUrl.
+                    // =================================================
 
                     val isWidevine =
                         drmType.equals(
@@ -219,66 +339,121 @@ object SymphogearJsonConverter {
                             ignoreCase = true
                         )
 
-                    val drmName =
+                    val drmValue =
                         if (isWidevine) {
-                            "widevine_${licUrl.hashCode()}"
+
+                            // Widevine:
+                            // gunakan license server URL
+                            licUrl
+
                         } else {
-                            "clearkey_${licUrl.hashCode()}"
+
+                            // ClearKey:
+                            // gunakan licenseKey jika tersedia,
+                            // fallback ke licUrl.
+                            when {
+
+                                !licenseKey.isNullOrBlank() ->
+                                    licenseKey
+
+                                !licUrl.isNullOrBlank() ->
+                                    licUrl
+
+                                else ->
+                                    null
+                            }
                         }
 
-                    channel.drmName =
-                        drmName
+                    if (hasDrm &&
+                        !drmValue.isNullOrBlank()
+                    ) {
 
-                    if (!drmMap.containsKey(drmName)) {
-                        drmMap[drmName] =
-                            licUrl
-                    }
-                }
+                        val drmName =
+                            if (isWidevine) {
 
-                // =====================================================
-                // CATEGORY
-                // =====================================================
+                                "widevine_${drmValue.hashCode()}"
 
-                val catKey =
-                    cat.lowercase().trim()
+                            } else {
 
-                if (!categoryMap.containsKey(catKey)) {
-                    categoryMap[catKey] =
-                        ArrayList()
-                }
+                                "clearkey_${drmValue.hashCode()}"
+                            }
 
-                categoryMap[catKey]?.add(
-                    channel
-                )
+                        channel.drmName =
+                            drmName
 
-                // =====================================================
-                // MENU
-                // =====================================================
+                        if (!drmMap.containsKey(drmName)) {
 
-                if (!menuId.isNullOrBlank()) {
+                            drmMap[drmName] =
+                                drmValue
+                        }
 
-                    val menuLabel =
-                        menuLabelMap[
-                            menuId.lowercase()
-                        ] ?: menuId.uppercase()
-
-                    com.animatv.player.extra.MenuManager
-                        .registerCategoryMenu(
-                            cat,
-                            menuId,
-                            menuLabel
+                        Log.d(
+                            TAG,
+                            "DRM channel: $name | type=$drmType"
                         )
+
+                    } else if (hasDrm) {
+
+                        Log.w(
+                            TAG,
+                            "DRM channel '$name' tidak mempunyai licenseKey/licUrl"
+                        )
+                    }
+
+                    // =================================================
+                    // CATEGORY
+                    // =================================================
+
+                    val catKey =
+                        cat
+                            .lowercase()
+                            .trim()
+
+                    if (!categoryMap.containsKey(catKey)) {
+
+                        categoryMap[catKey] =
+                            ArrayList()
+                    }
+
+                    categoryMap[catKey]
+                        ?.add(channel)
+
+                    // =================================================
+                    // MENU
+                    // =================================================
+
+                    if (!menuId.isNullOrBlank()) {
+
+                        val menuLabel =
+                            menuLabelMap[
+                                menuId.lowercase()
+                            ] ?: menuId.uppercase()
+
+                        com.animatv.player.extra.MenuManager
+                            .registerCategoryMenu(
+                                cat,
+                                menuId,
+                                menuLabel
+                            )
+                    }
+
+                } catch (e: Exception) {
+
+                    Log.e(
+                        TAG,
+                        "Gagal parsing satu channel: ${e.message}"
+                    )
                 }
             }
 
             // =========================================================
-            // BUAT CATEGORY
+            // CREATE CATEGORIES
             // =========================================================
 
             val categories =
                 ArrayList<Category>()
 
-            // Kategori sesuai urutan
+            // Kategori berdasarkan urutan yang ditentukan
             for (key in ORDERED_CATS) {
 
                 if (categoryMap.containsKey(key)) {
@@ -301,7 +476,7 @@ object SymphogearJsonConverter {
                 }
             }
 
-            // Kategori lain yang tidak ada di ORDERED_CATS
+            // Kategori lain
             for ((key, channels) in categoryMap) {
 
                 if (!ORDERED_CATS.contains(key)) {
@@ -328,7 +503,7 @@ object SymphogearJsonConverter {
                 categories
 
             // =========================================================
-            // DRM LICENSES
+            // CREATE DRM LICENSES
             // =========================================================
 
             val drmLicenses =
@@ -353,9 +528,14 @@ object SymphogearJsonConverter {
             playlist.drmLicenses =
                 drmLicenses
 
+            // =========================================================
+            // DEBUG LOG
+            // =========================================================
+
             Log.d(
                 TAG,
-                "Converted ${channelsArray.size()} channels, " +
+                "Converted " +
+                        "${channelsArray.size()} channels, " +
                         "${categories.size} cats, " +
                         "${drmLicenses.size} DRM"
             )
@@ -366,12 +546,17 @@ object SymphogearJsonConverter {
 
             Log.e(
                 TAG,
-                "Failed to convert Symphogear JSON: ${e.message}"
+                "Failed to convert Symphogear JSON: ${e.message}",
+                e
             )
 
             null
         }
     }
+
+    // ================================================================
+    // FORMAT CHECK
+    // ================================================================
 
     fun isSymphogearFormat(
         jsonString: String
