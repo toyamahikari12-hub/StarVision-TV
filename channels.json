@@ -30,6 +30,20 @@
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
+      "id": 100,
+      "name": "Cartoon Network",
+      "cat": "KIDS",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": false,
+      "type": "dash",
+      "logo": "https://icon2.cleanpng.com/20180811/aav/ddb009144338717fc078da28acc058fc.webp",
+      "url": "http://202.150.161.212:5000/live/channel27/playlist.m3u8",
+      "desc": "Cartoon Network DASH",
+      "tvgId": "Cartoon Network.id",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+    },
+    {
       "id": 101,
       "name": "ANTV",
       "cat": "NASIONAL",
@@ -69,7 +83,7 @@
       "drm": false,
       "type": "dash",
       "logo": "https://images.indihometv.com/assets/logo_rcti_hd.png",
-      "url": "https://beetv.my.id/xstreamx/rctiplus.m3u8?ch=rcti",
+      "url": "https://r-plus.sedotcw3.workers.dev/index.m3u8?id=rcti",
       "desc": "RCTI DASH (IndiHome fallback)",
       "tvgId": "RCTI.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
