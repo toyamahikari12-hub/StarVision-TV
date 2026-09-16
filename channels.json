@@ -360,19 +360,17 @@
     },
     {
       "id": 106,
-      "name": "TRANS7 (VS)",
+      "name": "Trans 7",
       "cat": "NASIONAL",
-      "color": "#7df9ff",
-      "q": "HD",
       "drm": true,
       "type": "dash",
-      "logo": "https://i.ibb.co.com/V37y7jf/trans7.png",
+      "logo": "https://icon2.cleanpng.com/20180811/aav/ddb009144338717fc078da28acc058fc.webp",
       "url": "https://cdnjktbpid37.cubmu.com/riutx01-22b1f3c4ac0e47a0ed0e3305661027ee/dash/VFJBTlM3LW15/manifest.mpd?signature=YmYwNjBmZDliMmQwZGQ2NmVjNWM1NzUyMWM1ZWEyNWU=&time=15250126226",
-      "desc": "TRANS7 DASH+ClearKey (Vision+)",
-      "tvgId": "Trans7.id",
       "drmType": "ClearKey",
-      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "licenseKey": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "referrer": "https://www.cubmu.com/",
+      "origin": "https://www.cubmu.com"
     },
     {
       "id": 1081,
