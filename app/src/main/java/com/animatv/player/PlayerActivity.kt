@@ -31,6 +31,7 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedT
 import com.google.android.exoplayer2.upstream.DefaultAllocator
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.animatv.player.databinding.ActivityPlayerBinding
 import com.animatv.player.databinding.CustomControlBinding
 import com.animatv.player.dialog.TrackSelectionDialog
@@ -838,70 +839,149 @@ class PlayerActivity : AppCompatActivity() {
 
     Log.e(
         "PLAYER_ERROR",
-        "code=${error.errorCode} name=${error.errorCodeName} msg=$errorMsg"
-    )
-
-    savePlayerLog(
-        "PLAYER ERROR | " +
         "channel=${current?.name} | " +
         "code=${error.errorCode} | " +
         "name=${error.errorCodeName} | " +
-        "message=$errorMsg",
-        error
+        "msg=$errorMsg"
     )
-            if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
-                player?.seekToDefaultPosition()
-                player?.prepare()
-                return
-            }
 
-            val isFormatError = error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED ||
-                    error.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED ||
-                    error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED ||
-                    error.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED
+    // ============================================================
+    // DETAIL HTTP ERROR
+    // Mencari InvalidResponseCodeException di seluruh cause chain.
+    // ============================================================
+    var cause: Throwable? = error.cause
+    var httpError: HttpDataSource.InvalidResponseCodeException? = null
 
-            if (isFormatError && !hasReachedReadyThisAttempt) {
-                if (formatFallbackQueue == null) {
-                    formatFallbackQueue = StreamFormatDetector.FORMAT_FALLBACK_LADDER
-                        .filter { it != lastAttemptedMimeType }
-                        .toMutableList()
-                }
-                val queue = formatFallbackQueue
-                if (!queue.isNullOrEmpty()) {
-                    val nextMimeType = queue.removeAt(0)
-                    Log.w("PLAYER_FORMAT", "Format $lastAttemptedMimeType gagal, " +
-                            "coba $nextMimeType untuk channel '${current?.name}'")
-                    Handler(Looper.getMainLooper()).post {
-                        if (isDestroyed) return@post
-                        try { player?.release() } catch (e: Exception) { }
-                        player = null
-                        playChannel(overrideMimeType = nextMimeType, isFormatFallbackAttempt = true)
-                    }
-                    return
-                }
-            }
+    while (cause != null) {
+        if (cause is HttpDataSource.InvalidResponseCodeException) {
+            httpError = cause
+            break
+        }
+        cause = cause.cause
+    }
 
-            val isLive = player?.isCurrentMediaItemLive ?: false
-            val maxRetry = if (isLive) 15 else 8
+    if (httpError != null) {
+        val httpLog = buildString {
+            append("HTTP ERROR\n")
+            append("channel=${current?.name}\n")
+            append("responseCode=${httpError.responseCode}\n")
+            append("message=${httpError.message}\n")
+            append("url=$currentCleanStreamUrl\n")
+            append("userAgent=${current?.userAgent}\n")
+            append("referer=${current?.referrer}\n")
+            append("origin=${current?.origin}\n")
+            append("responseHeaders=${httpError.headerFields}\n")
+        }
 
-            if (errorCounter < maxRetry && network.isConnected()) {
-                errorCounter++
-                val delaySeconds = when {
-                    errorCounter <= 3 -> 2
-                    errorCounter <= 8 -> 4
-                    else -> 6
-                }
-                AsyncSleep().task(object : AsyncSleep.Task {
-                    override fun onFinish() { retryPlayback(true) }
-                }).start(delaySeconds)
-            } else {
-                showMessage(
-                    String.format(getString(R.string.player_error_message),
-                        error.errorCode, error.errorCodeName, errorMsg), true
-                )
-            }
+        Log.e("PLAYER_HTTP_ERROR", httpLog)
+
+        // Kalau fungsi savePlayerLog() sudah ada di project kamu,
+        // simpan detail HTTP juga ke file log.
+        try {
+            savePlayerLog(httpLog)
+        } catch (e: Exception) {
+            Log.e("PLAYER_HTTP_ERROR", "Gagal menyimpan HTTP log: ${e.message}")
         }
     }
+
+    // ============================================================
+    // BEHIND LIVE WINDOW
+    // ============================================================
+    if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
+        player?.seekToDefaultPosition()
+        player?.prepare()
+        return
+    }
+
+    // ============================================================
+    // FORMAT ERROR
+    // ============================================================
+    val isFormatError =
+        error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED ||
+        error.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED ||
+        error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED ||
+        error.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED
+
+    if (isFormatError && !hasReachedReadyThisAttempt) {
+
+        if (formatFallbackQueue == null) {
+            formatFallbackQueue =
+                StreamFormatDetector.FORMAT_FALLBACK_LADDER
+                    .filter { it != lastAttemptedMimeType }
+                    .toMutableList()
+        }
+
+        val queue = formatFallbackQueue
+
+        if (!queue.isNullOrEmpty()) {
+            val nextMimeType = queue.removeAt(0)
+
+            Log.w(
+                "PLAYER_FORMAT",
+                "Format ${StreamFormatDetector.label(lastAttemptedMimeType)} gagal, " +
+                "coba ${StreamFormatDetector.label(nextMimeType)} " +
+                "untuk channel '${current?.name}'"
+            )
+
+            Handler(Looper.getMainLooper()).post {
+                if (isDestroyed) return@post
+
+                try {
+                    player?.release()
+                } catch (e: Exception) {
+                    // abaikan
+                }
+
+                player = null
+
+                playChannel(
+                    overrideMimeType = nextMimeType,
+                    isFormatFallbackAttempt = true
+                )
+            }
+
+            return
+        }
+    }
+
+    // ============================================================
+    // IO ERROR / RETRY
+    // ============================================================
+    val isIoError =
+        error.errorCode >= PlaybackException.ERROR_CODE_IO_UNSPECIFIED &&
+        error.errorCode <= PlaybackException.ERROR_CODE_IO_NO_PERMISSION
+
+    val isLive = player?.isCurrentMediaItemLive ?: false
+
+    val maxRetry = if (isLive) 15 else 8
+
+    if (errorCounter < maxRetry && network.isConnected()) {
+        errorCounter++
+
+        val delaySeconds = when {
+            errorCounter <= 3 -> 2
+            errorCounter <= 8 -> 4
+            else -> 6
+        }
+
+        AsyncSleep().task(object : AsyncSleep.Task {
+            override fun onFinish() {
+                retryPlayback(true)
+            }
+        }).start(delaySeconds)
+
+    } else {
+        showMessage(
+            String.format(
+                getString(R.string.player_error_message),
+                error.errorCode,
+                error.errorCodeName,
+                errorMsg
+            ),
+            true
+        )
+    }
+}
 
     private fun showInfo(message: String) {
         android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
