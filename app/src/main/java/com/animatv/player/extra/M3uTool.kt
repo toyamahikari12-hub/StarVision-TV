@@ -12,6 +12,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 class M3uTool {
+
     companion object {
 
         private val REGEX_GROUP: Pattern =
@@ -38,43 +39,57 @@ class M3uTool {
                 Pattern.CASE_INSENSITIVE
             )
 
-        // User-Agent dari EXT-VLC
         private val REGEX_USER_AGENT: Pattern =
             Pattern.compile(
                 ".*http-user-agent=(.+?)$",
                 Pattern.CASE_INSENSITIVE
             )
 
-        // Referer dari EXT-VLC
         private val REGEX_REFERRER: Pattern =
             Pattern.compile(
                 ".*http-referrer=(.+?)$",
                 Pattern.CASE_INSENSITIVE
             )
 
-        // Beberapa playlist memakai "referer", bukan "referrer"
         private val REGEX_REFERER: Pattern =
             Pattern.compile(
                 ".*http-referer=(.+?)$",
                 Pattern.CASE_INSENSITIVE
             )
 
+        /*
+         * Optional:
+         * beberapa playlist menggunakan:
+         *
+         * #EXTVLCOPT:http-origin=https://example.com
+         */
+        private val REGEX_ORIGIN: Pattern =
+            Pattern.compile(
+                ".*http-origin=(.+?)$",
+                Pattern.CASE_INSENSITIVE
+            )
+
         fun parse(content: String?): List<M3U> {
 
-            val result: MutableList<M3U> = ArrayList()
+            val result: MutableList<M3U> =
+                ArrayList()
 
             var lineNumber = 0
             var line: String?
 
             try {
 
-                val buffer = BufferedReader(
-                    StringReader(content ?: "")
-                )
+                val buffer =
+                    BufferedReader(
+                        StringReader(
+                            content ?: ""
+                        )
+                    )
 
                 line = buffer.readLine()
 
                 if (line == null) {
+
                     throw M3U.ParsingException(
                         0,
                         "Empty stream"
@@ -87,6 +102,7 @@ class M3uTool {
 
                 var userAgent: String? = null
                 var referer: String? = null
+                var origin: String? = null
 
                 var extGrp: String? = null
 
@@ -100,9 +116,9 @@ class M3uTool {
 
                     when {
 
-                        // ==============================
+                        // =====================================
                         // EXT VLC OPTIONS
-                        // ==============================
+                        // =====================================
                         isExtVlcOpt(line) -> {
 
                             val ua =
@@ -112,18 +128,31 @@ class M3uTool {
                                 regexReferrer(line)
                                     ?: regexReferer(line)
 
+                            val org =
+                                regexOrigin(line)
+
                             if (!ua.isNullOrBlank()) {
-                                userAgent = ua.trim()
+
+                                userAgent =
+                                    ua.trim()
                             }
 
                             if (!ref.isNullOrBlank()) {
-                                referer = ref.trim()
+
+                                referer =
+                                    ref.trim()
+                            }
+
+                            if (!org.isNullOrBlank()) {
+
+                                origin =
+                                    org.trim()
                             }
                         }
 
-                        // ==============================
+                        // =====================================
                         // EXTGRP
-                        // ==============================
+                        // =====================================
                         isExtGrp(line) -> {
 
                             extGrp =
@@ -131,13 +160,17 @@ class M3uTool {
                                     ?.normalize()
                         }
 
-                        // ==============================
+                        // =====================================
                         // EXTINF
-                        // ==============================
+                        // =====================================
                         isExtInf(line) -> {
 
                             // Simpan channel sebelumnya
-                            if (!m3u.channelName.isNullOrEmpty()) {
+                            if (
+                                !m3u.channelName
+                                    .isNullOrEmpty()
+                            ) {
+
                                 result.add(m3u)
                             }
 
@@ -154,69 +187,99 @@ class M3uTool {
                                     ?.normalize()
 
                             if (
-                                m3u.channelName.isNullOrEmpty() ||
-                                m3u.channelName?.startsWith(
-                                    M3U.EXTINF
-                                ) == true
+                                m3u.channelName
+                                    .isNullOrEmpty() ||
+
+                                m3u.channelName
+                                    ?.startsWith(
+                                        M3U.EXTINF
+                                    ) == true
                             ) {
-                                m3u.channelName = "NO NAME"
+
+                                m3u.channelName =
+                                    "NO NAME"
                             }
 
-                            if (m3u.groupName.isNullOrBlank()) {
+                            if (
+                                m3u.groupName
+                                    .isNullOrBlank()
+                            ) {
+
                                 m3u.groupName =
-                                    extGrp ?: "UNCATAGORIZED"
+                                    extGrp
+                                        ?: "UNCATAGORIZED"
                             }
+
+                            /*
+                             * Simpan header yang aktif
+                             * untuk channel ini.
+                             */
+                            m3u.userAgent =
+                                userAgent
+
+                            m3u.referrer =
+                                referer
+
+                            m3u.origin =
+                                origin
                         }
 
-                        // ==============================
+                        // =====================================
                         // KODI DRM
-                        // ==============================
+                        // =====================================
                         isKodi(line) -> {
 
-                            m3u.licenseKey =
+                            val key =
                                 regexKodi(line)
 
-                            m3u.licenseName =
-                                md5(
-                                    regexKodi(line).toString()
-                                )
+                            if (!key.isNullOrBlank()) {
+
+                                m3u.licenseKey =
+                                    key.trim()
+
+                                m3u.licenseName =
+                                    md5(
+                                        key.trim()
+                                    )
+                            }
                         }
 
-                        // ==============================
+                        // =====================================
                         // STREAM URL
-                        // ==============================
+                        // =====================================
                         isStream(line) -> {
 
                             val streamUrl =
-                                line?.trim()
+                                line
+                                    ?.trim()
                                     ?: continue
 
-                            var urlWithHeaders =
-                                streamUrl
-
-                            // User-Agent
-                            if (!userAgent.isNullOrBlank()) {
-
-                                urlWithHeaders +=
-                                    "|User-Agent=$userAgent"
-                            }
-
-                            // Referer
-                            if (!referer.isNullOrBlank()) {
-
-                                urlWithHeaders +=
-                                    "|referer=$referer"
-                            }
-
+                            /*
+                             * Jangan lagi menambahkan:
+                             *
+                             * |User-Agent=...
+                             * |referer=...
+                             *
+                             * ke URL.
+                             *
+                             * Header disimpan di field M3U
+                             * masing-masing.
+                             */
                             m3u.streamUrl?.add(
-                                urlWithHeaders
+                                streamUrl
                             )
                         }
                     }
                 }
 
-                // Simpan channel terakhir
-                if (!m3u.channelName.isNullOrEmpty()) {
+                // =====================================
+                // CHANNEL TERAKHIR
+                // =====================================
+                if (
+                    !m3u.channelName
+                        .isNullOrEmpty()
+                ) {
+
                     result.add(m3u)
                 }
 
@@ -234,9 +297,9 @@ class M3uTool {
             return result
         }
 
-        // ==============================
+        // =====================================
         // DETECTION
-        // ==============================
+        // =====================================
 
         private fun isExtVlcOpt(
             line: String?
@@ -276,10 +339,10 @@ class M3uTool {
                 M3U.KODIPROP,
                 ignoreCase = true
             ) == true &&
-                    line.contains(
-                        "license_key",
-                        ignoreCase = true
-                    )
+                line.contains(
+                    "license_key",
+                    ignoreCase = true
+                )
         }
 
         private fun isStream(
@@ -289,9 +352,9 @@ class M3uTool {
             return line?.isStreamUrl() == true
         }
 
-        // ==============================
+        // =====================================
         // REGEX
-        // ==============================
+        // =====================================
 
         private fun regexCh(
             line: String?
@@ -363,6 +426,16 @@ class M3uTool {
             )
         }
 
+        private fun regexOrigin(
+            line: String?
+        ): String? {
+
+            return regexLine(
+                line,
+                REGEX_ORIGIN
+            )
+        }
+
         private fun regexLine(
             line: String?,
             pattern: Pattern
@@ -374,22 +447,27 @@ class M3uTool {
                 )
 
             return if (matcher.matches()) {
+
                 matcher.group(1)
+
             } else {
+
                 null
             }
         }
 
-        // ==============================
+        // =====================================
         // MD5
-        // ==============================
+        // =====================================
 
         private fun md5(
             input: String
         ): String {
 
             val md =
-                MessageDigest.getInstance("MD5")
+                MessageDigest.getInstance(
+                    "MD5"
+                )
 
             return BigInteger(
                 1,
@@ -398,7 +476,10 @@ class M3uTool {
                 )
             )
                 .toString(16)
-                .padStart(32, '0')
+                .padStart(
+                    32,
+                    '0'
+                )
         }
     }
 }
