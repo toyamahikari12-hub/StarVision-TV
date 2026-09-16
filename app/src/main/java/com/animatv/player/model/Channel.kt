@@ -9,8 +9,13 @@ class Channel {
     @SerializedName(value = "stream_url", alternate = ["url"])
     var streamUrl: String? = null
 
-    @SerializedName("drm_name")
+    // FIX: mapping utama ke "drmType" (JSON inline), fallback ke "drm_name"
+    @SerializedName(value = "drmType", alternate = ["drm_name", "drmName"])
     var drmName: String? = null
+
+    // FIX: field "type" dari JSON (dash/hls/ss/dll) sebelumnya tidak dipetakan
+    @SerializedName("type")
+    var streamType: String? = null
 
     var logo: String? = null
 
@@ -20,6 +25,7 @@ class Channel {
     @SerializedName("referrer")
     var referrer: String? = null
 
+    // FIX: license inline (hex kid:key) dari JSON channel
     @SerializedName("licenseKey")
     var licenseKey: String? = null
 
