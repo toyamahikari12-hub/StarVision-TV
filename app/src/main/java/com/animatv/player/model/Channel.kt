@@ -19,4 +19,10 @@ class Channel {
 
     @SerializedName("referrer")
     var referrer: String? = null
+
+    @SerializedName("licenseKey")
+    var licenseKey: String? = null
+
+    @SerializedName("origin")
+    var origin: String? = null
 }
