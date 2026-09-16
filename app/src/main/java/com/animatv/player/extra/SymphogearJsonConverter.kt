@@ -394,4 +394,3 @@ fun isSymphogearFormat(
 }
 
 }
-Tuh symphogear apalah itu
