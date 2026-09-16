@@ -25,7 +25,6 @@ object SymphogearJsonConverter {
         "jepang" to "JEPANG",
         "sport" to "SPORT",
 
-        // legacy
         "berita" to "BERITA",
         "hiburan" to "HIBURAN",
         "olahraga" to "OLAHRAGA",
@@ -48,7 +47,6 @@ object SymphogearJsonConverter {
         "jepang",
         "sport",
 
-        // legacy
         "berita",
         "hiburan",
         "olahraga",
@@ -59,23 +57,48 @@ object SymphogearJsonConverter {
     )
 
     // ================================================================
-    // CONVERTER
+    // CONVERT
     // ================================================================
 
     fun convert(jsonString: String): Playlist? {
 
         return try {
 
-            val root =
-                JsonParser
-                    .parseString(jsonString)
-                    .asJsonObject
+            if (jsonString.isBlank()) {
+                Log.e(TAG, "JSON kosong")
+                return null
+            }
 
-            // Format Symphogear harus mempunyai "channels"
-            if (!root.has("channels")) {
+            // ========================================================
+            // PENTING:
+            // Gunakan JsonParser() agar kompatibel dengan Gson lama.
+            // Jangan gunakan JsonParser.parseString().
+            // ========================================================
+
+            val parser = JsonParser()
+
+            val rootElement =
+                parser.parse(jsonString)
+
+            if (!rootElement.isJsonObject) {
+                Log.e(TAG, "Root JSON bukan object")
+                return null
+            }
+
+            val root =
+                rootElement.asJsonObject
+
+            // ========================================================
+            // CHANNELS
+            // ========================================================
+
+            if (!root.has("channels") ||
+                root.get("channels").isJsonNull ||
+                !root.get("channels").isJsonArray
+            ) {
                 Log.e(
                     TAG,
-                    "JSON tidak mempunyai field 'channels'"
+                    "Field 'channels' tidak ditemukan atau bukan array"
                 )
                 return null
             }
@@ -83,7 +106,13 @@ object SymphogearJsonConverter {
             val channelsArray: JsonArray =
                 root.getAsJsonArray("channels")
 
-            val playlist = Playlist()
+            if (channelsArray.size() == 0) {
+                Log.e(TAG, "Array channels kosong")
+                return null
+            }
+
+            val playlist =
+                Playlist()
 
             val categoryMap =
                 LinkedHashMap<String, ArrayList<Channel>>()
@@ -95,40 +124,56 @@ object SymphogearJsonConverter {
             // RESET MENU
             // ========================================================
 
-            com.animatv.player.extra.MenuManager
-                .clearJsonMenus()
+            try {
+                com.animatv.player.extra.MenuManager
+                    .clearJsonMenus()
+            } catch (e: Exception) {
+                Log.w(
+                    TAG,
+                    "MenuManager reset gagal: ${e.message}"
+                )
+            }
 
             // ========================================================
-            // PARSE MENUS
+            // MENUS
             // ========================================================
 
             val menuLabelMap =
                 mutableMapOf<String, String>()
 
-            if (root.has("menus")) {
+            if (root.has("menus") &&
+                !root.get("menus").isJsonNull &&
+                root.get("menus").isJsonArray
+            ) {
 
                 try {
 
                     root.getAsJsonArray("menus")
-                        .forEach { menuEl ->
+                        .forEach { menuElement ->
+
+                            if (!menuElement.isJsonObject) {
+                                return@forEach
+                            }
 
                             val menuObj =
-                                menuEl.asJsonObject
+                                menuElement.asJsonObject
 
                             val menuId =
                                 menuObj
                                     .get("id")
+                                    ?.takeIf { !it.isJsonNull }
                                     ?.asString
                                     ?: return@forEach
 
                             val menuLabel =
                                 menuObj
                                     .get("label")
+                                    ?.takeIf { !it.isJsonNull }
                                     ?.asString
-                                    ?: menuId.uppercase()
+                                    ?: menuId.toUpperCase()
 
                             menuLabelMap[
-                                menuId.lowercase()
+                                menuId.toLowerCase()
                             ] = menuLabel
                         }
 
@@ -142,60 +187,87 @@ object SymphogearJsonConverter {
             }
 
             // ========================================================
-            // PARSE CHANNELS
+            // CHANNELS
             // ========================================================
 
             for (element in channelsArray) {
 
                 try {
 
+                    if (!element.isJsonObject) {
+                        continue
+                    }
+
                     val obj =
                         element.asJsonObject
 
                     // ------------------------------------------------
-                    // BASIC DATA
+                    // BASIC
                     // ------------------------------------------------
 
                     val name =
                         obj.get("name")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
-                            ?: continue
+                            ?.trim()
 
                     val url =
                         obj.get("url")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
-                            ?: continue
+                            ?.trim()
+
+                    if (name.isNullOrBlank() ||
+                        url.isNullOrBlank()
+                    ) {
+                        Log.w(
+                            TAG,
+                            "Channel dilewati karena name/url kosong"
+                        )
+                        continue
+                    }
 
                     val cat =
                         obj.get("cat")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
+                            ?.trim()
                             ?: "nasional"
 
                     val menuId =
                         obj.get("menu")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
+                            ?.trim()
 
                     // ------------------------------------------------
-                    // DRM DATA
+                    // DRM METADATA
                     // ------------------------------------------------
 
                     val hasDrm =
                         obj.get("drm")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asBoolean
                             ?: false
 
                     val drmType =
                         obj.get("drmType")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
+                            ?.trim()
                             ?: "ClearKey"
 
                     val licUrl =
                         obj.get("licUrl")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
+                            ?.trim()
 
                     val licenseKey =
                         obj.get("licenseKey")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
+                            ?.trim()
 
                     // ------------------------------------------------
                     // USER AGENT
@@ -203,7 +275,9 @@ object SymphogearJsonConverter {
 
                     val ua =
                         obj.get("ua")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
+                            ?.trim()
 
                     // ------------------------------------------------
                     // REFERER
@@ -222,18 +296,21 @@ object SymphogearJsonConverter {
 
                                 obj.get("referrer")
                                     .asString
+                                    .trim()
 
                             obj.has("referer") &&
                                     !obj.get("referer").isJsonNull ->
 
                                 obj.get("referer")
                                     .asString
+                                    .trim()
 
                             obj.has("ref") &&
                                     !obj.get("ref").isJsonNull ->
 
                                 obj.get("ref")
                                     .asString
+                                    .trim()
 
                             else -> null
                         }
@@ -244,7 +321,9 @@ object SymphogearJsonConverter {
 
                     val origin =
                         obj.get("origin")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
+                            ?.trim()
 
                     // ------------------------------------------------
                     // LOGO
@@ -252,10 +331,12 @@ object SymphogearJsonConverter {
 
                     val logo =
                         obj.get("logo")
+                            ?.takeIf { !it.isJsonNull }
                             ?.asString
+                            ?.trim()
 
                     // =================================================
-                    // CREATE CHANNEL
+                    // CHANNEL OBJECT
                     // =================================================
 
                     val channel =
@@ -267,10 +348,7 @@ object SymphogearJsonConverter {
                     channel.logo =
                         logo
 
-                    // =================================================
-                    // SIMPAN FIELD TAMBAHAN
-                    // =================================================
-
+                    // Simpan metadata asli
                     channel.userAgent =
                         ua
 
@@ -284,20 +362,14 @@ object SymphogearJsonConverter {
                         origin
 
                     // =================================================
-                    // BUILD STREAM URL
-                    //
-                    // PlayerActivity membaca:
-                    //
-                    // URL
-                    // |user-agent=...
-                    // |referer=...
+                    // STREAM URL
                     // =================================================
 
-                    val streamUrl =
+                    val streamBuilder =
                         StringBuilder(url)
 
                     val headers =
-                        mutableListOf<String>()
+                        ArrayList<String>()
 
                     if (!ua.isNullOrBlank()) {
 
@@ -315,22 +387,27 @@ object SymphogearJsonConverter {
 
                     if (headers.isNotEmpty()) {
 
-                        streamUrl.append(
-                            "|${headers.joinToString("|")}"
+                        streamBuilder.append(
+                            "|"
+                        )
+
+                        streamBuilder.append(
+                            headers.joinToString("|")
                         )
                     }
 
                     channel.streamUrl =
-                        streamUrl.toString()
+                        streamBuilder.toString()
 
                     // =================================================
-                    // DRM
+                    // DRM METADATA
+                    // =================================================
                     //
-                    // Untuk konten ClearKey yang memang berizin,
-                    // licenseKey dapat digunakan sebagai sumber
-                    // kredensial DRM.
+                    // Jangan mengubah nilai license menjadi URL.
+                    // licenseKey tetap disimpan di Channel.
                     //
-                    // Widevine tetap menggunakan licUrl.
+                    // Untuk license server resmi, licUrl digunakan
+                    // sebagai URL license.
                     // =================================================
 
                     val isWidevine =
@@ -339,65 +416,92 @@ object SymphogearJsonConverter {
                             ignoreCase = true
                         )
 
-                    val drmValue =
+                    if (hasDrm) {
+
                         if (isWidevine) {
 
-                            // Widevine:
-                            // gunakan license server URL
-                            licUrl
+                            if (!licUrl.isNullOrBlank()) {
+
+                                val drmName =
+                                    "widevine_${licUrl.hashCode()}"
+
+                                channel.drmName =
+                                    drmName
+
+                                if (!drmMap.containsKey(drmName)) {
+
+                                    drmMap[drmName] =
+                                        licUrl
+                                }
+
+                                Log.d(
+                                    TAG,
+                                    "Widevine metadata loaded: $name"
+                                )
+
+                            } else {
+
+                                Log.w(
+                                    TAG,
+                                    "Widevine '$name' tidak mempunyai licUrl"
+                                )
+                            }
 
                         } else {
 
                             // ClearKey:
-                            // gunakan licenseKey jika tersedia,
-                            // fallback ke licUrl.
-                            when {
+                            // tandai channel menggunakan ClearKey
+                            // apabila metadata license tersedia.
+                            //
+                            // Nilai licenseKey tetap berada di
+                            // channel. Tidak diubah menjadi URL.
 
-                                !licenseKey.isNullOrBlank() ->
-                                    licenseKey
+                            if (!licenseKey.isNullOrBlank()) {
 
-                                !licUrl.isNullOrBlank() ->
-                                    licUrl
+                                val drmName =
+                                    "clearkey_${licenseKey.hashCode()}"
 
-                                else ->
-                                    null
-                            }
-                        }
+                                channel.drmName =
+                                    drmName
 
-                    if (hasDrm &&
-                        !drmValue.isNullOrBlank()
-                    ) {
+                                if (!drmMap.containsKey(drmName)) {
 
-                        val drmName =
-                            if (isWidevine) {
+                                    drmMap[drmName] =
+                                        licenseKey
+                                }
 
-                                "widevine_${drmValue.hashCode()}"
+                                Log.d(
+                                    TAG,
+                                    "ClearKey metadata loaded: $name"
+                                )
+
+                            } else if (!licUrl.isNullOrBlank()) {
+
+                                val drmName =
+                                    "clearkey_${licUrl.hashCode()}"
+
+                                channel.drmName =
+                                    drmName
+
+                                if (!drmMap.containsKey(drmName)) {
+
+                                    drmMap[drmName] =
+                                        licUrl
+                                }
+
+                                Log.d(
+                                    TAG,
+                                    "ClearKey license URL loaded: $name"
+                                )
 
                             } else {
 
-                                "clearkey_${drmValue.hashCode()}"
+                                Log.w(
+                                    TAG,
+                                    "ClearKey '$name' tidak mempunyai license metadata"
+                                )
                             }
-
-                        channel.drmName =
-                            drmName
-
-                        if (!drmMap.containsKey(drmName)) {
-
-                            drmMap[drmName] =
-                                drmValue
                         }
-
-                        Log.d(
-                            TAG,
-                            "DRM channel: $name | type=$drmType"
-                        )
-
-                    } else if (hasDrm) {
-
-                        Log.w(
-                            TAG,
-                            "DRM channel '$name' tidak mempunyai licenseKey/licUrl"
-                        )
                     }
 
                     // =================================================
@@ -406,7 +510,7 @@ object SymphogearJsonConverter {
 
                     val catKey =
                         cat
-                            .lowercase()
+                            .toLowerCase()
                             .trim()
 
                     if (!categoryMap.containsKey(catKey)) {
@@ -426,37 +530,53 @@ object SymphogearJsonConverter {
 
                         val menuLabel =
                             menuLabelMap[
-                                menuId.lowercase()
-                            ] ?: menuId.uppercase()
+                                menuId.toLowerCase()
+                            ] ?: menuId.toUpperCase()
 
-                        com.animatv.player.extra.MenuManager
-                            .registerCategoryMenu(
-                                cat,
-                                menuId,
-                                menuLabel
+                        try {
+
+                            com.animatv.player.extra.MenuManager
+                                .registerCategoryMenu(
+                                    cat,
+                                    menuId,
+                                    menuLabel
+                                )
+
+                        } catch (e: Exception) {
+
+                            Log.w(
+                                TAG,
+                                "Menu register gagal: ${e.message}"
                             )
+                        }
                     }
 
                 } catch (e: Exception) {
 
                     Log.e(
                         TAG,
-                        "Gagal parsing satu channel: ${e.message}"
+                        "Gagal parsing channel: ${e.message}",
+                        e
                     )
                 }
             }
 
-            // =========================================================
-            // CREATE CATEGORIES
-            // =========================================================
+            // ========================================================
+            // CATEGORY
+            // ========================================================
 
             val categories =
                 ArrayList<Category>()
 
-            // Kategori berdasarkan urutan yang ditentukan
+            // Urutan kategori utama
             for (key in ORDERED_CATS) {
 
-                if (categoryMap.containsKey(key)) {
+                val channels =
+                    categoryMap[key]
+
+                if (channels != null &&
+                    channels.isNotEmpty()
+                ) {
 
                     val category =
                         Category()
@@ -464,30 +584,7 @@ object SymphogearJsonConverter {
                     category.name =
                         CAT_NAMES[key]
                             ?: key.replaceFirstChar {
-                                it.uppercase()
-                            }
-
-                    category.channels =
-                        categoryMap[key]
-
-                    categories.add(
-                        category
-                    )
-                }
-            }
-
-            // Kategori lain
-            for ((key, channels) in categoryMap) {
-
-                if (!ORDERED_CATS.contains(key)) {
-
-                    val category =
-                        Category()
-
-                    category.name =
-                        CAT_NAMES[key]
-                            ?: key.replaceFirstChar {
-                                it.uppercase()
+                                it.toUpperCase()
                             }
 
                     category.channels =
@@ -499,17 +596,46 @@ object SymphogearJsonConverter {
                 }
             }
 
+            // Kategori lain
+            for ((key, channels) in categoryMap) {
+
+                if (!ORDERED_CATS.contains(key) &&
+                    channels.isNotEmpty()
+                ) {
+
+                    val category =
+                        Category()
+
+                    category.name =
+                        CAT_NAMES[key]
+                            ?: key.replaceFirstChar {
+                                it.toUpperCase()
+                            }
+
+                    category.channels =
+                        channels
+
+                    categories.add(
+                        category
+                    )
+                }
+            }
+
+            // ========================================================
+            // SIMPAN PLAYLIST
+            // ========================================================
+
             playlist.categories =
                 categories
 
-            // =========================================================
-            // CREATE DRM LICENSES
-            // =========================================================
+            // ========================================================
+            // DRM LICENSE LIST
+            // ========================================================
 
             val drmLicenses =
                 ArrayList<DrmLicense>()
 
-            for ((name, lic) in drmMap) {
+            for ((name, value) in drmMap) {
 
                 val drm =
                     DrmLicense()
@@ -518,7 +644,7 @@ object SymphogearJsonConverter {
                     name
 
                 drm.url =
-                    lic
+                    value
 
                 drmLicenses.add(
                     drm
@@ -528,17 +654,27 @@ object SymphogearJsonConverter {
             playlist.drmLicenses =
                 drmLicenses
 
-            // =========================================================
-            // DEBUG LOG
-            // =========================================================
+            // ========================================================
+            // RESULT LOG
+            // ========================================================
 
             Log.d(
                 TAG,
-                "Converted " +
+                "SUCCESS: " +
                         "${channelsArray.size()} channels, " +
-                        "${categories.size} cats, " +
-                        "${drmLicenses.size} DRM"
+                        "${categories.size} categories, " +
+                        "${drmLicenses.size} DRM entries"
             )
+
+            if (categories.isEmpty()) {
+
+                Log.e(
+                    TAG,
+                    "Converter selesai tetapi tidak ada category"
+                )
+
+                return null
+            }
 
             playlist
 
@@ -564,15 +700,32 @@ object SymphogearJsonConverter {
 
         return try {
 
-            val root =
-                JsonParser
-                    .parseString(jsonString)
-                    .asJsonObject
+            if (jsonString.isBlank()) {
+                return false
+            }
 
-            root.has("channels") &&
-                    !root.has("categories")
+            // Gunakan API Gson lama agar kompatibel
+            // dengan dependency project.
+            val root =
+                JsonParser()
+                    .parse(jsonString)
+
+            if (!root.isJsonObject) {
+                return false
+            }
+
+            val obj =
+                root.asJsonObject
+
+            obj.has("channels") &&
+                    obj.get("channels").isJsonArray
 
         } catch (e: Exception) {
+
+            Log.e(
+                TAG,
+                "Format check gagal: ${e.message}"
+            )
 
             false
         }
