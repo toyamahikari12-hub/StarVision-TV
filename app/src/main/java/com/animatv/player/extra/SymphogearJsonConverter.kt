@@ -129,6 +129,9 @@ object SymphogearJsonConverter {
                 val licUrl =
                     obj.get("licUrl")?.asString
 
+                val licenseKey =
+                    obj.get("licenseKey")?.asString
+
                 // User-Agent
                 val ua =
                     obj.get("ua")?.asString
