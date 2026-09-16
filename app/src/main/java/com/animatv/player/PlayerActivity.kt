@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.MimeTypes
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.ParametersBuilder
@@ -62,21 +63,13 @@ class PlayerActivity : AppCompatActivity() {
     private var isLocked = false
 
     // ===== AUTO-DETEKSI SISTEM STREAMING (HLS/DASH/SmoothStreaming/RTSP/Progressive) =====
-    // Kalau tebakan format dari StreamFormatDetector meleset (channel pakai sistem yang
-    // belum umum), kita coba format lain di ladder ini secara otomatis - tanpa perlu
-    // menulis kode pemutar baru tiap ada channel dengan sistem streaming baru.
-    private var formatFallbackQueue: MutableList<String?>? = null // null = belum masuk mode fallback
+    private var formatFallbackQueue: MutableList<String?>? = null
     private var hasReachedReadyThisAttempt = false
     private var lastAttemptedMimeType: String? = null
-    // Ingat format yang TERBUKTI berhasil untuk sebuah URL, supaya kalau nanti live
-    // stream sempat putus & auto-retry, kita tidak menebak ulang dari nol (dan berisiko
-    // balik ke tebakan awal yang sempat salah) - langsung pakai format yang sudah terbukti.
     private val knownGoodMimeType = HashMap<String, String?>()
     private var currentCleanStreamUrl: String? = null
 
     // ===== BAGIAN 2: PLAYER CANGGIH =====
-    // Sleep Timer
-    // Auto Quality
     private var autoQualityHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var lastBufferHealth = 100
 
@@ -84,11 +77,9 @@ class PlayerActivity : AppCompatActivity() {
     private var sleepTimerRunnable: Runnable? = null
     private var sleepTimerSeconds = 0
 
-    // Playback Speed
     private val speedLevels = listOf(0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f)
-    private var speedIndex = 2 // default 1.0x
+    private var speedIndex = 2
 
-    // Gesture Control
     private var gestureDetector: GestureDetectorCompat? = null
     private var gestureHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var initialBrightness = -1f
@@ -101,7 +92,7 @@ class PlayerActivity : AppCompatActivity() {
     private var miniChannelAdapter: MiniChannelAdapter? = null
     private var isMiniPanelVisible = false
 
-    // ── TV REMOTE SYSTEM ── (sistem terpisah, tidak ubah kode lain)
+    // ── TV REMOTE SYSTEM ──
     private val tvHost by lazy {
         com.animatv.player.tv.TvPlayerHostImpl.create(
             activity             = this,
@@ -170,10 +161,8 @@ class PlayerActivity : AppCompatActivity() {
         bindingControl = CustomControlBinding.bind(bindingRoot.root.findViewById(R.id.custom_control))
         setContentView(bindingRoot.root)
 
-        // set this is not first time
         isFirst = false
 
-        // verify playlist
         if (Playlist.cached.isCategoriesEmpty()) {
             Log.e("PLAYER", getString(R.string.player_no_playlist))
             Toast.makeText(this, R.string.player_no_playlist, Toast.LENGTH_SHORT).show()
@@ -181,7 +170,6 @@ class PlayerActivity : AppCompatActivity() {
             return
         }
 
-        // get categories & channel to play
         try {
             val parcel: PlayData? = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(PlayData.VALUE, PlayData::class.java)
@@ -199,7 +187,6 @@ class PlayerActivity : AppCompatActivity() {
             return
         }
 
-        // verify
         if (category == null || current == null) {
             Log.e("PLAYER", getString(R.string.player_no_channel))
             Toast.makeText(this, R.string.player_no_channel, Toast.LENGTH_SHORT).show()
@@ -207,13 +194,9 @@ class PlayerActivity : AppCompatActivity() {
             return
         }
 
-        // set listener
         bindingListener()
-
-        // play the channel
         playChannel()
 
-        // local broadcast receiver to update playlist
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter(PLAYER_CALLBACK))
     }
@@ -229,10 +212,8 @@ class PlayerActivity : AppCompatActivity() {
             setControllerVisibilityListener {
                 setChannelInformation (it == View.VISIBLE)
                 if (!isLocked) {
-                    // Tidak locked, semua ikut show/hide normal
                     bindingRoot.btnMiniChannelToggle.visibility = it
                 }
-                // Tombol kunci di custom_control ikut show/hide saat tidak locked
                 if (!isLocked) bindingControl.buttonLock.visibility = it
             }
         }
@@ -248,7 +229,6 @@ class PlayerActivity : AppCompatActivity() {
         bindingControl.screenMode.setOnClickListener { showScreenMenu(it) }
         bindingControl.trackSelection.setOnClickListener { showTrackSelector() }
 
-        // Tombol kunci di custom_control (saat tidak locked)
         bindingControl.buttonLock.apply {
             visibility = if (isTelevision) View.GONE else View.VISIBLE
             setOnClickListener {
@@ -257,7 +237,6 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        // Overlay tombol kunci TERPISAH - hanya muncul saat locked, tidak dikendalikan ExoPlayer
         val handlerLockOverlay = Handler(Looper.getMainLooper())
         bindingRoot.btnLockOverlay.setOnClickListener {
             (it as ImageButton).setImageResource(R.drawable.ic_lock_open)
@@ -265,12 +244,10 @@ class PlayerActivity : AppCompatActivity() {
             bindingRoot.btnLockOverlay.visibility = View.GONE
         }
 
-        // Setup mini channel panel toggle button
         bindingRoot.btnMiniChannelToggle.setOnClickListener {
             toggleMiniChannelPanel()
         }
 
-        // ===== BAGIAN 2: PLAYER CANGGIH =====
         setupSleepTimer()
         setupPlaybackSpeed()
         setupDoubleTap()
@@ -312,7 +289,6 @@ class PlayerActivity : AppCompatActivity() {
         bindingControl.btnSleep.visibility = visibility
         bindingControl.buttonLock.visibility = if (setLocked) View.GONE else View.VISIBLE
         bindingRoot.btnMiniChannelToggle.visibility = if (setLocked) View.GONE else View.VISIBLE
-        // Overlay kunci: sembunyikan dulu, tap layar yang akan munculkan
         bindingRoot.btnLockOverlay.visibility = View.GONE
         switchLiveOrVideo()
     }
@@ -327,7 +303,6 @@ class PlayerActivity : AppCompatActivity() {
         }
         bindingControl.layoutSeekbar.visibility = visibility
         bindingControl.spacerControl.visibility = visibility
-        // override visibility if not seekable
         if (player?.isCurrentMediaItemSeekable == false) visibility = View.GONE
         bindingControl.buttonRewind.visibility = visibility
         bindingControl.buttonForward.visibility = visibility
@@ -359,14 +334,15 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     /**
-     * Bangun JSON license ClearKey (W3C EME) dari string hex "kid:key" atau
-     * beberapa pasang dipisah , / ; atau spasi.
-     * Return null kalau tidak ada pair valid -> caller wajib handle.
+     * Bangun JSON license ClearKey (W3C EME) dari string hex "kid:key".
+     * WAJIB konversi hex -> Base64 URL-Safe, karena ExoPlayer LocalMediaDrmCallback
+     * hanya menerima format Base64 URL-Safe (bukan hex mentah).
      */
     private fun buildClearKeyLicenseJson(license: String): ByteArray? {
         try {
-            // Pisah per pair. Dukung separator , / ; dan whitespace.
-            val pairs = license.split(Regex("[,/;\\s]+"))
+            val rawLicense = license.substringBefore("|").trim()
+
+            val pairs = rawLicense.split(Regex("[,/;\\s]+"))
                 .map { it.trim() }
                 .filter { it.isNotEmpty() && it.contains(":") }
 
@@ -385,7 +361,6 @@ class PlayerActivity : AppCompatActivity() {
                 val kidHex = pair.substring(0, colonIdx).trim()
                 val keyHex = pair.substring(colonIdx + 1).trim()
 
-                // Validasi: KID & KEY harus hex 32 karakter (128-bit)
                 if (kidHex.length != 32 || keyHex.length != 32) {
                     Log.w("DRM_DEBUG", "Panjang invalid kid=${kidHex.length} key=${keyHex.length} pada '$pair'")
                     continue
@@ -396,6 +371,7 @@ class PlayerActivity : AppCompatActivity() {
                     continue
                 }
 
+                // >>> KONVERSI PENTING: hex -> Base64 URL-Safe <<<
                 val kidB64 = android.util.Base64.encodeToString(
                     hexToBytes(kidHex),
                     android.util.Base64.NO_PADDING or
@@ -426,14 +402,12 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun playChannel() {
-        // Channel baru = reset state ladder auto-deteksi format
         formatFallbackQueue = null
         playChannel(overrideMimeType = null, isFormatFallbackAttempt = false)
     }
 
     private fun playChannel(overrideMimeType: String?, isFormatFallbackAttempt: Boolean) {
         hasReachedReadyThisAttempt = false
-        // Release player lama jika masih ada untuk cegah memory leak di Android 5
         if (player != null) {
             try {
                 player?.release()
@@ -442,23 +416,27 @@ class PlayerActivity : AppCompatActivity() {
             }
             player = null
         }
-        // reset view
         switchLiveOrVideo(true)
 
-        // set category & channel name
         bindingRoot.categoryName.text = category?.name?.trim()
         bindingRoot.channelName.text = current?.name?.trim()
 
-        // split streamurl with referer, user-agent
         var streamUrl = URLDecoder.decode(current?.streamUrl, "utf-8")
         var userAgent = streamUrl.findPattern(".*user-agent=(.+?)(\\|.*)?")
-        val referer = streamUrl.findPattern(".*referer=(.+?)(\\|.*)?")
+        var referer = streamUrl.findPattern(".*referer=(.+?)(\\|.*)?")
 
-        // clean streamurl
         streamUrl = streamUrl.findPattern("(.+?)(\\|.*)?") ?: streamUrl
 
-        // if null set User-Agent with existing resources
-        if (userAgent == null) {
+        // FIX: prioritas User-Agent dari field JSON channel ("ua")
+        if (userAgent.isNullOrEmpty()) {
+            userAgent = current?.userAgent
+        }
+        // FIX: prioritas Referer dari field JSON channel
+        if (referer.isNullOrEmpty()) {
+            referer = current?.referrer
+        }
+        // Fallback terakhir: user-agent random dari resources
+        if (userAgent.isNullOrEmpty()) {
             val userAgents = listOf(*resources.getStringArray(R.array.user_agent))
             userAgent = userAgents.firstOrNull {
                 current?.streamUrl?.contains(
@@ -470,53 +448,81 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
+        // FIX: license diambil dari cache ATAU langsung dari field inline channel
         val drmLicense = Playlist.cached.drmLicenses.firstOrNull {
-            current?.drmName?.equals(it.name) == true
-        }?.url
+            current?.drmName?.equals(it.name, ignoreCase = true) == true
+        }?.url ?: current?.licenseKey
 
-        // Auto-deteksi sistem streaming (HLS/DASH/SmoothStreaming/RTSP/Progressive).
-        // Prioritas: (1) kalau ini percobaan ladder fallback, paksa pakai kandidat yang
-        // diberikan (bisa null = progresif); (2) kalau URL ini sudah pernah terbukti
-        // jalan dengan format tertentu, langsung pakai itu; (3) baru tebak dari URL.
+        // ============ DEBUG LOG ============
+        Log.d("DRM_DEBUG", "=== CHANNEL DEBUG ===")
+        Log.d("DRM_DEBUG", "channel.name       = ${current?.name}")
+        Log.d("DRM_DEBUG", "channel.drmName    = ${current?.drmName}")
+        Log.d("DRM_DEBUG", "channel.streamType = ${current?.streamType}")
+        Log.d("DRM_DEBUG", "channel.licenseKey = ${current?.licenseKey}")
+        Log.d("DRM_DEBUG", "resolved drmLicense = $drmLicense")
+        Log.d("DRM_DEBUG", "userAgent = $userAgent")
+        Log.d("DRM_DEBUG", "referer   = $referer")
+        Log.d("DRM_DEBUG", "origin    = ${current?.origin}")
+        // ====================================
+
+        // Auto-deteksi format. Prioritas:
+        // (1) fallback ladder attempt -> paksa kandidat
+        // (2) sudah pernah sukses -> pakai yang terbukti
+        // (3) channel punya field "type" eksplisit -> pakai itu
+        // (4) tebak dari URL
+        val mimeTypeFromField = when (current?.streamType?.lowercase(Locale.US)) {
+            "dash", "mpd" -> MimeTypes.APPLICATION_MPD
+            "hls", "m3u8" -> MimeTypes.APPLICATION_M3U8
+            "ss", "smoothstreaming" -> MimeTypes.APPLICATION_SS
+            "rtsp" -> MimeTypes.APPLICATION_RTSP
+            "progressive", "mp4", "ts" -> MimeTypes.APPLICATION_MP4
+            else -> null
+        }
+
         val mimeType = when {
             isFormatFallbackAttempt -> overrideMimeType
             knownGoodMimeType.containsKey(streamUrl) -> knownGoodMimeType[streamUrl]
+            mimeTypeFromField != null -> mimeTypeFromField
             else -> StreamFormatDetector.detect(streamUrl)
         }
         lastAttemptedMimeType = mimeType
         currentCleanStreamUrl = streamUrl
-        Log.d("PLAYER_FORMAT", "Channel='${current?.name}' guessedFormat=${StreamFormatDetector.label(mimeType)} fallbackAttempt=$isFormatFallbackAttempt")
+        Log.d("PLAYER_FORMAT", "Channel='${current?.name}' format=${StreamFormatDetector.label(mimeType)} (fromField=${current?.streamType}) fallback=$isFormatFallbackAttempt")
 
-        // HTTP factory dengan User-Agent dan Referer
-        // Timeout lebih panjang untuk Android 5 dengan koneksi lambat
         val httpDataSourceFactory = DefaultHttpDataSource.Factory()
             .setAllowCrossProtocolRedirects(true)
             .setUserAgent(userAgent)
-            .setConnectTimeoutMs(15_000)   // 15 detik connect timeout
-            .setReadTimeoutMs(20_000)      // 20 detik read timeout
-        if (referer != null) httpDataSourceFactory.setDefaultRequestProperties(mapOf(Pair("referer", referer)))
+            .setConnectTimeoutMs(15_000)
+            .setReadTimeoutMs(20_000)
+
+        // FIX: kirim header Referer + Origin (banyak CDN cubmu butuh Origin)
+        val headers = mutableMapOf<String, String>()
+        if (!referer.isNullOrEmpty()) headers["Referer"] = referer
+        if (!current?.origin.isNullOrEmpty()) headers["Origin"] = current!!.origin!!
+        if (headers.isNotEmpty()) httpDataSourceFactory.setDefaultRequestProperties(headers)
+
         val dataSourceFactory = DefaultDataSourceFactory(this, httpDataSourceFactory)
 
         // ================================================================
-        // Build DrmSessionManager sesuai tipe DRM
+        // Build DrmSessionManager
         // ================================================================
         val drmName = current?.drmName?.lowercase(Locale.US).orEmpty()
         val isClearKey = drmName.contains("clearkey") || drmName.contains("clear_key") || drmName == "ck"
         val isWidevine = drmName.contains("widevine") || drmName == "wv"
         val hasDrm = drmName.isNotBlank() && !drmLicense.isNullOrBlank()
 
+        Log.d("DRM_DEBUG", "drmName='$drmName' isClearKey=$isClearKey isWidevine=$isWidevine hasDrm=$hasDrm")
+
         var drmSessionManager: com.google.android.exoplayer2.drm.DrmSessionManager =
             com.google.android.exoplayer2.drm.DrmSessionManager.DRM_UNSUPPORTED
 
         if (hasDrm && isClearKey) {
-            // Bersihkan suffix Kodi-style: "kid:key|User-Agent=xxx" -> "kid:key"
             val rawLicense = drmLicense!!.substringBefore("|").trim()
             val looksLikeUrl = rawLicense.startsWith("http://", true) ||
                     rawLicense.startsWith("https://", true)
 
             try {
                 if (looksLikeUrl) {
-                    // ClearKey yang ternyata license server URL
                     val drmCallback = com.google.android.exoplayer2.drm.HttpMediaDrmCallback(
                         rawLicense, httpDataSourceFactory)
                     drmSessionManager = com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Builder()
@@ -527,13 +533,12 @@ class PlayerActivity : AppCompatActivity() {
                         .build(drmCallback)
                     Log.d("DRM_DEBUG", "ClearKey via URL: $rawLicense")
                 } else {
-                    // ClearKey hex pairs langsung
                     val licenseBytes = buildClearKeyLicenseJson(rawLicense)
                     if (licenseBytes == null) {
                         Log.e("DRM_DEBUG", "ClearKey parse FAILED: $rawLicense")
                         Toast.makeText(
                             applicationContext,
-                            "ClearKey license tidak valid (harus hex kid:key): $rawLicense",
+                            "ClearKey license tidak valid: $rawLicense",
                             Toast.LENGTH_LONG).show()
                     } else {
                         val drmCallback =
@@ -542,7 +547,7 @@ class PlayerActivity : AppCompatActivity() {
                             .setUuidAndExoMediaDrmProvider(
                                 C.CLEARKEY_UUID,
                                 com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER)
-                            .setMultiSession(true)  // multiSession WAJIB true utk ClearKey multi-KID
+                            .setMultiSession(true)
                             .build(drmCallback)
                         Log.d("DRM_DEBUG", "ClearKey direct OK: $rawLicense")
                     }
@@ -568,26 +573,23 @@ class PlayerActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e("DRM_DEBUG", "Widevine build error", e)
             }
-        } else if (drmName.isNotBlank() && drmLicense == null) {
+        } else if (drmName.isNotBlank() && drmLicense.isNullOrBlank()) {
             Log.e("DRM_DEBUG", "DRM channel ($drmName) but license NOT FOUND!")
             Toast.makeText(applicationContext,
-                "DRM license tidak ditemukan, coba refresh playlist", Toast.LENGTH_LONG).show()
+                "DRM license tidak ditemukan (drmName='$drmName')", Toast.LENGTH_LONG).show()
         }
         // ================================================================
         // END DRM
         // ================================================================
 
-        // MediaItem - cukup set URI dan MimeType, DRM dihandle lewat DrmSessionManager
         mediaItem = MediaItem.Builder()
             .setUri(Uri.parse(streamUrl))
             .also { if (mimeType != null) it.setMimeType(mimeType) }
             .build()
 
-        // MediaSourceFactory dengan DrmSessionManager yang sudah dikonfigurasi
         val mediaSourceFactory = DefaultMediaSourceFactory(dataSourceFactory)
             .setDrmSessionManagerProvider { drmSessionManager }
 
-        // create trackselector with resolution constraint from sidebar buttons
         trackSelector = DefaultTrackSelector(this).apply {
             val maxHeights = listOf(360, 720, 1080, 2160, Int.MAX_VALUE)
             val maxBitrates = listOf(800_000, 2_500_000, 5_000_000, 20_000_000, Int.MAX_VALUE)
@@ -595,70 +597,48 @@ class PlayerActivity : AppCompatActivity() {
             parameters = ParametersBuilder(applicationContext)
                 .setMaxVideoSize(Int.MAX_VALUE, maxHeights[idx])
                 .setMaxVideoBitrate(maxBitrates[idx])
-                // Kalau manifest channel punya beberapa rendition dengan codec berbeda
-                // (mis. H.264 & HEVC dicampur di satu adaptation set - umum di channel
-                // yang baru ditambah rendition 4K/HEVC), izinkan ExoPlayer berpindah
-                // antar codec tsb alih-alih menolak semuanya.
                 .setAllowVideoMixedMimeTypeAdaptiveness(true)
                 .setAllowAudioMixedMimeTypeAdaptiveness(true)
-                // Tetap coba mainkan track meski secara resmi "melebihi kapasitas"
-                // renderer, karena banyak TV box tetap sanggup walau tidak terdaftar.
                 .setExceedRendererCapabilitiesIfNecessary(true)
                 .setExceedVideoConstraintsIfNecessary(true)
                 .setExceedAudioConstraintsIfNecessary(true)
                 .build()
         }
 
-        // LoadControl yang stabil untuk Android 5 dengan RAM terbatas
-        // min=2s, max=10s, playback_resume=1s, rebuffer=2s
-        // Buffer dioptimalkan untuk Android 5 TV Box RAM terbatas
         val loadControl: LoadControl = DefaultLoadControl.Builder()
             .setAllocator(DefaultAllocator(true, 16))
             .setBufferDurationsMs(
-                3_000,   // minBufferMs
-                15_000,  // maxBufferMs - 15 detik cukup untuk live stream
-                1_500,   // bufferForPlaybackMs
-                3_000    // bufferForPlaybackAfterRebufferMs
+                3_000,
+                15_000,
+                1_500,
+                3_000
             )
-            .setTargetBufferBytes(4 * 1024 * 1024) // 4MB buffer
+            .setTargetBufferBytes(4 * 1024 * 1024)
             .setPrioritizeTimeOverSizeThresholds(true)
             .build()
 
-        // enable extension renderer
-        // EXTENSION_RENDERER_MODE_OFF hemat RAM di Android 5 TV Box (tidak ada modul
-        // extension software decoder yang di-bundle, jadi mode ini tidak berpengaruh
-        // kalau nanti exoplayer-extension-ffmpeg dsb ditambahkan secara terpisah).
         val renderersFactory = DefaultRenderersFactory(this)
             .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF)
-            // Kalau decoder hardware "favorit" gagal init atau tidak mendukung profil
-            // tertentu (mis. HEVC Main10, atau profil H.264 High yang jarang), izinkan
-            // ExoPlayer coba decoder LAIN yang terdaftar di perangkat (termasuk decoder
-            // software bawaan Android) alih-alih langsung menyerah.
             .setEnableDecoderFallback(true)
 
-        // set player builder - selalu pakai loadControl yang stabil
         val playerBuilder = com.google.android.exoplayer2.ExoPlayer.Builder(this, renderersFactory)
             .setMediaSourceFactory(mediaSourceFactory)
             .setTrackSelector(trackSelector)
             .setLoadControl(loadControl)
 
-        // create player & set listener
         try {
             player = playerBuilder.build()
             player?.addListener(PlayerListener())
 
-            // set player view
             bindingRoot.playerView.player = player
             bindingRoot.playerView.resizeMode = preferences.resizeMode
             bindingRoot.playerView.requestFocus()
 
-            // play
             player?.playWhenReady = true
             player?.setMediaItem(mediaItem)
             player?.prepare()
         } catch (e: Exception) {
             android.util.Log.e("PLAYER", "Build/play error: ${e.message}", e)
-            // Retry setelah 2 detik kalau player gagal build
             android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
                 if (!isDestroyed) retryPlayback(true)
             }, 2000)
@@ -721,7 +701,6 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        // reset player & play
         errorCounter = 0
         try {
             player?.playWhenReady = false
@@ -736,7 +715,6 @@ class PlayerActivity : AppCompatActivity() {
     private fun retryPlayback(force: Boolean) {
         if (force) {
             if (player == null) {
-                // Player sudah di-release, perlu build ulang
                 playChannel()
                 return
             }
@@ -746,7 +724,6 @@ class PlayerActivity : AppCompatActivity() {
                 player?.prepare()
             } catch (e: Exception) {
                 Log.e("PLAYER", "retryPlayback error: ${e.message}")
-                // Fallback: rebuild player
                 player?.release()
                 player = null
                 playChannel()
@@ -758,7 +735,7 @@ class PlayerActivity : AppCompatActivity() {
             override fun onFinish() {
                 retryPlayback(true)
             }
-        }).start(2) // delay 2 detik sebelum retry
+        }).start(2)
     }
 
     private inner class PlayerListener : Player.Listener {
@@ -769,8 +746,6 @@ class PlayerActivity : AppCompatActivity() {
             when (state) {
                 Player.STATE_READY -> {
                     errorCounter = 0
-                    // Format tebakan/fallback ini berhasil - keluar dari mode ladder
-                    // dan ingat formatnya supaya reconnect berikutnya tidak menebak ulang
                     hasReachedReadyThisAttempt = true
                     formatFallbackQueue = null
                     currentCleanStreamUrl?.let { knownGoodMimeType[it] = lastAttemptedMimeType }
@@ -778,9 +753,7 @@ class PlayerActivity : AppCompatActivity() {
                     val chId = category?.channels?.indexOf(current) ?: -1
                     preferences.watched = PlayData(catId, chId)
                     switchLiveOrVideo()
-                    // Update highlight channel aktif di mini panel
                     updateMiniChannelActive()
-                    // Cek track support
                     val mappedTrackInfo = trackSelector.currentMappedTrackInfo
                     if (mappedTrackInfo != null) {
                         val isVideoProblem = mappedTrackInfo.getTypeSupport(C.TRACK_TYPE_VIDEO) == MappedTrackInfo.RENDERER_SUPPORT_UNSUPPORTED_TRACKS
@@ -798,11 +771,8 @@ class PlayerActivity : AppCompatActivity() {
                     }
                 }
                 Player.STATE_ENDED -> {
-                    // Live stream TIDAK boleh auto-retry saat ENDED
-                    // karena bisa menyebabkan keluar dari player di Android 5
                     val isLive = player?.isCurrentMediaItemLive == true
                     if (!isLive) retryPlayback(true)
-                    // Kalau live, abaikan - stream mungkin sedang rebuffering
                 }
                 else -> { }
             }
@@ -817,26 +787,18 @@ class PlayerActivity : AppCompatActivity() {
             val errorMsg = error.message ?: "Unknown error"
             Log.e("PLAYER_ERROR", "code=${error.errorCode} name=${error.errorCodeName} msg=$errorMsg")
 
-            // BEHIND_LIVE_WINDOW: seek ke live position - sering di Android 5
             if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
                 player?.seekToDefaultPosition()
                 player?.prepare()
                 return
             }
 
-            // Error parsing manifest/container = tebakan sistem streaming (HLS/DASH/dst)
-            // kemungkinan meleset, BUKAN masalah jaringan. Kalau ini terjadi sebelum
-            // pernah sempat STATE_READY, coba format lain dari ladder secara otomatis -
-            // supaya channel dengan sistem streaming yang belum umum tetap punya
-            // kesempatan diputar tanpa perlu tambahan kode.
             val isFormatError = error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED ||
                     error.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED ||
                     error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED ||
                     error.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED
 
             if (isFormatError && !hasReachedReadyThisAttempt) {
-                // Inisialisasi antrian percobaan pertama kali error format terjadi:
-                // semua kandidat di ladder KECUALI yang barusan dicoba dan gagal.
                 if (formatFallbackQueue == null) {
                     formatFallbackQueue = StreamFormatDetector.FORMAT_FALLBACK_LADDER
                         .filter { it != lastAttemptedMimeType }
@@ -847,11 +809,9 @@ class PlayerActivity : AppCompatActivity() {
                     val nextMimeType = queue.removeAt(0)
                     Log.w("PLAYER_FORMAT", "Format ${StreamFormatDetector.label(lastAttemptedMimeType)} gagal, " +
                             "coba ${StreamFormatDetector.label(nextMimeType)} untuk channel '${current?.name}'")
-                    // Lepas player di loop berikutnya (bukan langsung di dalam callback
-                    // error milik player itu sendiri) supaya lebih aman dari reentrancy.
                     Handler(Looper.getMainLooper()).post {
                         if (isDestroyed) return@post
-                        try { player?.release() } catch (e: Exception) { /* abaikan */ }
+                        try { player?.release() } catch (e: Exception) { }
                         player = null
                         playChannel(overrideMimeType = nextMimeType, isFormatFallbackAttempt = true)
                     }
@@ -859,12 +819,10 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
 
-            // IO Error saat live stream = jaringan putus sebentar, retry otomatis
             val isIoError = error.errorCode >= PlaybackException.ERROR_CODE_IO_UNSPECIFIED &&
                             error.errorCode <= PlaybackException.ERROR_CODE_IO_NO_PERMISSION
             val isLive = player?.isCurrentMediaItemLive ?: false
 
-            // Untuk live stream: retry lebih banyak, lebih sabar
             val maxRetry = if (isLive) 15 else 8
 
             if (errorCounter < maxRetry && network.isConnected()) {
@@ -884,13 +842,8 @@ class PlayerActivity : AppCompatActivity() {
                 )
             }
         }
-
-        // onTracksChanged dihapus - handled via onPlaybackStateChanged
-        // untuk kompatibilitas ExoPlayer 2.18.x
     }
 
-
-    // Notifikasi ringan pakai Toast (bukan error dialog)
     private fun showInfo(message: String) {
         android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
     }
@@ -939,12 +892,6 @@ class PlayerActivity : AppCompatActivity() {
         return true
     }
 
-
-
-    // ============================================================
-    // BAGIAN 2: PLAYER CANGGIH
-    // ============================================================
-
     // ===== 1. SLEEP TIMER =====
     private fun setupSleepTimer() {
         bindingControl.btnSleep?.setOnClickListener { showSleepTimerMenu() }
@@ -969,7 +916,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setSleepTimer(minutes: Int) {
-        // Cancel timer lama
         sleepTimerRunnable?.let { sleepTimerHandler.removeCallbacks(it) }
         sleepTimerRunnable = null
 
@@ -986,7 +932,6 @@ class PlayerActivity : AppCompatActivity() {
             override fun run() {
                 sleepTimerSeconds--
                 if (sleepTimerSeconds <= 0) {
-                    // Waktunya habis - tutup player
                     player?.pause()
                     finish()
                 } else {
@@ -1024,10 +969,8 @@ class PlayerActivity : AppCompatActivity() {
         bindingRoot.playerView.setOnTouchListener { _, event ->
             if (isLocked) {
                 if (event.action == MotionEvent.ACTION_UP) {
-                    // Munculkan overlay tombol kunci
                     bindingRoot.btnLockOverlay.setImageResource(R.drawable.ic_lock)
                     bindingRoot.btnLockOverlay.visibility = View.VISIBLE
-                    // Auto hide setelah 3 detik
                     handlerLockBtn.removeCallbacksAndMessages(null)
                     handlerLockBtn.postDelayed({
                         bindingRoot.btnLockOverlay.visibility = View.GONE
@@ -1045,11 +988,9 @@ class PlayerActivity : AppCompatActivity() {
                 override fun onDoubleTap(e: MotionEvent): Boolean {
                     val screenWidth = resources.displayMetrics.widthPixels
                     if (e.x < screenWidth / 2) {
-                        // Double tap kiri = rewind 10 detik
                         player?.seekBack()
                         showDoubleTapFeedback(false)
                     } else {
-                        // Double tap kanan = forward 10 detik
                         player?.seekForward()
                         showDoubleTapFeedback(true)
                     }
@@ -1070,9 +1011,8 @@ class PlayerActivity : AppCompatActivity() {
         }?.start()
     }
 
-    // ===== 4. GESTURE CONTROL (Brightness & Volume) =====
+    // ===== 4. GESTURE CONTROL =====
     private fun setupGestureControl() {
-        // Init brightness awal
         try {
             initialBrightness = Settings.System.getInt(
                 contentResolver,
@@ -1107,17 +1047,14 @@ class PlayerActivity : AppCompatActivity() {
                 val absDX = Math.abs(deltaX)
                 val absDY = Math.abs(deltaY)
 
-                // Tentukan mode gesture dari arah dominan pertama
                 if (!isGestureBrightness && !isGestureVolume) {
                     if (absDX > 30 || absDY > 30) {
-                        // Swipe atas/bawah = brightness, swipe kiri/kanan = volume
                         isGestureBrightness = absDY > absDX
                         isGestureVolume = absDX >= absDY
                     }
                 }
 
                 if (isGestureBrightness && absDY > 20) {
-                    // Swipe atas/bawah = brightness
                     val sensitivity = resources.displayMetrics.heightPixels / 2f
                     val delta = deltaY / sensitivity
                     val newBrightness = (initialBrightness + delta).coerceIn(0.01f, 1f)
@@ -1134,7 +1071,6 @@ class PlayerActivity : AppCompatActivity() {
                 }
 
                 if (isGestureVolume && absDX > 20) {
-                    // Swipe kiri/kanan = volume
                     val maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
                     val sensitivity = resources.displayMetrics.widthPixels / 2f
                     val delta = deltaX / sensitivity
@@ -1157,23 +1093,18 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-
     // ===== AUTO QUALITY =====
     private fun setupAutoQuality() {
-        // Auto quality DINONAKTIFKAN untuk live streaming
-        // bufferedPercentage selalu 0 untuk live stream -> salah deteksi
-        // Biarkan ExoPlayer pilih kualitas otomatis (ABR built-in)
         autoQualityHandler.postDelayed(object : Runnable {
             override fun run() {
                 val isLive = player?.isCurrentMediaItemLive ?: false
                 if (!isLive) checkAndAdjustQuality()
-                autoQualityHandler.postDelayed(this, 15000) // cek tiap 15 detik
+                autoQualityHandler.postDelayed(this, 15000)
             }
         }, 15000)
     }
 
     private fun checkAndAdjustQuality() {
-        // Hanya untuk VOD (bukan live stream)
         val p = player ?: return
         val buffered = p.bufferedPercentage
         if (buffered < 5 && p.isPlaying) {
@@ -1187,13 +1118,11 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     // ===== MINI CHANNEL PANEL =====
-
     private fun setupMiniChannelPanel() {
         val channels = category?.channels ?: return
         val currentIdx = channels.indexOf(current).coerceAtLeast(0)
 
         miniChannelAdapter = MiniChannelAdapter(channels) { idx ->
-            // Klik channel di mini list -> langsung putar
             if (idx != channels.indexOf(current)) {
                 current = channels[idx]
                 errorCounter = 0
@@ -1213,7 +1142,6 @@ class PlayerActivity : AppCompatActivity() {
             isFocusableInTouchMode = false
             descendantFocusability = android.view.ViewGroup.FOCUS_AFTER_DESCENDANTS
             itemAnimator = null
-            // Scroll ke channel aktif
             post {
                 (layoutManager as? androidx.recyclerview.widget.LinearLayoutManager)
                     ?.scrollToPositionWithOffset(currentIdx, 100)
@@ -1228,10 +1156,8 @@ class PlayerActivity : AppCompatActivity() {
         if (isMiniPanelVisible) {
             setupMiniChannelPanel()
             bindingRoot.miniChannelPanel.visibility = View.VISIBLE
-            // Rotate toggle icon
             bindingRoot.btnMiniChannelToggle.animate()
                 .rotation(180f).setDuration(200).start()
-            // TV: otomatis pindah fokus ke mini channel list saat panel dibuka
             if (UiMode().isTelevision()) {
                 bindingRoot.rvMiniChannels.post {
                     bindingRoot.rvMiniChannels.requestFocus()
@@ -1244,7 +1170,6 @@ class PlayerActivity : AppCompatActivity() {
             bindingRoot.miniChannelPanel.visibility = View.GONE
             bindingRoot.btnMiniChannelToggle.animate()
                 .rotation(0f).setDuration(200).start()
-            // TV: kembalikan fokus ke player view
             if (UiMode().isTelevision()) {
                 bindingRoot.playerView.requestFocus()
             }
@@ -1255,7 +1180,6 @@ class PlayerActivity : AppCompatActivity() {
         val channels = category?.channels ?: return
         val idx = channels.indexOf(current).coerceAtLeast(0)
         miniChannelAdapter?.setActiveChannel(idx)
-        // Scroll ke channel aktif
         if (isMiniPanelVisible) {
             (bindingRoot.rvMiniChannels.layoutManager
                 as? androidx.recyclerview.widget.LinearLayoutManager)
@@ -1329,26 +1253,21 @@ class PlayerActivity : AppCompatActivity() {
         if (hasFocus) window.setFullScreenFlags()
     }
 
-    // ── TV REMOTE: intercept sebelum view hierarchy ────────────────
+    // ── TV REMOTE ──
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (tvRemote.dispatchKeyEvent(event)) return true
         return super.dispatchKeyEvent(event)
     }
-    // ── END TV REMOTE ──────────────────────────────────────────────
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        // ── TV REMOTE: tangani dulu, baru lanjut kode lama ─────────
         if (tvRemote.onKeyUp(keyCode, event)) return true
-        // ── END TV REMOTE ──────────────────────────────────────────
-        // [1] Tutup mini channel panel dulu dengan BACK atau ESCAPE
+
         if (isMiniPanelVisible &&
             (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE)) {
             toggleMiniChannelPanel()
             return true
         }
 
-        // [2] DPAD_CENTER / ENTER saat controller tidak tampil → tampilkan controller
-        //     DPAD_CENTER / ENTER saat controller tampil → toggle play/pause
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
             keyCode == KeyEvent.KEYCODE_ENTER ||
             keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
@@ -1360,10 +1279,8 @@ class PlayerActivity : AppCompatActivity() {
             return true
         }
 
-        // [3] Jika terkunci, hanya izinkan tombol di atas
         if (isLocked) return true
 
-        // [4] Tombol media & menu – selalu ditangani
         when (keyCode) {
             KeyEvent.KEYCODE_MENU,
             KeyEvent.KEYCODE_SETTINGS -> return showTrackSelector()
@@ -1380,12 +1297,10 @@ class PlayerActivity : AppCompatActivity() {
             KeyEvent.KEYCODE_MEDIA_STOP -> { player?.pause(); return true }
         }
 
-        // [5] Seek untuk konten non-live
         if (player?.isCurrentMediaItemLive == false) {
             when (keyCode) {
                 KeyEvent.KEYCODE_MEDIA_REWIND,
                 KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
-                    // Pastikan controller terlihat agar user tahu progress
                     if (!bindingRoot.playerView.isControllerVisible)
                         bindingRoot.playerView.showController()
                     if (keyCode == KeyEvent.KEYCODE_MEDIA_REWIND) player?.seekBack()
@@ -1395,14 +1310,10 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
 
-        // [6] Saat controller ExoPlayer tampil → DPAD sepenuhnya untuk navigasi
-        //     tombol-tombol controller. TIDAK ada ganti channel via DPAD.
-        //     Untuk ganti channel gunakan mini channel panel (tombol OK/ENTER saat controller sembunyi).
         if (bindingRoot.playerView.isControllerVisible) {
             return super.onKeyUp(keyCode, event)
         }
 
-        // [7] Controller tersembunyi → DPAD ganti channel/kategori langsung
         if (!preferences.reverseNavigation) {
             when (keyCode) {
                 KeyEvent.KEYCODE_DPAD_UP    -> return switchChannel(CHANNEL_PREVIOUS)
@@ -1423,19 +1334,15 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        // [1] Tutup mini panel dulu
         if (isMiniPanelVisible) {
             toggleMiniChannelPanel()
             return
         }
-        // [2] Jika terkunci, tidak bisa keluar
         if (isLocked) return
-        // [3] Jika controller tampil, sembunyikan dulu (bukan keluar)
         if (bindingRoot.playerView.isControllerVisible) {
             bindingRoot.playerView.hideController()
             return
         }
-        // [4] TV box: langsung keluar (double back tidak praktis dengan remote)
         if (isTelevision || doubleBackToExitPressedOnce) {
             super.onBackPressed()
             finish(); return
@@ -1446,14 +1353,13 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        // Cleanup Player Canggih
         sleepTimerRunnable?.let { sleepTimerHandler.removeCallbacks(it) }
         gestureHandler.removeCallbacksAndMessages(null)
         autoQualityHandler.removeCallbacksAndMessages(null)
         player?.release()
         LocalBroadcastManager.getInstance(this)
             .unregisterReceiver(broadcastReceiver)
-        tvRemote.onDestroy() // ── TV REMOTE cleanup ──
+        tvRemote.onDestroy()
         super.onDestroy()
     }
 }
