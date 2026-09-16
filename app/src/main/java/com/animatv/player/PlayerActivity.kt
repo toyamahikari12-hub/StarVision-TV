@@ -982,6 +982,7 @@ class PlayerActivity : AppCompatActivity() {
         )
     }
 }
+}
 
     private fun showInfo(message: String) {
         android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
@@ -1501,5 +1502,4 @@ class PlayerActivity : AppCompatActivity() {
         tvRemote.onDestroy()
         super.onDestroy()
     }
-}
 }
