@@ -62,7 +62,50 @@ class PlayerActivity : AppCompatActivity() {
     private var handlerInfo: Handler? = null
     private var errorCounter = 0
     private var isLocked = false
+    // ===== PLAYER FILE LOGGER =====
+    private fun savePlayerLog(message: String, error: Throwable? = null) {
+        try {
+            val dir = File(
+                android.os.Environment.getExternalStoragePublicDirectory(
+                    android.os.Environment.DIRECTORY_DOWNLOADS
+                ),
+                "StarVision"
+            )
 
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
+
+            val file = File(dir, "player_log.txt")
+
+            val time = SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss.SSS",
+                Locale.US
+            ).format(Date())
+
+            val text = StringBuilder()
+                .append("[")
+                .append(time)
+                .append("] ")
+                .append(message)
+
+            if (error != null) {
+                text.append("\n")
+                text.append(Log.getStackTraceString(error))
+            }
+
+            text.append("\n")
+
+            file.appendText(text.toString())
+
+        } catch (e: Exception) {
+            Log.e(
+                "PLAYER_FILELOG",
+                "Gagal menyimpan log: ${e.message}"
+            )
+        }
+    }
+   
     // ===== AUTO-DETEKSI SISTEM STREAMING =====
     private var formatFallbackQueue: MutableList<String?>? = null
     private var hasReachedReadyThisAttempt = false
@@ -782,9 +825,21 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         override fun onPlayerError(error: PlaybackException) {
-            val errorMsg = error.message ?: "Unknown error"
-            Log.e("PLAYER_ERROR", "code=${error.errorCode} name=${error.errorCodeName} msg=$errorMsg")
+    val errorMsg = error.message ?: "Unknown error"
 
+    Log.e(
+        "PLAYER_ERROR",
+        "code=${error.errorCode} name=${error.errorCodeName} msg=$errorMsg"
+    )
+
+    savePlayerLog(
+        "PLAYER ERROR | " +
+        "channel=${current?.name} | " +
+        "code=${error.errorCode} | " +
+        "name=${error.errorCodeName} | " +
+        "message=$errorMsg",
+        error
+    )
             if (error.errorCode == PlaybackException.ERROR_CODE_BEHIND_LIVE_WINDOW) {
                 player?.seekToDefaultPosition()
                 player?.prepare()
