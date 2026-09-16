@@ -1502,3 +1502,4 @@ class PlayerActivity : AppCompatActivity() {
         super.onDestroy()
     }
 }
+}
