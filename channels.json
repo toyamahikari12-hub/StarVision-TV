@@ -374,17 +374,17 @@
     },
     {
       "id": 106,
-      "name": "Trans 7",
-      "cat": "NASIONAL",
+      "name": "ANIMAX",
+      "cat": "KIDS",
       "drm": true,
       "type": "dash",
-      "logo": "https://icon2.cleanpng.com/20180811/aav/ddb009144338717fc078da28acc058fc.webp",
-      "url": "https://cdnjktbpid37.cubmu.com/riutx01-22b1f3c4ac0e47a0ed0e3305661027ee/dash/VFJBTlM3LW15/manifest.mpd?signature=YmYwNjBmZDliMmQwZGQ2NmVjNWM1NzUyMWM1ZWEyNWU=&time=15250126226",
+      "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEio1t6Yl_YaFM88JrD_a3kSdN25cJTSbCQ9C2NtwVsN1bbEumqfhdLvZm6lQp19gVASVeFhaGOzjgTOA0k5mdfpAdb00BNQr9Ko4cf0K3KnNbNxLNwrAKeaKAFeuwN4fcVdHfT1ZskyKVhPHK4mHNXaEDTvXg4BwSwq-Yv6Wb4F8ezh3MVbC3YZedppzM8p/s700/ANIMAX.png",
+      "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/ab3ef0f0e4144c3c8b7e60f1873a3bcc/index.mpd",
       "drmType": "ClearKey",
-      "licenseKey": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
+      "licenseKey": "8b62ae389f0944d4a55daaad52de1f9d:ba145a1426491316010da87bfd69de05",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-      "referrer": "https://www.cubmu.com/",
-      "origin": "https://www.cubmu.com"
+      "referrer": "https://visionplus.id",
+      "origin": "https://visionplus.id"
     },
     {
       "id": 1081,
