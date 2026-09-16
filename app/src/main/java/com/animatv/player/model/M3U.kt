@@ -5,17 +5,30 @@ import java.lang.Exception
 import java.lang.RuntimeException
 
 class M3U {
+
     var groupName: String? = null
+
     @SerializedName("name")
     var channelName: String? = null
+
     @SerializedName("stream_url")
     var streamUrl: ArrayList<String>? = ArrayList()
+
     @SerializedName("drm_url")
     var licenseKey: String? = null
+
     @SerializedName("drm_name")
     var licenseName: String? = null
 
+    // Header HTTP dari playlist M3U
+    var userAgent: String? = null
+
+    var referrer: String? = null
+
+    var origin: String? = null
+
     companion object {
+
         const val KODIPROP = "#KODIPROP"
         const val EXTINF = "#EXTINF"
         const val EXTGRP = "#EXTGRP"
@@ -23,17 +36,32 @@ class M3U {
     }
 
     class ParsingException : RuntimeException {
+
         private var line: Int
 
-        constructor(line: Int, message: String) : super("$message at line $line") {
+        constructor(
+            line: Int,
+            message: String
+        ) : super(
+            "$message at line $line"
+        ) {
             this.line = line
         }
 
-        constructor(line: Int, message: String, cause: Exception?) : super("$message at line $line", cause) {
+        constructor(
+            line: Int,
+            message: String,
+            cause: Exception?
+        ) : super(
+            "$message at line $line",
+            cause
+        ) {
             this.line = line
         }
 
-        constructor(message: String) : super(message) {
+        constructor(
+            message: String
+        ) : super(message) {
             this.line = 0
         }
     }
