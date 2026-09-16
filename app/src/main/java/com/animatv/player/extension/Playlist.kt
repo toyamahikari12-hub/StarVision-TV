@@ -6,6 +6,7 @@ import com.animatv.player.extra.M3uTool
 import com.animatv.player.model.*
 
 fun List<M3U>?.toPlaylist(): Playlist? {
+
     if (this == null) return null
 
     val playlist = Playlist()
@@ -29,9 +30,14 @@ fun List<M3U>?.toPlaylist(): Playlist? {
 
         for (i in urls.indices) {
 
+            // ==========================================
+            // DRM LICENSE
+            // ==========================================
+
             if (!item.licenseKey.isNullOrEmpty()) {
 
-                val drm = DrmLicense()
+                val drm =
+                    DrmLicense()
 
                 drm.name =
                     item.licenseName
@@ -41,12 +47,17 @@ fun List<M3U>?.toPlaylist(): Playlist? {
 
                 if (
                     hashSet.none {
-                        d -> d.name == item.licenseName
+                        d ->
+                        d.name == item.licenseName
                     }
                 ) {
                     hashSet.add(drm)
                 }
             }
+
+            // ==========================================
+            // CATEGORY
+            // ==========================================
 
             val map =
                 linkedMap.getOrPut(
@@ -54,6 +65,10 @@ fun List<M3U>?.toPlaylist(): Playlist? {
                 ) {
                     ArrayList()
                 }
+
+            // ==========================================
+            // CHANNEL
+            // ==========================================
 
             val ch =
                 Channel()
@@ -65,15 +80,40 @@ fun List<M3U>?.toPlaylist(): Playlist? {
                     item.channelName
                 }
 
+            // URL STREAM
             ch.streamUrl =
                 urls[i]
+
+            // ==========================================
+            // HTTP HEADERS
+            // ==========================================
+
+            ch.userAgent =
+                item.userAgent
+
+            ch.referrer =
+                item.referrer
+
+            ch.origin =
+                item.origin
+
+            // ==========================================
+            // DRM
+            // ==========================================
 
             ch.drmName =
                 item.licenseName
 
+            ch.licenseKey =
+                item.licenseKey
+
             map.add(ch)
         }
     }
+
+    // ==========================================
+    // CATEGORY
+    // ==========================================
 
     for (entry in linkedMap) {
 
@@ -92,6 +132,10 @@ fun List<M3U>?.toPlaylist(): Playlist? {
     playlist.categories =
         cats
 
+    // ==========================================
+    // DRM LIST
+    // ==========================================
+
     drms.addAll(hashSet)
 
     playlist.drmLicenses =
@@ -101,6 +145,10 @@ fun List<M3U>?.toPlaylist(): Playlist? {
 }
 
 
+// ==================================================
+// SORT CATEGORY
+// ==================================================
+
 fun Playlist?.sortCategories() {
 
     this?.categories?.sortBy {
@@ -109,6 +157,10 @@ fun Playlist?.sortCategories() {
     }
 }
 
+
+// ==================================================
+// SORT CHANNEL
+// ==================================================
 
 fun Playlist?.sortChannels() {
 
@@ -126,6 +178,10 @@ fun Playlist?.sortChannels() {
 }
 
 
+// ==================================================
+// REMOVE EMPTY STREAM URL
+// ==================================================
+
 fun Playlist?.trimChannelWithEmptyStreamUrl() {
 
     if (this == null) return
@@ -142,11 +198,19 @@ fun Playlist?.trimChannelWithEmptyStreamUrl() {
 }
 
 
+// ==================================================
+// MERGE PLAYLIST
+// ==================================================
+
 fun Playlist?.mergeWith(
     playlist: Playlist?
 ) {
 
     if (playlist == null) return
+
+    // ==========================================
+    // MERGE CATEGORY
+    // ==========================================
 
     for (incomingCat in playlist.categories) {
 
@@ -177,6 +241,10 @@ fun Playlist?.mergeWith(
         }
     }
 
+    // ==========================================
+    // MERGE DRM
+    // ==========================================
+
     for (incomingDrm in playlist.drmLicenses) {
 
         if (
@@ -192,6 +260,10 @@ fun Playlist?.mergeWith(
     }
 }
 
+
+// ==================================================
+// INSERT FAVORITE
+// ==================================================
 
 fun Playlist?.insertFavorite(
     channels: ArrayList<Channel>
@@ -212,6 +284,10 @@ fun Playlist?.insertFavorite(
     }
 }
 
+
+// ==================================================
+// REMOVE FAVORITE
+// ==================================================
 
 fun Playlist?.removeFavorite() {
 
@@ -307,6 +383,10 @@ fun String?.toPlaylist(): Playlist? {
 }
 
 
+// ==================================================
+// CHECK EMPTY CATEGORY
+// ==================================================
+
 fun Playlist?.isCategoriesEmpty(): Boolean {
 
     return this
@@ -314,6 +394,10 @@ fun Playlist?.isCategoriesEmpty(): Boolean {
         ?.isEmpty() == true
 }
 
+
+// ==================================================
+// SYMPHOGEAR PLAYLIST
+// ==================================================
 
 fun String?.toSymphogearPlaylist(): Playlist? {
 
