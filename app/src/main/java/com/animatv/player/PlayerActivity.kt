@@ -63,6 +63,98 @@ class PlayerActivity : AppCompatActivity() {
     private var handlerInfo: Handler? = null
     private var errorCounter = 0
     private var isLocked = false
+
+    // TARUH KODE PARSER DI SINI
+    private data class ParsedStreamRequest(
+        val url: String,
+        val userAgent: String?,
+        val referer: String?,
+        val origin: String?
+    )
+
+    private fun cleanHeaderValue(value: String?): String? {
+        if (value.isNullOrBlank()) return null
+
+        var v = value.trim()
+
+        val prefixes = listOf(
+            "http-user-agent=",
+            "user-agent=",
+            "ua=",
+            "http-referer=",
+            "http-referrer=",
+            "referer=",
+            "referrer=",
+            "http-origin=",
+            "origin="
+        )
+
+        for (prefix in prefixes) {
+            if (v.startsWith(prefix, ignoreCase = true)) {
+                v = v.substring(prefix.length).trim()
+                break
+            }
+        }
+
+        return v.takeIf { it.isNotBlank() }
+    }
+
+    private fun parseStreamRequest(raw: String?): ParsedStreamRequest {
+        val decoded = try {
+            URLDecoder.decode(raw.orEmpty(), "UTF-8")
+        } catch (_: Exception) {
+            raw.orEmpty()
+        }
+
+        val parts = decoded.split("|")
+        val url = parts.firstOrNull()?.trim().orEmpty()
+
+        var userAgent: String? = null
+        var referer: String? = null
+        var origin: String? = null
+
+        for (rawPart in parts.drop(1)) {
+            val part = rawPart.trim()
+            val separator = part.indexOf('=')
+
+            if (separator <= 0) continue
+
+            val key = part.substring(0, separator)
+                .trim()
+                .lowercase(Locale.US)
+
+            val value = part.substring(separator + 1).trim()
+
+            when (key) {
+                "user-agent",
+                "http-user-agent",
+                "ua" -> {
+                    userAgent = cleanHeaderValue(value)
+                }
+
+                "referer",
+                "http-referer",
+                "referrer",
+                "http-referrer" -> {
+                    referer = cleanHeaderValue(value)
+                }
+
+                "origin",
+                "http-origin" -> {
+                    origin = cleanHeaderValue(value)
+                }
+            }
+        }
+
+        return ParsedStreamRequest(
+            url = url,
+            userAgent = userAgent,
+            referer = referer,
+            origin = origin
+        )
+    }
+
+    // function PlayerActivity lainnya mulai dari sini...
     // ===== PLAYER FILE LOGGER =====
     private fun savePlayerLog(message: String, error: Throwable? = null) {
         try {
@@ -465,12 +557,48 @@ class PlayerActivity : AppCompatActivity() {
         bindingRoot.categoryName.text = category?.name?.trim()
         bindingRoot.channelName.text = current?.name?.trim()
 
-        var streamUrl = URLDecoder.decode(current?.streamUrl, "utf-8")
-        var userAgent = streamUrl.findPattern(".*user-agent=(.+?)(\\|.*)?")
-        var referer = streamUrl.findPattern(".*referer=(.+?)(\\|.*)?")
+        private fun playChannel() {
+    formatFallbackQueue = null
+    playChannel(overrideMimeType = null, isFormatFallbackAttempt = false)
+}
 
-        streamUrl = streamUrl.findPattern("(.+?)(\\|.*)?") ?: streamUrl
+private fun playChannel(overrideMimeType: String?, isFormatFallbackAttempt: Boolean) {
+    hasReachedReadyThisAttempt = false
 
+    if (player != null) {
+        try {
+            player?.release()
+        } catch (e: Exception) {
+            Log.w("PLAYER", "release old player error: ${e.message}")
+        }
+        player = null
+    }
+
+    switchLiveOrVideo(true)
+
+    bindingRoot.categoryName.text = category?.name?.trim()
+    bindingRoot.channelName.text = current?.name?.trim()
+
+    // ==========================================
+    // PARSING STREAM URL + HEADER
+    // ==========================================
+
+    val parsedRequest = parseStreamRequest(current?.streamUrl)
+
+    var streamUrl = parsedRequest.url
+
+    var userAgent = parsedRequest.userAgent
+        ?: cleanHeaderValue(current?.userAgent)
+
+    var referer = parsedRequest.referer
+        ?: cleanHeaderValue(current?.referrer)
+
+    var origin = parsedRequest.origin
+        ?: cleanHeaderValue(current?.origin)
+
+    if (userAgent.isNullOrBlank()) {
+        userAgent = "StarVision-TV/1.0"
+    }
         // Prioritas User-Agent dari field JSON channel ("ua")
         if (userAgent.isNullOrEmpty()) {
             userAgent = current?.userAgent
@@ -540,10 +668,24 @@ class PlayerActivity : AppCompatActivity() {
         Log.d("PLAYER_FORMAT", "Channel='${current?.name}' format=$mimeType (fromField=${current?.streamType}) fallback=$isFormatFallbackAttempt")
        
         val httpDataSourceFactory = DefaultHttpDataSource.Factory()
-            .setAllowCrossProtocolRedirects(true)
-            .setUserAgent(userAgent)
-            .setConnectTimeoutMs(15_000)
-            .setReadTimeoutMs(20_000)
+       .setAllowCrossProtocolRedirects(true)
+       .setUserAgent(userAgent)
+       .setConnectTimeoutMs(15_000)
+       .setReadTimeoutMs(20_000)
+
+       val headers = mutableMapOf<String, String>()
+
+       if (!referer.isNullOrBlank()) {
+           headers["Referer"] = referer
+       }
+
+       if (!origin.isNullOrBlank()) {
+           headers["Origin"] = origin
+       }
+
+       if (headers.isNotEmpty()) {
+           httpDataSourceFactory.setDefaultRequestProperties(headers)
+       }
 
         // Kirim header Referer + Origin (banyak CDN cubmu butuh Origin)
         val headers = mutableMapOf<String, String>()
