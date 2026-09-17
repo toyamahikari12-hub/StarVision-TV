@@ -22,11 +22,16 @@ android {
         applicationId "com.animatv.player"
         minSdkVersion 21
         targetSdkVersion 34
+
         versionCode 1
         versionName "1.0"
 
         multiDexEnabled true
-        vectorDrawables.useSupportLibrary true
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -53,13 +58,25 @@ android {
         release {
             minifyEnabled false
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            proguardFiles(
+                getDefaultProguardFile('proguard-android-optimize.txt'),
+                'proguard-rules.pro'
+            )
+
             signingConfig signingConfigs.release
+
             applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "StarVisionTV_v${defaultConfig.versionName}.apk"
+                    outputFileName =
+                            "StarVisionTV_v${defaultConfig.versionName}.apk"
                 }
             }
+        }
+
+        debug {
+            minifyEnabled false
+            shrinkResources false
         }
     }
 
@@ -77,6 +94,7 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
+
         pickFirst 'lib/armeabi-v7a/libc++_shared.so'
         pickFirst 'lib/arm64-v8a/libc++_shared.so'
         pickFirst 'lib/x86/libc++_shared.so'
@@ -86,8 +104,9 @@ android {
 
 configurations.all {
     resolutionStrategy.eachDependency { details ->
+
         def group = details.requested.group
-        def name  = details.requested.name
+        def name = details.requested.name
 
         if (group == 'androidx.lifecycle') {
             switch (name) {
@@ -101,9 +120,9 @@ configurations.all {
                 case 'lifecycle-viewmodel':
                 case 'lifecycle-viewmodel-ktx':
                 case 'lifecycle-process':
-                    details.useVersion '2.5.1'; break
                 case 'lifecycle-viewmodel-savedstate':
-                    details.useVersion '2.5.1'; break
+                    details.useVersion '2.5.1'
+                    break
             }
         }
 
@@ -134,9 +153,13 @@ configurations.all {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
 
-    // AndroidX core
+    implementation fileTree(
+        dir: 'libs',
+        include: ['*.jar', '*.aar']
+    )
+
+    // AndroidX
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -144,50 +167,40 @@ dependencies {
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
     implementation 'androidx.preference:preference-ktx:1.2.1'
 
+    // Material
     implementation 'com.google.android.material:material:1.8.0'
 
     // Network
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
-
-    // Conscrypt - native SSL library, menghasilkan folder lib/ di APK
     implementation 'org.conscrypt:conscrypt-android:2.5.2'
 
-    // ExoPlayer 2.17.1 lengkap dengan semua extension
-    //noinspection GradleDependency
+    // ExoPlayer 2
     implementation 'com.google.android.exoplayer:exoplayer:2.17.1'
-    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:exoplayer-core:2.17.1'
-    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.17.1'
-    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.17.1'
-    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.17.1'
-    //noinspection GradleDependency
-    // Dukungan RTSP - ExoPlayer otomatis pakai RtspMediaSource untuk URL berskema
-    // "rtsp://" begitu modul ini ada, tanpa perlu kode pemutar tambahan.
     implementation 'com.google.android.exoplayer:exoplayer-rtsp:2.17.1'
-    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.17.1'
-    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:extension-okhttp:2.17.1'
-    //noinspection GradleDependency
     implementation 'com.google.android.exoplayer:extension-mediasession:2.17.1'
 
-    // Utils
+    // JSON
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // UI
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'com.github.bumptech.glide:glide:4.14.2'
     kapt 'com.github.bumptech.glide:compiler:4.14.2'
-    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
-    //noinspection GradleDependency
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
     implementation 'com.airbnb.android:lottie:3.7.2'
 
     implementation 'com.github.TutorialsAndroid:FilePicker:v8.0.19'
 
-    // Test
+    // Tests
     testImplementation 'junit:junit:4.13.2'
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
