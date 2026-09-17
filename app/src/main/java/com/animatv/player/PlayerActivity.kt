@@ -1003,28 +1003,34 @@ private fun playChannel(overrideMimeType: String?, isFormatFallbackAttempt: Bool
     }
 
     if (httpError != null) {
-        val httpLog = buildString {
-            append("HTTP ERROR\n")
-            append("channel=${current?.name}\n")
-            append("responseCode=${httpError.responseCode}\n")
-            append("message=${httpError.message}\n")
-            append("url=$currentCleanStreamUrl\n")
-            append("userAgent=${current?.userAgent}\n")
-            append("referer=${current?.referrer}\n")
-            append("origin=${current?.origin}\n")
-            append("responseHeaders=${httpError.headerFields}\n")
-        }
+    if (httpError != null) {
+    val httpLog = buildString {
+        append("HTTP ERROR\n")
+        append("channel=${current?.name}\n")
+        append("responseCode=${httpError.responseCode}\n")
+        append("message=${httpError.message}\n")
+        append("url=$currentCleanStreamUrl\n")
 
-        Log.e("PLAYER_HTTP_ERROR", httpLog)
+        // Gunakan nilai header yang sudah dibersihkan
+        // dari parser stream.
+        append("userAgent=${cleanHeaderValue(current?.userAgent)}\n")
+        append("referer=${cleanHeaderValue(current?.referrer)}\n")
+        append("origin=${cleanHeaderValue(current?.origin)}\n")
 
-        // Kalau fungsi savePlayerLog() sudah ada di project kamu,
-        // simpan detail HTTP juga ke file log.
-        try {
-            savePlayerLog(httpLog)
-        } catch (e: Exception) {
-            Log.e("PLAYER_HTTP_ERROR", "Gagal menyimpan HTTP log: ${e.message}")
-        }
+        append("responseHeaders=${httpError.headerFields}\n")
     }
+
+    Log.e("PLAYER_HTTP_ERROR", httpLog)
+
+    try {
+        savePlayerLog(httpLog)
+    } catch (e: Exception) {
+        Log.e(
+            "PLAYER_HTTP_ERROR",
+            "Gagal menyimpan HTTP log: ${e.message}"
+        )
+    }
+}
 
     // ============================================================
     // BEHIND LIVE WINDOW
