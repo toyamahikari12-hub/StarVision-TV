@@ -22,9 +22,9 @@
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
-      "type": "dash",
+      "type": "hls",
       "logo": "https://i.ibb.co.com/8DCTLNb3/antaratv.png",
-      "url": "https://cdn10jtedge.indihometv.com/atm/DASH/antara/manifest.mpd",
+      "url": "https://amg02159-kcglobal-amg02159c1-samsung-in-521.playouts.now.amagi.tv/playlist/amg02159-kcglobal-animax-samsungin/playlist.m3u8",
       "desc": "ANTARA TV DASH",
       "tvgId": "AntaraTV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
