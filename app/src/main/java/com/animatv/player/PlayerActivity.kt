@@ -2571,10 +2571,7 @@ class PlayerActivity : AppCompatActivity() {
 
                 Player.STATE_ENDED -> {
 
-                    val isLive =
-                        player
-                            ?.isCurrentMediaItemLive
-                            == true
+                    val isLive = player?.isCurrentMediaItemLive == true
 
 
                     if (!isLive) {
