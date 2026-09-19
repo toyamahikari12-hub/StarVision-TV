@@ -366,12 +366,13 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/k3S01Fh/transtv.png",
-      "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/7a69cfc9e135493f87ac4efd63000429/index.mpd",
+      "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/ab3ef0f0e4144c3c8b7e60f1873a3bcc/index.mpd",
       "desc": "TRANS TV DASH+ClearKey (Vision+)",
       "tvgId": "TransTV.id",
       "drmType": "ClearKey",
-      "licUrl": "251c384e846841abafa1f7c723d57e66:e45b06a38cd261b74c5160f0912c042f",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "licUrl": "6f309276a94e45be89a8860159456e84:3fe2eec12885264556ca4e29aa6c0c40",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 106,
