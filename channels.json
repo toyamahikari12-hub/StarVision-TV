@@ -679,7 +679,7 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/KqKdMRK/aniplus.png",
-      "url": "https://cdn08jtedge.indihometv.com/dassdvr/134/aniplus/manifest.mpd",
+      "url": "https://cdnbal1.indihometv.com/atm/DASH/aniplus/manifest.mpd",
       "desc": "ANIPLUS DASH+ClearKey (IndiHome)",
       "tvgId": "Aniplus.indihome",
       "drmType": "ClearKey",
