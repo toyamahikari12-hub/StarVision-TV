@@ -23,10 +23,10 @@
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://i.ibb.co.com/8DCTLNb3/antaratv.png",
+      "logo": "https://images.indihometv.com/images/channels/image_ch_trans7.png",
       "url": "https://green-night-d2b4.iontv.workers.dev/trans7.m3u8",
-      "desc": "ANTARA TV DASH",
-      "tvgId": "AntaraTV.id",
+      "desc": "TRANS7 DASH",
+      "tvgId": "TRANS7.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "referrer": "https://20.detik.com/"
     },
@@ -250,7 +250,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/b1tcbgm/rtv.png",
-      "url": "https://op-group1-swiftservehd-1.dens.tv/h/h10/index.m3u8?app_type=web&userid=lite&chname=RTV",
+      "url": "http://210.210.155.35/dr9445/h/h144/index2.m3u8",
       "desc": "RTV HLS",
       "tvgId": "RTV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
