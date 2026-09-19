@@ -345,14 +345,14 @@
     },
     {
       "id": 121,
-      "name": "SindoNews (IHT)",
-      "cat": "NASIONAL",
+      "name": "ANIPLUS",
+      "cat": "KIDS",
       "color": "#ffd700",
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://i.ibb.co.com/pbvprNQ/sindonewstv.png",
-      "url": "https://cdn10jtedge.indihometv.com/atm/DASH/mncnews/manifest.mpd",
+      "logo": "http://hometv.biz.id:80/images/Ew7KWgEVPBJlBK0JSddniCSXgQUyeYTSUh135SFESvbfdeNmlgxK086DUO-GdhDcNmI4Q-R2d7yXPiGs26TrDw.png",
+      "url": "http://hometv.biz.id:80/play/jliT0LwDFfe_fgU78F6pfc_P7ocSFqRm6le3k2UEuAs",
       "desc": "SindoNews HLS",
       "tvgId": "SindoNews.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
