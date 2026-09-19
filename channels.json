@@ -366,7 +366,7 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/k3S01Fh/transtv.png",
-      "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/ab3ef0f0e4144c3c8b7e60f1873a3bcc/index.mpd",
+      "url": "",
       "desc": "TRANS TV DASH+ClearKey (Vision+)",
       "tvgId": "TransTV.id",
       "drmType": "ClearKey",
@@ -667,7 +667,7 @@
       "desc": "ANIMAX DASH+ClearKey (Vision+)",
       "tvgId": "Animax.visionplus",
       "drmType": "clearkey",
-      "licUrl": "8b62ae389f0944d4a55daaad52de1f9d:ba145a1426491316010da87bfd69de05",
+      "licUrl": "6f309276a94e45be89a8860159456e84:3fe2eec12885264556ca4e29aa6c0c40",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
       "referrer": "https://visionplus.id"
     },
