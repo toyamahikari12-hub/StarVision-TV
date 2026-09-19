@@ -67,13 +67,12 @@
       "drm": true,
       "type": "hls",
       "logo": "https://i.ibb.co.com/dM0SYrN/rcti.png",
-      "url": "https://visionplus.fazznet.my.id/out/v1/0fd7b7d368bc44bc9b4dece20acc3e33/index.mpd",
+      "url": "https://jt.drmlive.net/jiotvplus/2258.mpd",
       "desc": "RCTI DASH+ClearKey (Vision+)",
       "tvgId": "RCTI.id",
       "drmType": "ClearKey",
-      "licUrl": "https://visionplus.fazznet.my.id/license?ch=Trans%207",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id"
+      "licUrl": "https://jt.drmlive.net/jiotvplus/jtck?id=2258",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 102,
