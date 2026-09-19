@@ -590,7 +590,7 @@
       "tvgId": "Dreamworks.visionplus",
       "drmType": "ClearKey",
       "licenseKey": "ec31647c5c3b490bbb5c840ca3e96c9e:a28271a4ba4d085efa1f7738e0f82ea1",
-      "referrer": "https://visionplus.id"
+      "referrer": "https://visionplus.id/"
     },
     {
       "id": 132,
@@ -669,7 +669,7 @@
       "drmType": "clearkey",
       "licUrl": "6f309276a94e45be89a8860159456e84:3fe2eec12885264556ca4e29aa6c0c40",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-      "referrer": "https://visionplus.id"
+      "referrer": "https://visionplus.id/"
     },
     {
       "id": 128,
