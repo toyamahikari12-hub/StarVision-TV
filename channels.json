@@ -65,13 +65,13 @@
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
-      "type": "dash",
+      "type": "hls",
       "logo": "https://i.ibb.co.com/dM0SYrN/rcti.png",
-      "url": "https://fta4-cdn-flr.visionplus.id/out/v1/997ce8767b604fae9fce05379b3b8b3a/index.mpd",
+      "url": "https://visionplus.fazznet.my.id/out/v1/0fd7b7d368bc44bc9b4dece20acc3e33/index.mpdhttps://visionplus.fazznet.my.id/out/v1/0fd7b7d368bc44bc9b4dece20acc3e33/index.mpd",
       "desc": "RCTI DASH+ClearKey (Vision+)",
       "tvgId": "RCTI.id",
       "drmType": "ClearKey",
-      "licUrl": "d386001215594043a8995db796ad9e9c:3404792cb4c804902acdc6ca65c1a298",
+      "licUrl": "https://visionplus.fazznet.my.id/license?ch=Trans%207",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
