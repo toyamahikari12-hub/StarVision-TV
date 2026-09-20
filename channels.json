@@ -103,7 +103,7 @@
       "desc": "SCTV HLS",
       "tvgId": "SCTV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer" "https://www.vidio.com/"
+      "referrer": "https://www.vidio.com/"
     },
     {
       "id": 104,
@@ -135,7 +135,7 @@
       "desc": "TRANS TV HLS (Detik)",
       "tvgId": "TransTV.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer" "https://www.cnbcindonesia.com/"
+      "referrer": "https://www.cnbcindonesia.com/"
     },
     {
       "id": 1061,
@@ -205,7 +205,7 @@
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWXLEjqZOOO2LT5C_1aBWyMBW7K3X8UaK2r3jmKvNbuXaWpei7VO_9LR1lfKqXhTIvYjciKBzFsa2ENtKRmI5snupnZUB4zdLh-mzhgQwwryclFl-OCE-auGTDPhjOog0Wv36dnGXU1WJTG3T9yT-ZcWj7ddXMMZTLilzzt8rrZd7zLmHd221buxvteyRU/s700/GTV.png",
+      "logo": "https://thumbor.prod.vidiocdn.com/0plBZ7Gso7gNBJxid9ksA8HMGxc=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/205/54ab19.png",
       "url": "https://cdnbal1.indihometv.com/atm/DASH/indosiar/indosiar-avc1_2500000=7-3277707030000000.mpd",
       "desc": "INDOSIAR HLS",
       "tvgId": "INDOSIAR.id",
@@ -316,7 +316,7 @@
       "desc": "CNN INDONESIA HLS",
       "tvgId": "CNNIndonesia.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer" "https://video.detik.com/"
+      "referrer": "https://video.detik.com/"
     },
     {
       "id": 118,
