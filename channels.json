@@ -501,7 +501,8 @@
       "tvgId": "AXN.vision+",
       "drmType": "ClearKey",
       "licUrl": "2b095c9946d242cb9108e6a589a26072:8bc2cdfd0e86f7cfa935ef05978be229",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 138,
@@ -549,19 +550,20 @@
     },
     {
       "id": 125,
-      "name": "Nickelodeon (VS)",
+      "name": "Nickelodeon",
       "cat": "KIDS",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/tJ27PX5/nick.png",
-      "url": "https://fta2-cdn-flr.visionplus.id/out/v1/3fe6d9eb97ed455c942eb8d3d1c2c2e8/index.mpd",
+      "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/3fe6d9eb97ed455c942eb8d3d1c2c2e8/index.mpd",
       "desc": "Nickelodeon DASH+ClearKey (Vision+)",
       "tvgId": "Nickelodeon.visionplus",
       "drmType": "ClearKey",
       "licUrl": "676b60c2b84b49b6b316207a590203e4:da9878a96062ea105895f310e052fa7b",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 129,
@@ -581,7 +583,7 @@
     },
     {
       "id": 131,
-      "name": "Dreamworks (VS)",
+      "name": "Dreamworks",
       "cat": "KIDS",
       "color": "#e91e8c",
       "q": "HD",
