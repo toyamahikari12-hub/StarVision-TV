@@ -37,8 +37,6 @@ satu-satunya jalan adalah menambah modul software decoder ExoPlayer (mis.
 `extension-ffmpeg` untuk audio) yang harus di-build sendiri dari source dengan NDK -
 di luar cakupan patch ini karena butuh proses build native terpisah.
 
-[![Build AnimeTV APK](https://github.com/manakayuuna123-dot/AnimeTV/actions/workflows/build.yml/badge.svg)](https://github.com/manakayuuna123-dot/AnimeTV/actions/workflows/build.yml)
-
 ## Fitur Utama
 
 | Fitur | Keterangan |
@@ -55,52 +53,6 @@ di luar cakupan patch ini karena butuh proses build native terpisah.
 | 🔒 Lock Screen | Kunci kontrol player |
 | 📱 PIP Mode | Picture-in-picture support |
 
-## Sumber Channel
-
-Playlist channel diambil dari:
-```
-https://raw.githubusercontent.com/aurorasekai15-hub/SymphogearTV-Native/main/channels.json
-```
-
-## Format channels.json
-
-```json
-{
-  "channels": [
-    {
-      "id": 1,
-      "name": "Nama Channel",
-      "cat": "nasional",
-      "url": "https://example.com/stream.mpd",
-      "drm": false,
-      "logo": "https://example.com/logo.png"
-    },
-    {
-      "id": 2,
-      "name": "Channel DRM ClearKey",
-      "cat": "custom",
-      "url": "https://example.com/protected.mpd",
-      "drm": true,
-      "drmType": "ClearKey",
-      "licUrl": "keyid1:key1,keyid2:key2",
-      "logo": ""
-    },
-    {
-      "id": 3,
-      "name": "Channel DRM Widevine",
-      "cat": "custom",
-      "url": "https://example.com/widevine.mpd",
-      "drm": true,
-      "drmType": "Widevine",
-      "licUrl": "https://license-server.com/widevine",
-      "logo": ""
-    }
-  ]
-}
-```
-
-### Kategori yang Didukung
-`nasional` · `berita` · `hiburan` · `olahraga` · `internasional` · `jepang` · `vision` · `indihome` · `custom`
 
 ## Build via GitHub Actions
 
@@ -108,15 +60,6 @@ https://raw.githubusercontent.com/aurorasekai15-hub/SymphogearTV-Native/main/cha
 2. Buka tab **Actions**
 3. Workflow **Build AnimeTV APK** otomatis jalan saat push ke `main`
 4. Download APK dari **Artifacts** setelah build selesai
-
-## Build Manual
-
-```bash
-chmod +x gradlew
-./gradlew assembleRelease
-```
-
-Output APK: `app/build/outputs/apk/release/AnimeTV_v1.0.apk`
 
 ## Teknologi
 
