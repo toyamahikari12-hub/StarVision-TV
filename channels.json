@@ -1412,11 +1412,11 @@
       "desc": "Sportstars3 DASH+ClearKey (Vision+)",
       "tvgId": "Sportstars3.vision+",
       "drmType": "Widevine",
-      "licUrl": "https://ayo.maling.pl/V/vision/id=114.play",
+      "licUrl": "https://bintangstreaming.my.id/rcti_plus/index.drm?id=114",
       "ua": "Mozilla/5.0",
       "menu": "sport",
       "parent": "SPORT",
-      "ref": "https://m.visionplus.id"
+      "ref": "https://www.visionplus.id"
     },
     {
       "id": 186,
