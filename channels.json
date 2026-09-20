@@ -443,19 +443,20 @@
     },
     {
       "id": 110,
-      "name": "HBO (IHT)",
+      "name": "HBO",
       "cat": "MOVIES & ENTERTAINMENT",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/wzNw0zL/hbo.png",
-      "url": "https://qp-pldt-live-grp-03-prod.akamaized.net/out/u/cg_hbohd.mpd",
+      "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/SEJPLW15/manifest.mpd",
       "desc": "HBO HLS",
       "tvgId": "HBO.id",
       "drmType": "ClearKey",
-      "licUrl": "d47ebabf7a21430b83a8c4b82d9ef6b1:54c213b2b5f885f1e0290ee4131d425b",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 135,
