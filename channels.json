@@ -206,10 +206,11 @@
       "drm": false,
       "type": "hls",
       "logo": "https://thumbor.prod.vidiocdn.com/0plBZ7Gso7gNBJxid9ksA8HMGxc=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/205/54ab19.png",
-      "url": "https://cdnbal1.indihometv.com/atm/DASH/indosiar/indosiar-avc1_2500000=7-3277707030000000.mpd",
+      "url": "https://beetv.my.id/xstreamx/vd.m3u8?ch=indosiar",
       "desc": "INDOSIAR HLS",
       "tvgId": "INDOSIAR.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://m.rctiplus.com/"
     },
     {
       "id": 109,
@@ -447,11 +448,11 @@
       "cat": "MOVIES & ENTERTAINMENT",
       "color": "#e91e8c",
       "q": "HD",
-      "drm": false,
+      "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/wzNw0zL/hbo.png",
       "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/SEJPLW15/manifest.mpd",
-      "desc": "HBO dash",
+      "desc": "HBO dash+Clearkey",
       "tvgId": "HBO.id",
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
@@ -506,6 +507,20 @@
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "referrer": "https://www.cubmu.com/"
+    },
+    {
+      "id": 138,
+      "name": "AXN Asia",
+      "cat": "DAERAH",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": false,
+      "type": "hls",
+      "logo": "https://i.ibb.co.com/f9XVz9j/axn.png",
+      "url": "https://cdnbal1.indihometv.com/atm/DASH/axn/axn-avc1_2500000=7-3277707030000000.mpd",
+      "desc": "AXN Asia HLS",
+      "tvgId": "AXN Asia.id",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 138,
