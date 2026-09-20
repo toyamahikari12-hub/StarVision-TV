@@ -92,17 +92,18 @@
     },
     {
       "id": 103,
-      "name": "SCTV (IHT)",
+      "name": "SCTV",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://i.ibb.co.com/JcdKRXb/sctv.png",
-      "url": "",
+      "logo": "https://thumbor.prod.vidiocdn.com/kH-K9J4cROqL0TZrAyQhw7P5pBk=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/204/4e9f5c.png",
+      "url": "http://filex.me:8080//@singh_tesla_7207492/puWnhEGsXpK3/302301.m3u8",
       "desc": "SCTV HLS",
       "tvgId": "SCTV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer" "https://www.vidio.com/"
     },
     {
       "id": 104,
@@ -130,10 +131,11 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/k3S01Fh/transtv.png",
-      "url": "http://filex.me:8080//@singh_tesla_7207492/puWnhEGsXpK3/302312.m3u8",
+      "url": "https://green-night-d2b4.iontv.workers.dev/transtv.m3u8",
       "desc": "TRANS TV HLS (Detik)",
       "tvgId": "TransTV.detik",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer" "https://www.cnbcindonesia.com/"
     },
     {
       "id": 1061,
@@ -205,8 +207,8 @@
       "type": "hls",
       "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWXLEjqZOOO2LT5C_1aBWyMBW7K3X8UaK2r3jmKvNbuXaWpei7VO_9LR1lfKqXhTIvYjciKBzFsa2ENtKRmI5snupnZUB4zdLh-mzhgQwwryclFl-OCE-auGTDPhjOog0Wv36dnGXU1WJTG3T9yT-ZcWj7ddXMMZTLilzzt8rrZd7zLmHd221buxvteyRU/s700/GTV.png",
       "url": "https://cdnbal1.indihometv.com/atm/DASH/indosiar/indosiar-avc1_2500000=7-3277707030000000.mpd",
-      "desc": "GTV R+ HLS",
-      "tvgId": "GTV R+.id",
+      "desc": "INDOSIAR HLS",
+      "tvgId": "INDOSIAR.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
@@ -310,10 +312,11 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/7NvJhWJ/cnnindo.png",
-      "url": "https://live.cnnindonesia.com/livecnn/smil:cnntv.smil/master.m3u8",
+      "url": "https://video.detik.com/livecnn/smil:cnntv/chunklist_w268557525_b384000_sleng.m3u8",
       "desc": "CNN INDONESIA HLS",
       "tvgId": "CNNIndonesia.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer" "https://video.detik.com/"
     },
     {
       "id": 118,
