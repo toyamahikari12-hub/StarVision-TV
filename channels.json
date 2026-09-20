@@ -1440,8 +1440,8 @@
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Animal_Planet_logo.svg/512px-Animal_Planet_logo.svg.png",
-      "url": "http://202.169.224.202:8800/udp/239.9.1.7:1234",
+      "logo": "http://bluelogo8991.duckdns.org:2095/LOGO/EX.YU/DOKU/FHD/ANIMAL.PLANET.png",
+      "url": "http://45.12.33.4:2095/nrsl4846/nrsl0502dd00bb55/142175",
       "desc": "Animal Planet HLS",
       "tvgId": "Animal Planet.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
