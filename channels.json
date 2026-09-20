@@ -454,7 +454,7 @@
       "desc": "HBO HLS",
       "tvgId": "HBO.id",
       "drmType": "ClearKey",
-      "licUrl": "d47ebabf7a21430b83a8c4b82d9ef6b1:54c213b2b5f885f1e0290ee4131d425b"
+      "licUrl": "d47ebabf7a21430b83a8c4b82d9ef6b1:54c213b2b5f885f1e0290ee4131d425b",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
@@ -491,7 +491,7 @@
     },
     {
       "id": 137,
-      "name": "AXN (VS)",
+      "name": "AXN",
       "cat": "MOVIES & ENTERTAINMENT",
       "color": "#e91e8c",
       "q": "HD",
