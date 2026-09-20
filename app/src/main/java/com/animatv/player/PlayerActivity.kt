@@ -4128,6 +4128,9 @@ class PlayerActivity : AppCompatActivity() {
                 val mode =
                     when (m.itemId) {
 
+                        R.id.mode_fit ->
+                            0
+
                         R.id.mode_fixed_width ->
                             1
 
@@ -4141,14 +4144,15 @@ class PlayerActivity : AppCompatActivity() {
                             4
 
                         else ->
-                            0
+                            5
                     }
 
 
                 if (
                     bindingRoot
                         .playerView
-                        .resizeMode != mode
+                        .resizeMode != mode &&
+                    mode != 5
                 ) {
 
                     bindingRoot
@@ -4163,6 +4167,37 @@ class PlayerActivity : AppCompatActivity() {
 
 
                 true
+            }
+
+
+            when (
+                preferences.resizeMode
+            ) {
+
+                0 ->
+                    menu.findItem(
+                        R.id.mode_fit
+                    ).isChecked = true
+
+                1 ->
+                    menu.findItem(
+                        R.id.mode_fixed_width
+                    ).isChecked = true
+
+                2 ->
+                    menu.findItem(
+                        R.id.mode_fixed_height
+                    ).isChecked = true
+
+                3 ->
+                    menu.findItem(
+                        R.id.mode_fill
+                    ).isChecked = true
+
+                4 ->
+                    menu.findItem(
+                        R.id.mode_zoom
+                    ).isChecked = true
             }
 
 
