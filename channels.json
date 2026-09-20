@@ -107,20 +107,20 @@
     },
     {
       "id": 104,
-      "name": "INDOSIAR (Vidio)",
+      "name": "INDOSIAR|2",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/xjNQwrH/indosiar.png",
-      "url": "https://bonetvstream.asismuhammad8888.workers.dev/index.mpd?q=205&ext=dash&x=1785784982&k=90996156ceb656f93ecf5c718280db1cae90f9cd50ad646c28491977082e800f&sc=205",
+      "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/SW5kb3NpYXI/manifest.mpd",
       "desc": "INDOSIAR DASH+Widevine",
       "tvgId": "Indosiar.vidio",
       "drmType": "Widevine",
-      "licUrl": "https://bonetvstream.asismuhammad8888.workers.dev/index.mpd?q=205&ext=drm&x=1785784982&k=90852beee7bc73f7ad9eddab2aed36921501a87afa24b23ee0adea3edde41197",
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
-      "ref": "https://www.vidio.com/"
+      "ref": "https://www.cubmu.com/"
     },
     {
       "id": 1051,
@@ -499,13 +499,13 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/f9XVz9j/axn.png",
-      "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/456143d3b12140e1a872b25f067ddb62/index.mpd",
+      "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/QVhOLW15/manifest.mpd",
       "desc": "AXN DASH+ClearKey (Vision+)",
       "tvgId": "AXN.vision+",
       "drmType": "ClearKey",
-      "licUrl": "2b095c9946d242cb9108e6a589a26072:8bc2cdfd0e86f7cfa935ef05978be229",
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/"
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 138,
