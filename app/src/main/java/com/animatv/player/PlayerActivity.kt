@@ -884,7 +884,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
 
-        bindingRoot.layoutInfo.visibility =
+        bindingRoot.channelOsd.visibility =
             if (
                 visible &&
                 !isPipMode
@@ -945,7 +945,7 @@ class PlayerActivity : AppCompatActivity() {
                     return@postDelayed
                 }
 
-                bindingRoot.layoutInfo
+                bindingRoot.channelOsd
                     .visibility =
                     View.INVISIBLE
             },
@@ -974,7 +974,7 @@ class PlayerActivity : AppCompatActivity() {
                 View.VISIBLE
 
 
-        bindingRoot.layoutInfo.visibility =
+        bindingRoot.channelOsd.visibility =
             visibility
 
         bindingControl.buttonExit.visibility =
@@ -1401,11 +1401,11 @@ class PlayerActivity : AppCompatActivity() {
         switchLiveOrVideo(true)
 
 
-        bindingRoot.categoryName.text =
+        bindingRoot.tvChannelNumber.text =
             category?.name?.trim()
 
 
-        bindingRoot.channelName.text =
+        bindingRoot.tvChannelName.text =
             current?.name?.trim()
 
 
@@ -3920,7 +3920,7 @@ class PlayerActivity : AppCompatActivity() {
             )
 
 
-        bindingRoot.rvMiniChannels.apply {
+        bindingRoot.miniChannelRecycler.apply {
 
             layoutManager =
                 androidx.recyclerview.widget
@@ -4006,16 +4006,16 @@ class PlayerActivity : AppCompatActivity() {
             ) {
 
                 bindingRoot
-                    .rvMiniChannels
+                    .miniChannelRecycler
                     .post {
 
                         bindingRoot
-                            .rvMiniChannels
+                            .miniChannelRecycler
                             .requestFocus()
 
 
                         bindingRoot
-                            .rvMiniChannels
+                            .miniChannelRecycler
                             .getChildAt(
                                 miniChannelAdapter
                                     ?.getActiveIndex()
@@ -4079,7 +4079,7 @@ class PlayerActivity : AppCompatActivity() {
 
             (
                 bindingRoot
-                    .rvMiniChannels
+                    .miniChannelRecycler
                     .layoutManager
                     as? androidx.recyclerview.widget
                         .LinearLayoutManager
