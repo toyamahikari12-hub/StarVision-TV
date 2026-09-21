@@ -14,6 +14,20 @@
     "VISION+": "https://i.ibb.co.com/K0vmtrP/cat-vision.png",
     "INDIHOME": "https://i.ibb.co.com/K0vmtrP/cat-indihome.png"
   },
+  "category_order": [
+    "Nasional",
+    "Movies & Entertainment",
+    "Daerah",
+    "Kids",
+    "Jepang",
+    "Dunia Wibu",
+    "Sport",
+    "FIFA SERIES 2026"
+  ],
+  "category_icons": {
+    "dunia wibu": "WIB",
+    "fifa series 2026": "FIF"
+  },
   "channels": [
     {
       "id": 100,
