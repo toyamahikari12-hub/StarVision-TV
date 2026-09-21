@@ -1416,22 +1416,22 @@
     },
     {
       "id": 185,
-      "name": "Sportstars3 (VS)",
+      "name": "Sportstars3 (V+)",
       "cat": "SPORT",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "dash",
-      "logo": "https://www.visionplus.id/images/repository/654/654-LOGO-m.png",
+      "logo": "https://www.mncvision.id/userfiles/image/channel/channel_99.png",
       "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/6f5596513af749c19d0bcdac013dda3c/index.mpd",
       "desc": "Sportstars3 DASH+ClearKey (Vision+)",
       "tvgId": "Sportstars3.vision+",
       "drmType": "Widevine",
-      "licUrl": "https://bintangstreaming.my.id/rcti_plus/index.drm?id=114",
+      "licUrl": "https://dusk.biz.id/rpl/drm.php?id=114",
       "ua": "Mozilla/5.0",
       "menu": "sport",
       "parent": "SPORT",
-      "ref": "https://www.visionplus.id"
+      "referrer": "https://www.visionplus.id"
     },
     {
       "id": 186,
