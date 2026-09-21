@@ -633,19 +633,20 @@
     },
     {
       "id": 133,
-      "name": "Mentari TV (IHT)",
+      "name": "Mentari TV (V+)",
       "cat": "KIDS",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/XYH1m9q/mentaritv.png",
-      "url": "https://cdn08jtedge.indihometv.com/dassdvr/134/mentaritv/manifest.mpd",
+      "url": "https://d84q7nw4qf3j3.cloudfront.net/out/v1/703a71abac3844748b1e68166242d4f3/index.mpd",
       "desc": "Mentari TV DASH+ClearKey (Indihome)",
       "tvgId": "Mentari TV.indihome",
       "drmType": "ClearKey",
-      "licUrl": "d96a81a887fd46f1b18e1fd48c2eeb81:fb8947a8804c874cc0f0b71bdb609ca0",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "licUrl": "340ff241ff754b038f07096e17104cdc:839bdf4f1523661ba61df2dc219878a3",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 134,
