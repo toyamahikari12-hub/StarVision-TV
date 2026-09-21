@@ -3,7 +3,8 @@
     <!-- App -->
     <string name="app_name">StarVision TV</string>
     <string name="iptv_playlist" translatable="false">https://raw.githubusercontent.com/toyamahikari12-hub/StarVision-TV/main/channels.json</string>
-    <string name="gh_token" translatable="false">github_pat_11CBOX77A0jZFiKUOuO6mq_vvewYUWN83Iglu4urR2QCuGfmBcSfII5bmAOPDH9QK1UUZYLAVWErKbr9j</string>
+    <!-- gh_token dipindah ke BuildConfig.GH_TOKEN (lihat app/build.gradle),
+         diisi dari GitHub Actions secret GH_TOKEN saat build, bukan ditulis di sini. -->
     <!-- API Key untuk server privat (dipisah agar susah direverse) -->
     <string name="srv_p1" translatable="false">X-API</string>
     <string name="srv_p2" translatable="false">-Key</string>
