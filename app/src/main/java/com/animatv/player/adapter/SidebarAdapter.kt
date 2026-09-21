@@ -57,7 +57,9 @@ class SidebarAdapter(
         val catName = cat.name ?: ""
         val key = catName.lowercase().trim()
 
-        val icon = catIcons.entries.firstOrNull { key.contains(it.key) }?.value ?: "CH"
+        val icon = cat.icon?.takeIf { it.isNotBlank() }
+            ?: catIcons.entries.firstOrNull { key.contains(it.key) }?.value
+            ?: catName.trim().take(3).uppercase().ifBlank { "CH" }
         holder.icon.text = icon
         holder.name.text = catName
 
