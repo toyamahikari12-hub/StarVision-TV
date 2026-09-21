@@ -1091,7 +1091,7 @@
     },
     {
       "id": 163,
-      "name": "Sportstars (VS)",
+      "name": "Sportstars (V+)",
       "cat": "SPORT",
       "color": "#e91e8c",
       "q": "HD",
@@ -1102,8 +1102,9 @@
       "desc": "Sportstars DASH+ClearKey (Vision+)",
       "tvgId": "Sportstars.vision+",
       "drmType": "ClearKey",
-      "licUrl": "39c4dc6704cf4ceea2fd4863b88d8a7d:4e9d7954c2ff46759289da4fc9f018ea",
+      "licUrl": "https://dusk.biz.id/rpl/drm.php?id=112",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://www.visionplus.id"
       "menu": "sport",
       "parent": "SPORT"
     },
