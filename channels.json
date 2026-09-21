@@ -709,9 +709,7 @@
       "tvgId": "Aniplus.indihome",
       "drmType": "ClearKey",
       "licUrl": "f2c313fce55344e5a52389741d1f53f8:bae1e47db562b66895beb8fccdf2ad8a",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "menu": "live tv",
-      "parent": "LIVE TV"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 120,
