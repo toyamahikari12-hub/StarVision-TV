@@ -5,9 +5,22 @@ import android.view.View
 import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.view.WindowManager
 
 @Suppress("DEPRECATION")
 fun Window.setFullScreenFlags() {
+    // Isi area poni/notch/kamera depan supaya tidak ada bar hitam di sisi layar
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        val params = this.attributes
+        params.layoutInDisplayCutoutMode =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+            } else {
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
+        this.attributes = params
+    }
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val controller = this.insetsController ?: return
         controller.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
