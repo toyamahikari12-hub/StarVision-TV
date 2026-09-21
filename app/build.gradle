@@ -37,6 +37,14 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
+
+        // Token diambil dari environment variable saat build (GitHub Actions secret),
+        // TIDAK ditulis permanen di source code / strings.xml.
+        buildConfigField(
+            "String",
+            "GH_TOKEN",
+            "\"${System.getenv('GH_TOKEN') ?: ''}\""
+        )
     }
 
     buildFeatures {
