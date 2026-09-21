@@ -114,13 +114,13 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/xjNQwrH/indosiar.png",
-      "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/SW5kb3NpYXI/manifest.mpd",
+      "url": "http://tvratu.my.id/vid/index.mpd?id=205&type=dash",
       "desc": "INDOSIAR DASH+Widevine",
       "tvgId": "Indosiar",
       "drmType": "Widevine",
-      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
+      "licUrl": "http://tvratu.my.id/vid/index.mpd?id=2058&type=drm",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
-      "ref": "https://www.cubmu.com/"
+      "referrer": "https://www.vidio.com/"
     },
     {
       "id": 1051,
