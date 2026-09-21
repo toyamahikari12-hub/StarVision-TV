@@ -6,6 +6,7 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
+import androidx.core.view.WindowCompat
 
 @Suppress("DEPRECATION")
 fun Window.setFullScreenFlags() {
@@ -20,6 +21,9 @@ fun Window.setFullScreenFlags() {
             }
         this.attributes = params
     }
+
+    // Konten app ikut mentok ke tepi layar (tidak didorong menjauhi poni/notch)
+    WindowCompat.setDecorFitsSystemWindows(this, false)
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val controller = this.insetsController ?: return
