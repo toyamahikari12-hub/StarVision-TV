@@ -370,10 +370,11 @@
       "drm": false,
       "type": "hls",
       "logo": "http://hometv.biz.id:80/images/Ew7KWgEVPBJlBK0JSddniCSXgQUyeYTSUh135SFESvbfdeNmlgxK086DUO-GdhDcNmI4Q-R2d7yXPiGs26TrDw.png",
-      "url": "https://www.bevy.be/bevyfiles/singaporepremium.xml",
+      "url": "https://raw.githubusercontent.com/hendroagung2904/IDH/refs/heads/main/IDH-Aniplus.m3u8",
       "desc": "ANIPLUS HLS",
       "tvgId": "ANIPLUS.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://www.dens.tv/"
     },
     {
       "id": 105,
