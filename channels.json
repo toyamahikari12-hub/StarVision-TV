@@ -384,13 +384,13 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/k3S01Fh/transtv.png",
-      "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/0fd7b7d368bc44bc9b4dece20acc3e33/index.mpd",
+      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-439abf566997b187117993103dfd8508/dash/VHJhbnNUVg/manifest.mpd",
       "desc": "TRANS TV DASH+ClearKey (Vision+)",
       "tvgId": "TransTV.id",
       "drmType": "ClearKey",
-      "licUrl": "https://bintangstreaming.my.id/rcti_pro/index.drm?id=7",
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b97",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/"
+      "referrer": "https://www.transvision.co.id/"
     },
     {
       "id": 106,
