@@ -1,7 +1,7 @@
 package com.animatv.player.extra
 
 import android.net.Uri
-import com.google.android.exoplayer2.util.MimeTypes
+import androidx.media3.common.MimeTypes
 import java.util.Locale
 
 /**
