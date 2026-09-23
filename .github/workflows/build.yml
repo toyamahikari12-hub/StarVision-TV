@@ -251,7 +251,7 @@ jobs:
 
       - name: Verify APK
         run: |
-          $ANDROID_HOME/build-tools/33.0.2/apksigner verify --verbose StarVisionTV_v1.0_signed.apk
+          $ANDROID_HOME/build-tools/35.0.0/apksigner verify --verbose StarVisionTV_v1.0_signed.apk
           echo "APK verified successfully!"
 
       # ================================================================
@@ -271,10 +271,10 @@ jobs:
           echo "" >> $REPORT
           echo "  ── PERMISSIONS ──" >> $REPORT
           echo "  (Permission tidak perlu bisa ditolak user dan menyebabkan crash)" >> $REPORT
-          $ANDROID_HOME/build-tools/33.0.2/aapt dump permissions $APK 2>/dev/null >> $REPORT || true
+          $ANDROID_HOME/build-tools/35.0.0/aapt dump permissions $APK 2>/dev/null >> $REPORT || true
           echo "" >> $REPORT
           echo "  ── INFO APK ──" >> $REPORT
-          $ANDROID_HOME/build-tools/33.0.2/aapt dump badging $APK 2>/dev/null | grep -E "package|sdkVersion|targetSdk|launchable-activity" >> $REPORT || true
+          $ANDROID_HOME/build-tools/35.0.0/aapt dump badging $APK 2>/dev/null | grep -E "package|sdkVersion|targetSdk|launchable-activity" >> $REPORT || true
 
           cat $REPORT
 
