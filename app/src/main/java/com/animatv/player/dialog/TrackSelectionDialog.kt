@@ -2,8 +2,9 @@
  * Copyright (C) 2019 The Android Open Source Project
  * Licensed under the Apache License, Version 2.0
  *
- * Rewritten for ExoPlayer 2.17.x API compatibility
- * (Tracks / TrackSelectionOverride tidak ada di 2.17.x)
+ * Ditulis ulang untuk Media3 (androidx.media3) API.
+ * Media3 memakai model Tracks/TrackSelectionOverride berbasis TrackGroup,
+ * bukan lagi MappingTrackSelector.MappedTrackInfo seperti ExoPlayer2 lama.
  */
 package com.animatv.player.dialog
 
@@ -21,16 +22,17 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.media3.common.C
+import androidx.media3.common.TrackGroup
+import androidx.media3.common.TrackSelectionOverride
+import androidx.media3.common.Tracks
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.media3.ui.TrackSelectionView
+import androidx.media3.ui.TrackSelectionView.TrackSelectionListener
 import androidx.viewpager.widget.ViewPager
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo
-import com.google.android.exoplayer2.ui.TrackSelectionView
-import com.google.android.exoplayer2.ui.TrackSelectionView.TrackSelectionListener
 import com.google.android.material.tabs.TabLayout
 import com.animatv.player.R
 
-@Suppress("DEPRECATION")
 class TrackSelectionDialog : DialogFragment() {
 
     private val tabFragments: SparseArray<TrackSelectionViewFragment> = SparseArray()
@@ -41,6 +43,7 @@ class TrackSelectionDialog : DialogFragment() {
 
     private fun init(
         titleId: Int,
+        tracks: Tracks,
         trackSelector: DefaultTrackSelector,
         onClickListener: DialogInterface.OnClickListener,
         onDismissListener: DialogInterface.OnDismissListener
@@ -49,36 +52,41 @@ class TrackSelectionDialog : DialogFragment() {
         this.onClickListener = onClickListener
         this.onDismissListener = onDismissListener
 
-        val mappedTrackInfo = trackSelector.currentMappedTrackInfo ?: return
         val parameters = trackSelector.parameters
 
-        for (i in 0 until mappedTrackInfo.rendererCount) {
-            val trackType = mappedTrackInfo.getRendererType(i)
-            if (trackType != C.TRACK_TYPE_VIDEO &&
-                trackType != C.TRACK_TYPE_AUDIO &&
-                trackType != C.TRACK_TYPE_TEXT) continue
+        // Kelompokkan Tracks.Group berdasarkan tipe (video/audio/teks) -
+        // pengganti loop per-renderer di MappedTrackInfo versi lama.
+        val groupsByType = tracks.groups
+            .filter {
+                it.type == C.TRACK_TYPE_VIDEO ||
+                    it.type == C.TRACK_TYPE_AUDIO ||
+                    it.type == C.TRACK_TYPE_TEXT
+            }
+            .groupBy { it.type }
 
-            val trackGroupArray = mappedTrackInfo.getTrackGroups(i)
-            if (trackGroupArray.length == 0) continue
+        var tabIndex = 0
+        for ((trackType, groups) in groupsByType) {
+            if (groups.isEmpty()) continue
+
+            val isDisabled = parameters.disabledTrackTypes.contains(trackType)
+            val overridesForType = TrackSelectionView.filterOverrides(
+                parameters.overrides, groups, /* allowMultipleOverrides = */ false
+            )
 
             val tabFragment = TrackSelectionViewFragment()
-            tabFragment.initFragment(
-                mappedTrackInfo,
-                i,
-                parameters.getRendererDisabled(i),
-                parameters.getSelectionOverride(i, trackGroupArray)
-            )
-            tabFragments.put(i, tabFragment)
+            tabFragment.initFragment(groups, isDisabled, overridesForType)
+            tabFragments.put(tabIndex, tabFragment)
             tabTrackTypes.add(trackType)
+            tabIndex++
         }
     }
 
-    fun getIsDisabled(rendererIndex: Int): Boolean {
-        return tabFragments[rendererIndex]?.isDisabled ?: false
+    fun getIsDisabled(index: Int): Boolean {
+        return tabFragments[index]?.isDisabled ?: false
     }
 
-    fun getOverride(rendererIndex: Int): DefaultTrackSelector.SelectionOverride? {
-        return tabFragments[rendererIndex]?.override
+    fun getOverrides(index: Int): Map<TrackGroup, TrackSelectionOverride> {
+        return tabFragments[index]?.overrides ?: emptyMap()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -128,22 +136,19 @@ class TrackSelectionDialog : DialogFragment() {
 
     class TrackSelectionViewFragment : Fragment(), TrackSelectionListener {
 
-        private lateinit var mappedTrackInfo: MappedTrackInfo
-        private var rendererIndex = 0
+        private var trackGroups: List<Tracks.Group> = emptyList()
 
         var isDisabled = false
-        var override: DefaultTrackSelector.SelectionOverride? = null
+        var overrides: Map<TrackGroup, TrackSelectionOverride> = emptyMap()
 
         fun initFragment(
-            mappedTrackInfo: MappedTrackInfo,
-            rendererIndex: Int,
+            trackGroups: List<Tracks.Group>,
             initialIsDisabled: Boolean,
-            initialOverride: DefaultTrackSelector.SelectionOverride?
+            initialOverrides: Map<TrackGroup, TrackSelectionOverride>
         ) {
-            this.mappedTrackInfo = mappedTrackInfo
-            this.rendererIndex = rendererIndex
+            this.trackGroups = trackGroups
             this.isDisabled = initialIsDisabled
-            this.override = initialOverride
+            this.overrides = initialOverrides
         }
 
         override fun onCreateView(
@@ -152,35 +157,32 @@ class TrackSelectionDialog : DialogFragment() {
             savedInstanceState: Bundle?
         ): View? {
             val rootView = inflater.inflate(
-                com.google.android.exoplayer2.R.layout.exo_track_selection_dialog,
+                androidx.media3.ui.R.layout.exo_track_selection_dialog,
                 container, false
             )
             val trackSelectionView: TrackSelectionView =
-                rootView.findViewById(com.google.android.exoplayer2.R.id.exo_track_selection_view)
+                rootView.findViewById(androidx.media3.ui.R.id.exo_track_selection_view)
 
             trackSelectionView.setShowDisableOption(true)
             trackSelectionView.setAllowMultipleOverrides(false)
             trackSelectionView.setAllowAdaptiveSelections(true)
 
-            // ExoPlayer 2.17.x API
             trackSelectionView.init(
-                mappedTrackInfo,
-                rendererIndex,
+                trackGroups,
                 isDisabled,
-                if (override != null) listOf(override!!) else emptyList(),
+                overrides,
                 null,
                 this
             )
             return rootView
         }
 
-        // ExoPlayer 2.17.x TrackSelectionListener signature
         override fun onTrackSelectionChanged(
             isDisabled: Boolean,
-            overrides: MutableList<DefaultTrackSelector.SelectionOverride>
+            overrides: MutableMap<TrackGroup, TrackSelectionOverride>
         ) {
             this.isDisabled = isDisabled
-            this.override = overrides.firstOrNull()
+            this.overrides = overrides
         }
 
         init {
@@ -191,20 +193,17 @@ class TrackSelectionDialog : DialogFragment() {
 
     companion object {
 
-        fun willHaveContent(trackSelector: DefaultTrackSelector?): Boolean {
-            val mappedTrackInfo = trackSelector?.currentMappedTrackInfo ?: return false
-            for (i in 0 until mappedTrackInfo.rendererCount) {
-                val trackType = mappedTrackInfo.getRendererType(i)
-                if ((trackType == C.TRACK_TYPE_VIDEO ||
-                            trackType == C.TRACK_TYPE_AUDIO ||
-                            trackType == C.TRACK_TYPE_TEXT) &&
-                    mappedTrackInfo.getTrackGroups(i).length > 0
-                ) return true
+        fun willHaveContent(tracks: Tracks?): Boolean {
+            if (tracks == null) return false
+            return tracks.groups.any {
+                it.type == C.TRACK_TYPE_VIDEO ||
+                    it.type == C.TRACK_TYPE_AUDIO ||
+                    it.type == C.TRACK_TYPE_TEXT
             }
-            return false
         }
 
         fun createForTrackSelector(
+            tracks: Tracks,
             trackSelector: DefaultTrackSelector?,
             onDismissListener: DialogInterface.OnDismissListener
         ): TrackSelectionDialog {
@@ -212,19 +211,16 @@ class TrackSelectionDialog : DialogFragment() {
             val dialog = TrackSelectionDialog()
             dialog.init(
                 titleId = R.string.track_selection_title,
+                tracks = tracks,
                 trackSelector = trackSelector,
                 onClickListener = { _, _ ->
-                    val mappedTrackInfo =
-                        trackSelector.currentMappedTrackInfo ?: return@init
                     val builder = trackSelector.parameters.buildUpon()
-                    for (i in 0 until mappedTrackInfo.rendererCount) {
-                        val trackGroups = mappedTrackInfo.getTrackGroups(i)
-                        builder.setRendererDisabled(i, dialog.getIsDisabled(i))
-                        val ov = dialog.getOverride(i)
-                        if (ov != null) {
-                            builder.setSelectionOverride(i, trackGroups, ov)
-                        } else {
-                            builder.clearSelectionOverrides(i)
+                    for (i in dialog.tabTrackTypes.indices) {
+                        val trackType = dialog.tabTrackTypes[i]
+                        builder.setTrackTypeDisabled(trackType, dialog.getIsDisabled(i))
+                        builder.clearOverridesOfType(trackType)
+                        dialog.getOverrides(i).values.forEach { override ->
+                            builder.addOverride(override)
                         }
                     }
                     trackSelector.setParameters(builder)
@@ -237,13 +233,13 @@ class TrackSelectionDialog : DialogFragment() {
         private fun getTrackTypeString(resources: Resources, trackType: Int): String {
             return when (trackType) {
                 C.TRACK_TYPE_VIDEO -> resources.getString(
-                    com.google.android.exoplayer2.R.string.exo_track_selection_title_video
+                    androidx.media3.ui.R.string.exo_track_selection_title_video
                 )
                 C.TRACK_TYPE_AUDIO -> resources.getString(
-                    com.google.android.exoplayer2.R.string.exo_track_selection_title_audio
+                    androidx.media3.ui.R.string.exo_track_selection_title_audio
                 )
                 C.TRACK_TYPE_TEXT -> resources.getString(
-                    com.google.android.exoplayer2.R.string.exo_track_selection_title_text
+                    androidx.media3.ui.R.string.exo_track_selection_title_text
                 )
                 else -> throw IllegalArgumentException("Unknown track type: $trackType")
             }
