@@ -507,9 +507,11 @@ class PlayerActivity : AppCompatActivity() {
             .build()
 
         // enable extension renderer
-        // EXTENSION_RENDERER_MODE_OFF hemat RAM di Android 5 TV Box
+        // EXTENSION_RENDERER_MODE_ON: decoder hardware tetap diutamakan;
+        // decoder software (FFmpeg, audio) hanya dipakai sebagai cadangan
+        // saat hardware tidak mendukung format track-nya (mis. AC3/E-AC3/DTS).
         val renderersFactory = DefaultRenderersFactory(this)
-            .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF)
+            .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
 
         // set player builder - selalu pakai loadControl yang stabil
         val playerBuilder = com.google.android.exoplayer2.ExoPlayer.Builder(this, renderersFactory)
