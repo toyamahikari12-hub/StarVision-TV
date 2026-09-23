@@ -370,7 +370,7 @@
       "drm": false,
       "type": "hls",
       "logo": "http://hometv.biz.id:80/images/Ew7KWgEVPBJlBK0JSddniCSXgQUyeYTSUh135SFESvbfdeNmlgxK086DUO-GdhDcNmI4Q-R2d7yXPiGs26TrDw.png",
-      "url": "https://www.m3u8player.online/embed/dash?url=https%3A%2F%2Fcdnbal1.indihometv.com%2Fatm%2FDASH%2Fanimax%2Fmanifest.mpd",
+      "url": "https://cdnbal1.indihometv.com/atm/DASH/animax/manifest.mpd",
       "desc": "ANIPLUS HLS",
       "tvgId": "ANIPLUS.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
