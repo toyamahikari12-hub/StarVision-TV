@@ -23,14 +23,27 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.ParametersBuilder
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo
-import com.google.android.exoplayer2.upstream.DefaultAllocator
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MimeTypes
+import androidx.media3.common.PlaybackException
+import androidx.media3.common.Player
+import androidx.media3.datasource.DefaultDataSource
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.exoplayer.DefaultLoadControl
+import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.LoadControl
+import androidx.media3.exoplayer.drm.DefaultDrmSessionManager
+import androidx.media3.exoplayer.drm.DrmSessionManager
+import androidx.media3.exoplayer.drm.FrameworkMediaDrm
+import androidx.media3.exoplayer.drm.HttpMediaDrmCallback
+import androidx.media3.exoplayer.drm.LocalMediaDrmCallback
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector.ParametersBuilder
+import androidx.media3.exoplayer.trackselection.MappingTrackSelector.MappedTrackInfo
+import androidx.media3.exoplayer.upstream.DefaultAllocator
 import com.animatv.player.databinding.ActivityPlayerBinding
 import com.animatv.player.databinding.CustomControlBinding
 import com.animatv.player.dialog.TrackSelectionDialog
@@ -42,7 +55,6 @@ import com.animatv.player.model.Category
 import com.animatv.player.model.Channel
 import com.animatv.player.model.PlayData
 import com.animatv.player.model.Playlist
-import com.google.android.exoplayer2.util.MimeTypes
 import java.net.URLDecoder
 import java.util.*
 
@@ -53,7 +65,7 @@ class PlayerActivity : AppCompatActivity() {
     private val network by lazy { Network() }
     private var category: Category? = null
     private var current: Channel? = null
-    private var player: com.google.android.exoplayer2.ExoPlayer? = null
+    private var player: ExoPlayer? = null
     private lateinit var mediaItem: MediaItem
     private lateinit var trackSelector: DefaultTrackSelector
     private lateinit var bindingRoot: ActivityPlayerBinding
@@ -407,15 +419,14 @@ class PlayerActivity : AppCompatActivity() {
             .setConnectTimeoutMs(15_000)   // 15 detik connect timeout
             .setReadTimeoutMs(20_000)      // 20 detik read timeout
         if (referer != null) httpDataSourceFactory.setDefaultRequestProperties(mapOf(Pair("referer", referer)))
-        val dataSourceFactory = DefaultDataSourceFactory(this, httpDataSourceFactory)
+        val dataSourceFactory = DefaultDataSource.Factory(this, httpDataSourceFactory)
 
         // Build DrmSessionManager dan MediaItem sesuai tipe DRM
         val isClearKey = current?.drmName?.startsWith("clearkey_") == true
         val isWidevine = current?.drmName?.startsWith("widevine_") == true
         val hasDrm = !current?.drmName.isNullOrBlank() && !drmLicense.isNullOrBlank()
 
-        var drmSessionManager: com.google.android.exoplayer2.drm.DrmSessionManager =
-            com.google.android.exoplayer2.drm.DrmSessionManager.DRM_UNSUPPORTED
+        var drmSessionManager: DrmSessionManager = DrmSessionManager.DRM_UNSUPPORTED
 
         if (hasDrm && isClearKey && !drmLicense.isNullOrBlank()) {
             // ClearKey: build JSON response langsung, pakai LocalMediaDrmCallback
@@ -446,9 +457,9 @@ class PlayerActivity : AppCompatActivity() {
                 keysJson.append("],\"type\":\"temporary\"}")
                 val licenseBytes = keysJson.toString().toByteArray(Charsets.UTF_8)
                 // LocalMediaDrmCallback: langsung inject license JSON tanpa network
-                val drmCallback = com.google.android.exoplayer2.drm.LocalMediaDrmCallback(licenseBytes)
-                drmSessionManager = com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Builder()
-                    .setUuidAndExoMediaDrmProvider(C.CLEARKEY_UUID, com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER)
+                val drmCallback = LocalMediaDrmCallback(licenseBytes)
+                drmSessionManager = DefaultDrmSessionManager.Builder()
+                    .setUuidAndExoMediaDrmProvider(C.CLEARKEY_UUID, FrameworkMediaDrm.DEFAULT_PROVIDER)
                     .setMultiSession(false)
                     .build(drmCallback)
                 Log.d("DRM_DEBUG", "ClearKey DrmSessionManager built OK")
@@ -458,10 +469,10 @@ class PlayerActivity : AppCompatActivity() {
         } else if (hasDrm && isWidevine) {
             if (!isDrmWidevineSupported()) return
             // Widevine: pakai HttpMediaDrmCallback dengan license server URL
-            val drmCallback = com.google.android.exoplayer2.drm.HttpMediaDrmCallback(
+            val drmCallback = HttpMediaDrmCallback(
                 drmLicense, httpDataSourceFactory)
-            drmSessionManager = com.google.android.exoplayer2.drm.DefaultDrmSessionManager.Builder()
-                .setUuidAndExoMediaDrmProvider(C.WIDEVINE_UUID, com.google.android.exoplayer2.drm.FrameworkMediaDrm.DEFAULT_PROVIDER)
+            drmSessionManager = DefaultDrmSessionManager.Builder()
+                .setUuidAndExoMediaDrmProvider(C.WIDEVINE_UUID, FrameworkMediaDrm.DEFAULT_PROVIDER)
                 .setMultiSession(true)
                 .build(drmCallback)
             Log.d("DRM_DEBUG", "Widevine DrmSessionManager built, licUrl=$drmLicense")
@@ -514,7 +525,7 @@ class PlayerActivity : AppCompatActivity() {
             .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
 
         // set player builder - selalu pakai loadControl yang stabil
-        val playerBuilder = com.google.android.exoplayer2.ExoPlayer.Builder(this, renderersFactory)
+        val playerBuilder = ExoPlayer.Builder(this, renderersFactory)
             .setMediaSourceFactory(mediaSourceFactory)
             .setTrackSelector(trackSelector)
             .setLoadControl(loadControl)
@@ -640,7 +651,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private inner class PlayerListener : Player.Listener {
         override fun onPlaybackStateChanged(state: Int) {
-            val trackHaveContent = TrackSelectionDialog.willHaveContent(trackSelector)
+            val trackHaveContent = TrackSelectionDialog.willHaveContent(player?.currentTracks)
             bindingControl.trackSelection.visibility =
                 if (trackHaveContent) View.VISIBLE else View.GONE
             when (state) {
@@ -771,7 +782,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun showTrackSelector(): Boolean {
-        TrackSelectionDialog.createForTrackSelector(trackSelector) { }
+        val tracks = player?.currentTracks ?: return false
+        TrackSelectionDialog.createForTrackSelector(tracks, trackSelector) { }
             .show(supportFragmentManager, "TrackSelection")
         return true
     }
