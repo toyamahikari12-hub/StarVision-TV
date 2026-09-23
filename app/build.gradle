@@ -182,21 +182,21 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'org.conscrypt:conscrypt-android:2.5.2'
 
-    // ExoPlayer 2
-    implementation 'com.google.android.exoplayer:exoplayer:2.19.1'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.19.1'
-    implementation 'com.google.android.exoplayer:exoplayer-dash:2.19.1'
-    implementation 'com.google.android.exoplayer:exoplayer-hls:2.19.1'
-    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.19.1'
-    implementation 'com.google.android.exoplayer:exoplayer-rtsp:2.19.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.19.1'
-    implementation 'com.google.android.exoplayer:extension-okhttp:2.19.1'
-    implementation 'com.google.android.exoplayer:extension-mediasession:2.19.1'
+    // Media3 (penerus resmi ExoPlayer 2, aktif diupdate Google)
+    implementation 'androidx.media3:media3-exoplayer:1.10.1'
+    implementation 'androidx.media3:media3-exoplayer-dash:1.10.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.10.1'
+    implementation 'androidx.media3:media3-exoplayer-smoothstreaming:1.10.1'
+    implementation 'androidx.media3:media3-exoplayer-rtsp:1.10.1'
+    implementation 'androidx.media3:media3-ui:1.10.1'
+    implementation 'androidx.media3:media3-datasource-okhttp:1.10.1'
+    implementation 'androidx.media3:media3-session:1.10.1'
+    implementation 'androidx.media3:media3-common:1.10.1'
 
     // Ekstensi decoder software FFmpeg (audio), pre-built oleh proyek Jellyfin,
     // supaya track audio seperti AC3/E-AC3/DTS yang tidak didukung hardware
     // tetap bisa diputar lewat software decoder.
-    implementation 'org.jellyfin.exoplayer:exoplayer-ffmpeg-extension:2.19.1+1'
+    implementation 'org.jellyfin.media3:media3-ffmpeg-decoder:1.9.0+1'
 
     // JSON
     implementation 'com.google.code.gson:gson:2.10.1'
