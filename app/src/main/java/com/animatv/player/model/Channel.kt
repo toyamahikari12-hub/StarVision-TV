@@ -30,4 +30,9 @@ class Channel {
 
     @SerializedName("origin")
     var origin: String? = null
+
+    // Preset buffer per channel (opsional): "cepat" | "normal" | "stabil".
+    // Kalau tidak diisi/tidak dikenali, dipakai preset "normal".
+    @SerializedName("buffer")
+    var bufferMode: String? = null
 }
