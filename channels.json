@@ -374,7 +374,7 @@
       "desc": "ANIMAX HLS",
       "tvgId": "ANIMAX.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.dens.tv/"
+      "buffer": "stabil"
     },
     {
       "id": 105,
@@ -1464,7 +1464,8 @@
       "url": "http://hometv.biz.id:80/play/JCkOFylsCPunX6iBXSa0dgO7jqXmUmS173XCtvKOH4U",
       "desc": "UPIN IPIN HLS",
       "tvgId": "UPIN IPIN.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "buffer": "stabil"
     },
     {
       "id": 187,
