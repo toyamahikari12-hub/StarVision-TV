@@ -707,7 +707,7 @@
       "desc": "ANIMAX DASH+ClearKey (Vision+)",
       "tvgId": "Animax.visionplus",
       "drmType": "clearkey",
-      "licUrl": "6f309276a94e45be89a8860159456e84:3fe2eec12885264556ca4e29aa6c0c40",
+      "licUrl": "https://visionplus.drmiontv.workers.dev/lic?id=49&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "http-user-agent=Mozilla/5.0 (Linux; Android 14; Google TV Streamer Build/UTT3.240625.001.K5; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/130.0.6723.60 Mobile Safari/537.36",
       "referrer": "https://www.visionplus.id/"
     },
