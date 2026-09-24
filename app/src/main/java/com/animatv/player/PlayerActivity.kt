@@ -509,16 +509,25 @@ class PlayerActivity : AppCompatActivity() {
                 .build()
         }
 
-        // LoadControl yang stabil untuk Android 5 dengan RAM terbatas
-        // min=2s, max=10s, playback_resume=1s, rebuffer=2s
-        // Buffer dioptimalkan untuk Android 5 TV Box RAM terbatas
+        // LoadControl - nilai default aman untuk Android 5 dengan RAM terbatas,
+        // bisa dioverride per channel lewat field "buffer" di channels.json:
+        //   "cepat"  -> buffer kecil, mulai lebih cepat, rawan macet di koneksi lemah
+        //   "normal" -> nilai default (dipakai kalau field tidak diisi/tidak dikenali)
+        //   "stabil" -> buffer besar, mulai lebih lambat, lebih tahan koneksi tidak stabil
+        val (minBufferMs, maxBufferMs, bufferForPlaybackMs, bufferForPlaybackAfterRebufferMs) =
+            when (current?.bufferMode?.lowercase()?.trim()) {
+                "cepat"  -> listOf(1_000, 8_000, 500, 1_500)
+                "stabil" -> listOf(5_000, 30_000, 3_000, 5_000)
+                else     -> listOf(3_000, 15_000, 1_500, 3_000) // "normal" / default
+            }
+
         val loadControl: LoadControl = DefaultLoadControl.Builder()
             .setAllocator(DefaultAllocator(true, 16))
             .setBufferDurationsMs(
-                3_000,   // minBufferMs
-                15_000,  // maxBufferMs - 15 detik cukup untuk live stream
-                1_500,   // bufferForPlaybackMs
-                3_000    // bufferForPlaybackAfterRebufferMs
+                minBufferMs,
+                maxBufferMs,
+                bufferForPlaybackMs,
+                bufferForPlaybackAfterRebufferMs
             )
             .setTargetBufferBytes(4 * 1024 * 1024) // 4MB buffer
             .setPrioritizeTimeOverSizeThresholds(true)
