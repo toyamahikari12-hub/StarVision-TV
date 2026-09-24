@@ -142,44 +142,6 @@ object SymphogearJsonConverter {
             }
 
             // ========================================================
-            // PARSE OPSI KATEGORI DARI JSON (opsional)
-            //   "category_order": ["Nasional", "Musik", "Jepang"]
-            //   "category_icons": { "musik": "MSK" }
-            // ========================================================
-
-            val customOrder = ArrayList<String>()
-            try {
-                if (root.has("category_order") &&
-                    root.get("category_order").isJsonArray
-                ) {
-                    root.getAsJsonArray("category_order").forEach {
-                        val k = it.asString.lowercase().trim()
-                        if (k.isNotEmpty() && !customOrder.contains(k)) {
-                            customOrder.add(k)
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                Log.w(TAG, "Gagal membaca category_order: ${e.message}")
-            }
-
-            val customIcons = HashMap<String, String>()
-            try {
-                if (root.has("category_icons") &&
-                    root.get("category_icons").isJsonObject
-                ) {
-                    for ((k, v) in root.getAsJsonObject("category_icons").entrySet()) {
-                        customIcons[k.lowercase().trim()] = v.asString.trim()
-                    }
-                }
-            } catch (e: Exception) {
-                Log.w(TAG, "Gagal membaca category_icons: ${e.message}")
-            }
-
-            // Nama asli kategori (huruf besar/kecil sesuai JSON)
-            val rawNameMap = HashMap<String, String>()
-
-            // ========================================================
             // PARSE CHANNELS
             // ========================================================
 
@@ -285,6 +247,14 @@ object SymphogearJsonConverter {
                             ?.asString
 
                     // ------------------------------------------------
+                    // BUFFER (opsional, preset per channel)
+                    // ------------------------------------------------
+
+                    val bufferMode =
+                        obj.get("buffer")
+                            ?.asString
+
+                    // ------------------------------------------------
                     // LOGO
                     // ------------------------------------------------
 
@@ -320,6 +290,9 @@ object SymphogearJsonConverter {
 
                     channel.origin =
                         origin
+
+                    channel.bufferMode =
+                        bufferMode
 
                     // =================================================
                     // BUILD STREAM URL
@@ -451,8 +424,6 @@ object SymphogearJsonConverter {
 
                         categoryMap[catKey] =
                             ArrayList()
-
-                        rawNameMap[catKey] = cat.trim()
                     }
 
                     categoryMap[catKey]
@@ -471,7 +442,7 @@ object SymphogearJsonConverter {
 
                         com.animatv.player.extra.MenuManager
                             .registerCategoryMenu(
-                                cat.trim(),
+                                cat,
                                 menuId,
                                 menuLabel
                             )
@@ -493,38 +464,50 @@ object SymphogearJsonConverter {
             val categories =
                 ArrayList<Category>()
 
-            // Urutan final:
-            // 1) "category_order" dari JSON (kalau ada)
-            // 2) sisanya: urutan bawaan (ORDERED_CATS)
-            // 3) sisanya lagi: sesuai urutan kemunculan di JSON
-            val finalOrder = LinkedHashSet<String>()
-            finalOrder.addAll(customOrder)
-            finalOrder.addAll(ORDERED_CATS)
-            finalOrder.addAll(categoryMap.keys)
+            // Kategori berdasarkan urutan yang ditentukan
+            for (key in ORDERED_CATS) {
 
-            for (key in finalOrder) {
+                if (categoryMap.containsKey(key)) {
 
-                val channels = categoryMap[key] ?: continue
+                    val category =
+                        Category()
 
-                val category =
-                    Category()
+                    category.name =
+                        CAT_NAMES[key]
+                            ?: key.replaceFirstChar {
+                                it.uppercase()
+                            }
 
-                category.name =
-                    CAT_NAMES[key]
-                        ?: rawNameMap[key]
-                        ?: key.replaceFirstChar {
-                            it.uppercase()
-                        }
+                    category.channels =
+                        categoryMap[key]
 
-                category.icon =
-                    customIcons[key]
+                    categories.add(
+                        category
+                    )
+                }
+            }
 
-                category.channels =
-                    channels
+            // Kategori lain
+            for ((key, channels) in categoryMap) {
 
-                categories.add(
-                    category
-                )
+                if (!ORDERED_CATS.contains(key)) {
+
+                    val category =
+                        Category()
+
+                    category.name =
+                        CAT_NAMES[key]
+                            ?: key.replaceFirstChar {
+                                it.uppercase()
+                            }
+
+                    category.channels =
+                        channels
+
+                    categories.add(
+                        category
+                    )
+                }
             }
 
             playlist.categories =
