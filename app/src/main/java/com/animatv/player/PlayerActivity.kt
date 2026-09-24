@@ -72,6 +72,18 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var bindingControl: CustomControlBinding
     private var handlerInfo: Handler? = null
     private var errorCounter = 0
+
+    // Watchdog anti-macet: kalau player nyangkut di STATE_BUFFERING lebih lama
+    // dari batas ini (tanpa melempar error resmi), dipaksa retry.
+    // Nilainya ikut preset "buffer" per channel dari channels.json.
+    private var bufferWatchdogTimeoutMs = 20_000L
+    private val bufferWatchdogHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private val bufferWatchdogRunnable = Runnable {
+        Log.w("PLAYER", "Buffering macet > ${bufferWatchdogTimeoutMs}ms, paksa retry")
+        if (network.isConnected()) {
+            retryPlayback(true)
+        }
+    }
     private var isLocked = false
 
     // ===== BAGIAN 2: PLAYER CANGGIH =====
@@ -521,6 +533,14 @@ class PlayerActivity : AppCompatActivity() {
                 else     -> listOf(3_000, 15_000, 1_500, 3_000) // "normal" / default
             }
 
+        // Batas watchdog anti-macet ikut preset yang sama: preset "stabil" diberi
+        // toleransi lebih lama karena memang didesain untuk sumber yang lambat.
+        bufferWatchdogTimeoutMs = when (current?.bufferMode?.lowercase()?.trim()) {
+            "cepat"  -> 12_000L
+            "stabil" -> 30_000L
+            else     -> 20_000L
+        }
+
         val loadControl: LoadControl = DefaultLoadControl.Builder()
             .setAllocator(DefaultAllocator(true, 16))
             .setBufferDurationsMs(
@@ -627,6 +647,7 @@ class PlayerActivity : AppCompatActivity() {
 
         // reset player & play
         errorCounter = 0
+        bufferWatchdogHandler.removeCallbacks(bufferWatchdogRunnable)
         try {
             player?.playWhenReady = false
             player?.stop()
@@ -671,7 +692,13 @@ class PlayerActivity : AppCompatActivity() {
             bindingControl.trackSelection.visibility =
                 if (trackHaveContent) View.VISIBLE else View.GONE
             when (state) {
+                Player.STATE_BUFFERING -> {
+                    // Mulai/reset hitung mundur watchdog setiap kali masuk state buffering
+                    bufferWatchdogHandler.removeCallbacks(bufferWatchdogRunnable)
+                    bufferWatchdogHandler.postDelayed(bufferWatchdogRunnable, bufferWatchdogTimeoutMs)
+                }
                 Player.STATE_READY -> {
+                    bufferWatchdogHandler.removeCallbacks(bufferWatchdogRunnable)
                     errorCounter = 0
                     val catId = Playlist.cached.categories.indexOf(category)
                     val chId = category?.channels?.indexOf(current) ?: -1
@@ -697,11 +724,15 @@ class PlayerActivity : AppCompatActivity() {
                     }
                 }
                 Player.STATE_ENDED -> {
+                    bufferWatchdogHandler.removeCallbacks(bufferWatchdogRunnable)
                     // Live stream TIDAK boleh auto-retry saat ENDED
                     // karena bisa menyebabkan keluar dari player di Android 5
                     val isLive = player?.isCurrentMediaItemLive == true
                     if (!isLive) retryPlayback(true)
                     // Kalau live, abaikan - stream mungkin sedang rebuffering
+                }
+                Player.STATE_IDLE -> {
+                    bufferWatchdogHandler.removeCallbacks(bufferWatchdogRunnable)
                 }
                 else -> { }
             }
@@ -1315,6 +1346,7 @@ class PlayerActivity : AppCompatActivity() {
         sleepTimerRunnable?.let { sleepTimerHandler.removeCallbacks(it) }
         gestureHandler.removeCallbacksAndMessages(null)
         autoQualityHandler.removeCallbacksAndMessages(null)
+        bufferWatchdogHandler.removeCallbacks(bufferWatchdogRunnable)
         player?.release()
         LocalBroadcastManager.getInstance(this)
             .unregisterReceiver(broadcastReceiver)
