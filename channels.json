@@ -709,7 +709,8 @@
       "drmType": "clearkey",
       "licUrl": "https://visionplus.drmiontv.workers.dev/lic?id=49&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
-      "referrer": "https://www.visionplus.id/"
+      "referrer": "https://www.visionplus.id/",
+      "origin": "https://www.visionplus.id/"
     },
     {
       "id": 128,
