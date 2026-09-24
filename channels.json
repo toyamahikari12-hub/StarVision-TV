@@ -515,11 +515,11 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/f9XVz9j/axn.png",
-      "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/QVhOLW15/manifest.mpd",
+      "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/456143d3b12140e1a872b25f067ddb62/index.mpd",
       "desc": "AXN DASH+ClearKey",
       "tvgId": "AXN",
-      "drmType": "ClearKey",
-      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
+      "drmType": "Widevine",
+      "licUrl": "https://visionplus.drmiontv.workers.dev/lic?id=60&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "referrer": "https://www.cubmu.com/"
     },
@@ -594,7 +594,7 @@
       "desc": "Nickelodeon DASH+ClearKey (Vision+)",
       "tvgId": "Nickelodeon.visionplus",
       "drmType": "Widevine",
-      "licUrl": "676b60c2b84b49b6b316207a590203e4:da9878a96062ea105895f310e052fa7b",
+      "licUrl": "https://visionplus.drmiontv.workers.dev/lic?id=48&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "referrer": "https://www.visionplus.id/"
     },
@@ -627,7 +627,7 @@
       "desc": "Dreamworks DASH+ClearKey (Vision+)",
       "tvgId": "Dreamworks.visionplus",
       "drmType": "Widevine",
-      "licUrl": "ecd651d0872c46d6b75a902f3b796e6b:3915b032de12140475d2696ae734cf58",
+      "licUrl": "https://visionplus.drmiontv.workers.dev/lic?id=50&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "referrer": "https://www.visionplus.id/"
     },
