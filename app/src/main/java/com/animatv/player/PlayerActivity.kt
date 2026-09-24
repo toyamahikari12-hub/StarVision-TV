@@ -396,8 +396,16 @@ class PlayerActivity : AppCompatActivity() {
 
         // split streamurl with referer, user-agent
         var streamUrl = URLDecoder.decode(current?.streamUrl, "utf-8")
+        // Prioritas: header di akhir URL (|user-agent=..|referer=..),
+        // lalu field channel (dari playlist M3U/JSON).
         var userAgent = streamUrl.findPattern(".*user-agent=(.+?)(\\|.*)?")
+            ?: current?.userAgent?.trim()?.trim('"')?.takeIf { it.isNotEmpty() }
         val referer = streamUrl.findPattern(".*referer=(.+?)(\\|.*)?")
+            ?: current?.referrer?.trim()?.trim('"')?.takeIf { it.isNotEmpty() }
+        // Origin hanya berisi scheme://host[:port], tanpa path / trailing slash
+        val origin = current?.origin?.trim()?.trim('"')
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { Regex("^(https?://[^/]+)", RegexOption.IGNORE_CASE).find(it)?.groupValues?.get(1) ?: it }
 
         // clean streamurl
         streamUrl = streamUrl.findPattern("(.+?)(\\|.*)?") ?: streamUrl
@@ -437,7 +445,10 @@ class PlayerActivity : AppCompatActivity() {
             .setUserAgent(userAgent)
             .setConnectTimeoutMs(15_000)   // 15 detik connect timeout
             .setReadTimeoutMs(20_000)      // 20 detik read timeout
-        if (referer != null) httpDataSourceFactory.setDefaultRequestProperties(mapOf(Pair("referer", referer)))
+        val requestHeaders = HashMap<String, String>()
+        if (referer != null) requestHeaders["Referer"] = referer
+        if (origin != null) requestHeaders["Origin"] = origin
+        if (requestHeaders.isNotEmpty()) httpDataSourceFactory.setDefaultRequestProperties(requestHeaders)
         val dataSourceFactory = DefaultDataSource.Factory(this, httpDataSourceFactory)
 
         // Build DrmSessionManager dan MediaItem sesuai tipe DRM
