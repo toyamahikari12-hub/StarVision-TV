@@ -1118,7 +1118,7 @@
       "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/89a6e4261cd7470f83e5869e90440cff/index.mpd",
       "desc": "Sportstars DASH+ClearKey (Vision+)",
       "tvgId": "Sportstars.vision+",
-      "drmType": "ClearKey",
+      "drmType": "Widevine",
       "licUrl": "https://dusk.biz.id/rpl/drm.php?id=112",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
