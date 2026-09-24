@@ -27,6 +27,12 @@ class M3U {
 
     var origin: String? = null
 
+    // Logo dari atribut tvg-logo
+    var logo: String? = null
+
+    // Nilai #KODIPROP:inputstream.adaptive.license_type (mis. com.widevine.alpha)
+    var licenseType: String? = null
+
     companion object {
 
         const val KODIPROP = "#KODIPROP"
