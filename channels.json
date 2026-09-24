@@ -740,7 +740,8 @@
       "url": "http://hometv.biz.id:80/play/jliT0LwDFfe_fgU78F6pfc_P7ocSFqRm6le3k2UEuAs",
       "desc": "ANIPLUS 1080p HLS",
       "tvgId": "ANIPLUS 1080p.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "buffer": "stabil"
     },
     {
       "id": 122,
