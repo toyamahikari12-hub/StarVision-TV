@@ -737,7 +737,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/TV_Tokyo_logo_2023.svg/2560px-TV_Tokyo_logo_2023.svg.png",
-      "url": "https://slive.mana2.my/AniPlus/index.mpd",
+      "url": "https://linear-abematv.akamaized.net/preview/channel/abema-anime/playlist.m3u8",
       "desc": "TV Tokyo HLS",
       "tvgId": "TV Tokyo.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
