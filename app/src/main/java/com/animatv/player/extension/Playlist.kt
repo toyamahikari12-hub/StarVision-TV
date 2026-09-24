@@ -97,6 +97,10 @@ fun List<M3U>?.toPlaylist(): Playlist? {
             ch.origin =
                 item.origin
 
+            // LOGO (tvg-logo)
+            ch.logo =
+                item.logo
+
             // ==========================================
             // DRM
             // ==========================================
