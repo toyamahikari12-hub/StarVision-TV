@@ -101,11 +101,15 @@ class PlayerActivity : AppCompatActivity() {
     private var miniChannelAdapter: MiniChannelAdapter? = null
     private var isMiniPanelVisible = false
 
+    // Media3 PlayerView tidak lagi punya properti `isControllerVisible` seperti
+    // ExoPlayer2 dulu - jadi statusnya dilacak manual lewat ControllerVisibilityListener.
+    private var isPlayerControllerVisible = true
+
     // ── TV REMOTE SYSTEM ── (sistem terpisah, tidak ubah kode lain)
     private val tvHost by lazy {
         com.animatv.player.tv.TvPlayerHostImpl.create(
             activity             = this,
-            isControllerVisible  = { bindingRoot.playerView.isControllerVisible },
+            isControllerVisible  = { isPlayerControllerVisible },
             isMiniPanelVisible   = { isMiniPanelVisible },
             isLocked             = { isLocked },
             isLive               = { player?.isCurrentMediaItemLive == true },
@@ -226,15 +230,18 @@ class PlayerActivity : AppCompatActivity() {
                 override fun onSwipeLeft() { switchChannel(CHANNEL_NEXT) }
                 override fun onSwipeRight() { switchChannel(CHANNEL_PREVIOUS) }
             })
-            setControllerVisibilityListener {
-                setChannelInformation (it == View.VISIBLE)
-                if (!isLocked) {
-                    // Tidak locked, semua ikut show/hide normal
-                    bindingRoot.btnMiniChannelToggle.visibility = it
+            setControllerVisibilityListener(
+                androidx.media3.ui.PlayerView.ControllerVisibilityListener { visibility ->
+                    isPlayerControllerVisible = (visibility == View.VISIBLE)
+                    setChannelInformation(visibility == View.VISIBLE)
+                    if (!isLocked) {
+                        // Tidak locked, semua ikut show/hide normal
+                        bindingRoot.btnMiniChannelToggle.visibility = visibility
+                    }
+                    // Tombol kunci di custom_control ikut show/hide saat tidak locked
+                    if (!isLocked) bindingControl.buttonLock.visibility = visibility
                 }
-                // Tombol kunci di custom_control ikut show/hide saat tidak locked
-                if (!isLocked) bindingControl.buttonLock.visibility = it
-            }
+            )
         }
         bindingControl.trackSelection.setOnClickListener { showTrackSelector() }
         bindingControl.buttonExit.apply {
@@ -284,7 +291,7 @@ class PlayerActivity : AppCompatActivity() {
             if (visible && !isPipMode) View.VISIBLE else View.INVISIBLE
 
         if (isPipMode) return
-        if (visible == bindingRoot.playerView.isControllerVisible) return
+        if (visible == isPlayerControllerVisible) return
         if (visible) bindingRoot.playerView.clearFocus()
         else return
 
@@ -293,7 +300,7 @@ class PlayerActivity : AppCompatActivity() {
 
         handlerInfo?.removeCallbacksAndMessages(null)
         handlerInfo?.postDelayed({
-                if (bindingRoot.playerView.isControllerVisible) return@postDelayed
+                if (isPlayerControllerVisible) return@postDelayed
                 bindingRoot.layoutInfo.visibility = View.INVISIBLE
             },
             bindingRoot.playerView.controllerShowTimeoutMs.toLong()
@@ -1201,7 +1208,7 @@ class PlayerActivity : AppCompatActivity() {
         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
             keyCode == KeyEvent.KEYCODE_ENTER ||
             keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-            if (!bindingRoot.playerView.isControllerVisible) {
+            if (!isPlayerControllerVisible) {
                 bindingRoot.playerView.showController()
             } else {
                 if (player?.isPlaying == false) player?.play() else player?.pause()
@@ -1235,7 +1242,7 @@ class PlayerActivity : AppCompatActivity() {
                 KeyEvent.KEYCODE_MEDIA_REWIND,
                 KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
                     // Pastikan controller terlihat agar user tahu progress
-                    if (!bindingRoot.playerView.isControllerVisible)
+                    if (!isPlayerControllerVisible)
                         bindingRoot.playerView.showController()
                     if (keyCode == KeyEvent.KEYCODE_MEDIA_REWIND) player?.seekBack()
                     else player?.seekForward()
@@ -1247,7 +1254,7 @@ class PlayerActivity : AppCompatActivity() {
         // [6] Saat controller ExoPlayer tampil → DPAD sepenuhnya untuk navigasi
         //     tombol-tombol controller. TIDAK ada ganti channel via DPAD.
         //     Untuk ganti channel gunakan mini channel panel (tombol OK/ENTER saat controller sembunyi).
-        if (bindingRoot.playerView.isControllerVisible) {
+        if (isPlayerControllerVisible) {
             return super.onKeyUp(keyCode, event)
         }
 
@@ -1280,7 +1287,7 @@ class PlayerActivity : AppCompatActivity() {
         // [2] Jika terkunci, tidak bisa keluar
         if (isLocked) return
         // [3] Jika controller tampil, sembunyikan dulu (bukan keluar)
-        if (bindingRoot.playerView.isControllerVisible) {
+        if (isPlayerControllerVisible) {
             bindingRoot.playerView.hideController()
             return
         }
