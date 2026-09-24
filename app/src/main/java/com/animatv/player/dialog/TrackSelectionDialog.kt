@@ -233,13 +233,13 @@ class TrackSelectionDialog : DialogFragment() {
         private fun getTrackTypeString(resources: Resources, trackType: Int): String {
             return when (trackType) {
                 C.TRACK_TYPE_VIDEO -> resources.getString(
-                    androidx.media3.ui.R.string.exo_track_selection_title_video
+                    R.string.exo_track_selection_title_video
                 )
                 C.TRACK_TYPE_AUDIO -> resources.getString(
-                    androidx.media3.ui.R.string.exo_track_selection_title_audio
+                    R.string.exo_track_selection_title_audio
                 )
                 C.TRACK_TYPE_TEXT -> resources.getString(
-                    androidx.media3.ui.R.string.exo_track_selection_title_text
+                    R.string.exo_track_selection_title_text
                 )
                 else -> throw IllegalArgumentException("Unknown track type: $trackType")
             }
