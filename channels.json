@@ -626,7 +626,7 @@
       "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/7518da9041c4414d86f173daa719152e/index.mpd",
       "desc": "Dreamworks DASH+ClearKey (Vision+)",
       "tvgId": "Dreamworks.visionplus",
-      "drmType": "Widevine",
+      "drmType": "com.widevine.alpha",
       "licUrl": "https://visionplus.drmiontv.workers.dev/lic?id=50&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "referrer": "https://www.visionplus.id/"
