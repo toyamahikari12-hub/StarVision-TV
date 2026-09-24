@@ -1491,7 +1491,7 @@
       "url": "https://ds-linear-abematv.akamaized.net/channel/abema-anime/manifest.mpd",
       "desc": "ABEMA Anime Channel DASH+ClearKey",
       "tvgId": "abema-anime",
-      "drmType": "ClearKey",
+      "drmType": "Widevine",
       "licenseKey": "128673685efa440583efe8c1a5cd34a3:8ad21413bb064258ad9a1b9ecded0afb,02435eb568ca4aa68fc5f86e824ea4b8:f850df9ef0c64f1ba7d711382786f17a,666782a83def41b1bdcb5225cbda1f3b:ed5deaa0b312429a949a3a4d1886a826,dd2851dd150c48a08a94de5dbc57797d:e9306fbd2f0b4bc694ac80d19b42ac14,572110bf34ad47af81448ff121e619ed:f756aa14ce24490992017291e57b98d0,b4978ddb4db0453fa06d82a71601843b:54b6e7ccc02b4043846695cf86f4f87d,eaaf2ce70ba749eaa9dbcb97b3334268:00707ce261e342a7a6e8d769d87c3763,2aa9906b0bdc4c718b8148b4248d1b6c:3b7bfb8b3c214d2da8c83f76f32d0959,b63aa80876964606bfe7d321785b82e5:2d9ebea278c548cc9141afb41198da0f,0e18e09d42c243109dab32e490187136:d013f5000062457ea4756ab7e5f8887f,21a120574a7d408f9ea761ebb1325e77:19e50d162a9746b2852c8e4c2ddf9f0d"
     },
     {
