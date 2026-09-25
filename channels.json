@@ -17,6 +17,7 @@
   "category_order": [
     "Nasional",
     "Movies & Entertainment",
+    "Entertainment",
     "Daerah",
     "Kids",
     "Jepang",
@@ -620,13 +621,13 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/932vZfR/dreamworks.png",
-      "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/DreamWorksHD/mpd/DreamWorksHD.mpd",
+      "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/7518da9041c4414d86f173daa719152e/index.mpd",
       "desc": "Dreamworks DASH+ClearKey (Vision+)",
       "tvgId": "Dreamworks.visionplus",
-      "drmType": "Clearkey",
-      "licUrl": "f08c30b7ee114399b72e77b0c099244b:a33d496875d04510a9b3116ba51ae65d",
+      "drmType": "Widevine",
+      "licUrl": "https://dusk.biz.id/rpl/drm.php?id=67",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.firstmedia.com"
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 132,
@@ -637,11 +638,11 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/xXxyBrv/dunianak.png",
-      "url": "https://cdn08jtedge.indihometv.com/dassdvr/130/duniaanak/manifest.mpd",
+      "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/RHVuaWEgQW5haw/manifest.mpd",
       "desc": "Dunia anak DASH+ClearKey (Indihome)",
       "tvgId": "Dunia anak.indihome",
       "drmType": "ClearKey",
-      "licUrl": "24e63424fa264ceb9bc6215c0fe860e6:41427f48bce4ffa2ad1b435d9190c199",
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
@@ -846,21 +847,19 @@
     },
     {
       "id": 146,
-      "name": "NBA TV (IHT)",
-      "cat": "SPORT",
+      "name": "Dunia Lain",
+      "cat": "Entertainment",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "dash",
       "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d2/NBA_TV.svg/250px-NBA_TV.svg.png",
-      "url": "https://cdn08jtedge.indihometv.com/dassdvr/130/nba/manifest.mpd",
-      "desc": "NBA TV DASH+ClearKey (Indihome)",
-      "tvgId": "NBA TV.indihome",
+      "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/RHVuaWEgTGFpbg/manifest.mpd",
+      "desc": "Dunia Lain DASH+ClearKey (Indihome)",
+      "tvgId": "Dunia Lain.indihome",
       "drmType": "ClearKey",
-      "licUrl": "834ec3cbface4fe992e995a32d35f587:e0a97198d9f2dfcb0a0483cd4b04414b",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "menu": "sport",
-      "parent": "SPORT"
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 147,
@@ -966,18 +965,18 @@
     },
     {
       "id": 154,
-      "name": "Trans7 (IHT)",
-      "cat": "NASIONAL",
+      "name": "Insert",
+      "cat": "Entertainment",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "dash",
       "logo": "https://thumbor.prod.vidiocdn.com/sTHuz46XhalNvNWDUl-Jvv8k64A=/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/image/734/trans7-9dade4.jpg",
-      "url": "https://cdn08jtedge.indihometv.com/dassdvr/130/trans7/manifest_wuseetv.mpd",
-      "desc": "Trans7 Indihome DASH+ClearKey (Indihome)",
-      "tvgId": "Trans7 Indihome.indihome",
+      "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/IW5zZXJ0/manifest.mpd",
+      "desc": "Insert DASH+ClearKey (Indihome)",
+      "tvgId": "Insert.indihome",
       "drmType": "ClearKey",
-      "licUrl": "c59d66dbf59245e9b14cb47862c456b7:247bb0f6d1c9d64f589d8b2f8e631a53",
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
