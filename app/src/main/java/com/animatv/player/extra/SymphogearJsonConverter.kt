@@ -475,8 +475,75 @@ object SymphogearJsonConverter {
                 )
             }
 
+            // ========================================================
+            // CATEGORY ORDER & HIDDEN dari channels.json (opsional)
+            // ========================================================
+            // Field paling sederhana buat mengatur kategori langsung
+            // dari channels.json, tanpa perlu susun ulang urutan channel
+            // di dalam array:
+            //
+            //   "category_order": ["NASIONAL", "HBO GROUP", ...],
+            //   "category_hidden": ["Nama Kategori Yang Disembunyikan"]
+            //
+            // Kalau "category_order" ada dan tidak kosong, dia menang atas
+            // urutan alami kemunculan pertama di atas. Kategori yang tidak
+            // disebut di "category_order" tetap muncul, ditaruh setelah
+            // yang disebutkan, sesuai urutan alaminya.
+
+            val explicitOrder =
+                mutableListOf<String>()
+
+            if (root.has("category_order")) {
+                try {
+                    root.getAsJsonArray("category_order").forEach { el ->
+                        val name = el.asString?.trim()
+                        if (!name.isNullOrEmpty()) explicitOrder.add(name)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Gagal parsing category_order: ${e.message}")
+                }
+            }
+
+            val explicitHidden =
+                mutableSetOf<String>()
+
+            if (root.has("category_hidden")) {
+                try {
+                    root.getAsJsonArray("category_hidden").forEach { el ->
+                        val name = el.asString?.trim()
+                        if (!name.isNullOrEmpty()) explicitHidden.add(name.lowercase())
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Gagal parsing category_hidden: ${e.message}")
+                }
+            }
+
+            var finalCategories: List<Category> = categories
+
+            if (explicitHidden.isNotEmpty()) {
+                finalCategories = finalCategories.filter { cat ->
+                    !explicitHidden.contains((cat.name ?: "").trim().lowercase())
+                }
+            }
+
+            if (explicitOrder.isNotEmpty()) {
+                val sorted = ArrayList<Category>()
+                for (name in explicitOrder) {
+                    val found = finalCategories.firstOrNull {
+                        (it.name ?: "").trim().equals(name, ignoreCase = true)
+                    }
+                    if (found != null) sorted.add(found)
+                }
+                for (cat in finalCategories) {
+                    if (sorted.none { (it.name ?: "").equals(cat.name ?: "", ignoreCase = true) }) {
+                        sorted.add(cat)
+                    }
+                }
+                finalCategories = sorted
+            }
+
             playlist.categories =
-                categories
+                ArrayList(finalCategories)
 
             // =========================================================
             // CREATE DRM LICENSES
