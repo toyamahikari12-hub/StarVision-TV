@@ -620,13 +620,13 @@
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/932vZfR/dreamworks.png",
-      "url": "https://d3b0v7fggu5zwm.cloudfront.net/out/v1/7518da9041c4414d86f173daa719152e/index.mpd",
+      "url": "https://atemecdnbalancer-voe.sysln.id/live/eds/DreamWorksHD/mpd/DreamWorksHD.mpd",
       "desc": "Dreamworks DASH+ClearKey (Vision+)",
       "tvgId": "Dreamworks.visionplus",
-      "drmType": "com.widevine.alpha",
-      "licUrl": "https://visionplus.drmiontv.workers.dev/lic?id=50&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
+      "drmType": "Clearkey",
+      "licUrl": "f08c30b7ee114399b72e77b0c099244b:a33d496875d04510a9b3116ba51ae65d",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/"
+      "referrer": "https://www.firstmedia.com"
     },
     {
       "id": 132,
