@@ -22,6 +22,14 @@ import com.animatv.player.extension.isLinkUrl
 import com.animatv.player.extra.SourceChecker
 import com.animatv.player.model.Source
 import java.io.File
+import android.text.InputType
+import android.view.Gravity
+import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
+import com.animatv.player.extra.AdminManager
 
 class SettingSourcesFragment: Fragment() {
     companion object {
@@ -30,6 +38,65 @@ class SettingSourcesFragment: Fragment() {
 
     @Suppress("DEPRECATION")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+
+        // Tab Playlist dikunci kode admin. Sumber sudah tertanam permanen
+        // di kode (lihat Preferences.kt), jadi pengguna biasa tidak perlu
+        // membuka tab ini — hanya admin yang boleh melihat/mengubahnya.
+        val root = FrameLayout(requireContext())
+
+        if (AdminManager.isAdminUnlocked) {
+            root.addView(buildSourcesView(inflater, container))
+        } else {
+            root.addView(buildLockedView(inflater, root))
+        }
+
+        return root
+    }
+
+    /** Tampilan kunci: minta kode admin sebelum menampilkan daftar source. */
+    private fun buildLockedView(inflater: LayoutInflater, root: FrameLayout): View {
+        val context = requireContext()
+
+        val layout = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            setPadding(80, 80, 80, 80)
+        }
+
+        val label = android.widget.TextView(context).apply {
+            text = "Playlist terkunci.\nMasukkan kode admin untuk mengelola sumber playlist."
+            setTextColor(0xFFCCCCCC.toInt())
+            gravity = Gravity.CENTER
+            textSize = 15f
+            setPadding(0, 0, 0, 40)
+        }
+
+        val input = EditText(context).apply {
+            hint = "Kode admin"
+            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+
+        val button = Button(context).apply {
+            text = "Buka"
+            setOnClickListener {
+                if (AdminManager.tryUnlockAdmin(input.text.toString().trim())) {
+                    root.removeAllViews()
+                    root.addView(buildSourcesView(inflater, root))
+                } else {
+                    Toast.makeText(context, "Kode salah!", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        layout.addView(label)
+        layout.addView(input)
+        layout.addView(button)
+
+        return layout
+    }
+
+    /** Tampilan asli daftar & pengaturan source (kode lama, tidak diubah). */
+    private fun buildSourcesView(inflater: LayoutInflater, container: ViewGroup?): View {
         val binding = SettingSourcesFragmentBinding.inflate(inflater, container, false)
 
         val adapter = SourcesAdapter(sources)
