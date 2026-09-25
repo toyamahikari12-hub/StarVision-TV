@@ -20,11 +20,11 @@ object AdminManager {
     // ===== KONFIGURASI ADMIN =====
     // Ganti ini dengan kode rahasia milikmu!
     private const val ADMIN_SECRET_CODE = "ANIMATV2026"
-    private const val ADMIN_GITHUB_OWNER = "manakayuuna123-dot"
+    private const val ADMIN_GITHUB_OWNER = "toyamahikari12-hub"
 
-    // URL config dari GitHub repo
+    // URL config dari GitHub repo (repo aktif milikmu)
     private const val CONFIG_URL =
-        "https://raw.githubusercontent.com/manakayuuna123-dot/AnimeTV/main/config/features.json"
+        "https://raw.githubusercontent.com/toyamahikari12-hub/StarVision-TV/main/config/features.json"
 
     // SharedPreferences keys
     private const val PREF_NAME = "animatv_admin"

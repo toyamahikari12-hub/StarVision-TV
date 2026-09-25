@@ -20,18 +20,56 @@ object CategoryOrderManager {
         App.context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
     }
 
-    /** Simpan urutan kategori (list nama kategori) */
+    /**
+     * Urutan kategori bawaan, ditanam permanen di kode (baked-in).
+     * Berlaku otomatis di SEMUA install tanpa perlu diatur lewat Admin
+     * Panel di tiap perangkat.
+     *
+     * Kategori yang disebut di sini akan tampil sesuai urutan list ini
+     * (index 0 = paling atas). Kategori lain yang tidak disebutkan akan
+     * ditaruh setelahnya, sesuai urutan aslinya dari playlist.
+     *
+     * Admin Panel tetap bisa mengubah urutan, tapi perubahan itu hanya
+     * tersimpan lokal di perangkat itu saja (dipakai untuk uji coba).
+     * Untuk mengubah urutan default di SEMUA perangkat, edit list ini
+     * lalu build ulang aplikasinya.
+     */
+    private val DEFAULT_ORDER = listOf(
+        "Live Event"
+        // tambahkan nama kategori lain di sini sesuai urutan yang diinginkan,
+        // contoh: "Live Event", "V+ IONTV", "Dunia Wibu"
+    )
+
+    /** Simpan urutan kategori (list nama kategori) — override lokal per perangkat */
     fun saveOrder(orderedNames: List<String>) {
         prefs.edit().putString(KEY_ORDER, Gson().toJson(orderedNames)).apply()
     }
 
-    /** Ambil urutan kategori yang tersimpan */
+    /**
+     * Ambil urutan kategori yang berlaku. Prioritas:
+     *   1. Override lokal dari Admin Panel (khusus perangkat itu, buat uji coba)
+     *   2. categoryOrder dari remote config (AdminManager) -- ini yang dipakai
+     *      supaya bisa diubah kapan saja tanpa build ulang, berlaku di
+     *      SEMUA perangkat begitu config-nya di-refresh
+     *   3. DEFAULT_ORDER yang tertanam di kode (fallback kalau remote
+     *      config belum sempat diambil / tidak diisi)
+     */
     fun getOrder(): List<String> {
-        val json = prefs.getString(KEY_ORDER, null) ?: return emptyList()
-        return try {
-            val type = object : TypeToken<List<String>>() {}.type
-            Gson().fromJson(json, type)
-        } catch (e: Exception) { emptyList() }
+        val json = prefs.getString(KEY_ORDER, null)
+        if (json != null) {
+            try {
+                val type = object : TypeToken<List<String>>() {}.type
+                val saved: List<String> = Gson().fromJson(json, type)
+                if (saved.isNotEmpty()) return saved
+            } catch (e: Exception) {
+                // abaikan, lanjut cek remote config
+            }
+        }
+
+        val remoteOrder = AdminManager.getConfig().categoryOrder
+        if (remoteOrder.isNotEmpty()) return remoteOrder
+
+        return DEFAULT_ORDER
     }
 
     /** Simpan daftar kategori yang disembunyikan */
@@ -39,14 +77,27 @@ object CategoryOrderManager {
         prefs.edit().putString(KEY_HIDDEN, Gson().toJson(hiddenNames.toList())).apply()
     }
 
-    /** Ambil daftar kategori yang disembunyikan */
+    /**
+     * Ambil daftar kategori yang disembunyikan. Prioritas sama seperti
+     * getOrder(): override lokal Admin Panel, lalu remote config, baru
+     * dianggap tidak ada yang disembunyikan.
+     */
     fun getHidden(): Set<String> {
-        val json = prefs.getString(KEY_HIDDEN, null) ?: return emptySet()
-        return try {
-            val type = object : TypeToken<List<String>>() {}.type
-            val list: List<String> = Gson().fromJson(json, type)
-            list.toSet()
-        } catch (e: Exception) { emptySet() }
+        val json = prefs.getString(KEY_HIDDEN, null)
+        if (json != null) {
+            try {
+                val type = object : TypeToken<List<String>>() {}.type
+                val list: List<String> = Gson().fromJson(json, type)
+                if (list.isNotEmpty()) return list.toSet()
+            } catch (e: Exception) {
+                // abaikan, lanjut cek remote config
+            }
+        }
+
+        val remoteHidden = AdminManager.getConfig().categoryHidden
+        if (remoteHidden.isNotEmpty()) return remoteHidden.toSet()
+
+        return emptySet()
     }
 
     /**
