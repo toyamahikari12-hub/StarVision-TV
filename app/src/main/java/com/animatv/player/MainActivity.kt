@@ -236,6 +236,15 @@ open class MainActivity : AppCompatActivity() {
         AdminManager.fetchConfigAsync { config ->
             // Config sudah di-cache, fitur akan pakai config terbaru
             android.util.Log.d("StarVisionTV", "Config v${config.configVersion} loaded")
+
+            // Kalau kategori sudah sempat dimuat sebelum config remote
+            // ini datang (kondisi ini hanya terjadi di launch pertama
+            // sebelum cache config terisi), susun ulang sidebar supaya
+            // urutan/kategori tersembunyi dari remote config langsung
+            // kepakai tanpa perlu buka & tutup app lagi.
+            if (!isFinishing && allCategories.isNotEmpty()) {
+                setupSidebar(Playlist.cached)
+            }
         }
 
         // Setup fitur berdasarkan config
