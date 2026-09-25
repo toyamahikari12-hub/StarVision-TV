@@ -637,13 +637,14 @@
       "q": "HD",
       "drm": true,
       "type": "dash",
-      "logo": "https://i.ibb.co.com/xXxyBrv/dunianak.png",
+      "logo": "https://raw.githubusercontent.com/apistech/project/refs/heads/main/logo/image_ch_duniaanak.png",
       "url": "https://cdnjktbpid37.cubmu.com/riutx01-439abf566997b187117993103dfd8508/dash/RHVuaWEgQW5haw/manifest.mpd?signature=YzFiMDczNTk5YzQ0YTAxM2U4ZDViODhmZWIzZDkwYzE=&time=77777777777&device_id=oqPcIJQPEgQxuPCsq77lFIwOcrQECY_B1ndbumvw1NNut3BBlg",
       "desc": "Dunia anak DASH+ClearKey (Indihome)",
       "tvgId": "Dunia anak.indihome",
       "drmType": "org.w3.clearkey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "//www.cubmu.com/"
     },
     {
       "id": 133,
@@ -859,7 +860,8 @@
       "tvgId": "Dunia Lain.indihome",
       "drmType": "org.w3.clearkey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "//www.cubmu.com/"
     },
     {
       "id": 147,
