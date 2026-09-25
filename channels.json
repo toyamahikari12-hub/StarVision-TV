@@ -672,7 +672,7 @@
       "q": "HD",
       "drm": true,
       "type": "dash",
-      "logo": "https://i.ibb.co.com/Gkz5wjx/nickjr.png",
+      "logo": "https://www.skyperfectv.co.jp/library/common/img/channel/icon/basic/bs236.gif",
       "url": "https://fta1-cdn-flr.visionplus.id/out/v1/27163af9499b4bcca2da96677b158efe/index.mpd",
       "desc": "Nick Jr DASH+ClearKey (Vision+)",
       "tvgId": "Nick Jr.vision+",
@@ -689,7 +689,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/DgC0xN3/animax.png",
-      "url": "https://tv.iedon.net/api/streams/live/bs236/1080p/mpegts",
+      "url": "https://naori-test.netgenx.site/pxx.php?shk_cid=bs15#.m3u8",
       "desc": "ANIMAX JAPAN HLS (dens.tv)",
       "tvgId": "Animax.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
