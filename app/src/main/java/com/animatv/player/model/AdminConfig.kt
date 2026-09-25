@@ -35,6 +35,13 @@ data class AdminConfig(
     val themeColorAccent: String = "#00BCD4",
     val bgRotatorInterval: Int = 30,        // Detik ganti background
 
+    // Kategori (opsional): kalau diisi di config remote, ini menang atas
+    // DEFAULT_ORDER yang tertanam di kode, jadi bisa diubah kapan saja
+    // tanpa build ulang -- cukup edit file config JSON di GitHub.
+    // Kosongkan (list default) untuk pakai DEFAULT_ORDER di kode.
+    val categoryOrder: List<String> = emptyList(),
+    val categoryHidden: List<String> = emptyList(),
+
     // Admin info
     val configVersion: Int = 1,
     val lastUpdated: String = ""
