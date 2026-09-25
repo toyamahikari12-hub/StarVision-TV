@@ -17,7 +17,7 @@
   "category_order": [
     "Nasional",
     "Movies & Entertainment",
-    "Entertainment",
+    "HBO GROUP",
     "Daerah",
     "Kids",
     "Jepang",
@@ -571,7 +571,7 @@
     {
       "id": 140,
       "name": "HBO",
-      "cat": "MOVIES & ENTERTAINMENT",
+      "cat": "HBO GROUP",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
