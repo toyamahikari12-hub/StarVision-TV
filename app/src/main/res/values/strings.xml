@@ -3,6 +3,7 @@
     <!-- App -->
     <string name="app_name">StarVision TV</string>
     <string name="iptv_playlist" translatable="false">https://raw.githubusercontent.com/toyamahikari12-hub/StarVision-TV/main/channels.json</string>
+    <string name="iptv_playlist_2" translatable="false">https://visionplus.drmiontv.workers.dev/playlist.m3u</string>
     <!-- gh_token dipindah ke BuildConfig.GH_TOKEN (lihat app/build.gradle),
          diisi dari GitHub Actions secret GH_TOKEN saat build, bukan ditulis di sini. -->
     <!-- API Key untuk server privat (dipisah agar susah direverse) -->
