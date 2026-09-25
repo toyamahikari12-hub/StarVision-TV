@@ -747,16 +747,16 @@
     },
     {
       "id": 122,
-      "name": "NHK BS1",
+      "name": "TBS Channel 1",
       "cat": "JEPANG",
       "color": "#f97316",
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/NHK_World_logo.svg/240px-NHK_World_logo.svg.png",
-      "url": "https://nhkworld-vh.akamaihd.net/i/nhkworld_japanese_1@195894/master.m3u8",
-      "desc": "NHK BS1 HLS",
-      "tvgId": "NHK.jp",
+      "logo": "https://www.skyperfectv.co.jp/library/common/img/channel/icon/basic/cs296.gif",
+      "url": "https://akariko−bck1.sankuria.sbs/stream/jp/tbs_channel_1/stream-output.m3u8?mode=hls",
+      "desc": "TBS Channel 1 HLS",
+      "tvgId": "TBS Channel 1.jp",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
