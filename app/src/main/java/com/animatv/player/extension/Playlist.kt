@@ -304,6 +304,36 @@ fun Playlist?.removeFavorite() {
 }
 
 
+
+/**
+ * PlayerActivity mengenali DRM dari awalan nama:
+ *   widevine_...  -> Widevine
+ *   clearkey_...  -> ClearKey
+ *
+ * Di channels.json cukup tulis "drmType": "widevine" atau "clearkey".
+ * Nama internalnya dibuat per-licenseKey, jadi dua channel dengan
+ * license berbeda tidak saling menimpa.
+ */
+private fun normalizeDrmName(drmType: String, licenseKey: String): String {
+
+    val t = drmType.trim().lowercase()
+
+    return when {
+
+        t.startsWith("widevine_") || t.startsWith("clearkey_") ->
+            drmType.trim()
+
+        t.contains("widevine") ->
+            "widevine_" + licenseKey.hashCode()
+
+        t.contains("clearkey") ->
+            "clearkey_" + licenseKey.hashCode()
+
+        else ->
+            drmType.trim()
+    }
+}
+
 /**
  * Mengubah String menjadi Playlist.
  *
@@ -590,7 +620,7 @@ fun String?.toPlaylist(): Playlist? {
                     drmType.isNotEmpty()
                 ) {
 
-                    channel.drmName = drmType
+                    channel.drmName = normalizeDrmName(drmType, licenseKey)
                 }
 
 
@@ -651,16 +681,16 @@ fun String?.toPlaylist(): Playlist? {
                 ) {
 
                     if (
-                        !drmMap.containsKey(drmType)
+                        !drmMap.containsKey(normalizeDrmName(drmType, licenseKey))
                     ) {
 
                         val drm =
                             DrmLicense()
 
-                        drm.name = drmType
+                        drm.name = normalizeDrmName(drmType, licenseKey)
                         drm.url = licenseKey
 
-                        drmMap[drmType] = drm
+                        drmMap[normalizeDrmName(drmType, licenseKey)] = drm
                     }
                 }
 
