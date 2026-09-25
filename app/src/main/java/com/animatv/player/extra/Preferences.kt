@@ -132,6 +132,17 @@ class Preferences {
                 path = context.getString(R.string.iptv_playlist)
                 active = true
             }
+
+            // Source kedua bawaan aplikasi (Vision+ / channels.m3u).
+            // Sengaja ditanam permanen seperti "default" di atas, supaya
+            // selalu ada di setiap install tanpa perlu ditambahkan manual
+            // lewat Settings, dan tetap ikut ter-update kalau linknya
+            // berubah isinya (bukan salinan statis).
+            val defaultVisionPlus = Source().apply {
+                path = context.getString(R.string.iptv_playlist_2)
+                active = true
+            }
+
             try {
                 val json = preferences.getString(SOURCES_PLAYLIST, "").toString()
                 if (json.isBlank()) throw Exception("no playlist sources in preference")
@@ -147,6 +158,19 @@ class Preferences {
             }
 
             if (result.isEmpty()) result.add(default)
+
+            // Pastikan source Vision+ selalu ada, baik saat install baru
+            // maupun setelah update dari versi lama yang belum punya
+            // source ini tersimpan.
+            val visionPlusIndex = result.indexOfFirst {
+                it.path.trim().equals(defaultVisionPlus.path.trim(), ignoreCase = true)
+            }
+            if (visionPlusIndex >= 0) {
+                result[visionPlusIndex].path = defaultVisionPlus.path
+            } else {
+                result.add(defaultVisionPlus)
+            }
+
             val active = result.filter { s -> s.active }
             if (active.isEmpty()) result.first().active = true
 

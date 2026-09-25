@@ -2,6 +2,7 @@ package com.animatv.player.extra
 
 import android.util.Log
 import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.animatv.player.model.Category
 import com.animatv.player.model.Channel
@@ -11,6 +12,24 @@ import com.animatv.player.model.Playlist
 object SymphogearJsonConverter {
 
     private const val TAG = "SymphogearConverter"
+
+
+    // ================================================================
+    // NULL-SAFE JSON READERS
+    // "origin": null di JSON menghasilkan JsonNull, dan JsonNull.asString
+    // melempar exception -> channel dilewati diam-diam. Helper ini
+    // mengembalikan null untuk field yang tidak ada / null.
+    // ================================================================
+
+    private fun JsonObject.str(key: String): String? {
+        val el = this.get(key)
+        return if (el == null || el.isJsonNull) null else el.asString
+    }
+
+    private fun JsonObject.bool(key: String): Boolean? {
+        val el = this.get(key)
+        return if (el == null || el.isJsonNull) null else el.asBoolean
+    }
 
     // ================================================================
     // CATEGORY NAMES
@@ -116,15 +135,11 @@ object SymphogearJsonConverter {
                                 menuEl.asJsonObject
 
                             val menuId =
-                                menuObj
-                                    .get("id")
-                                    ?.asString
+                                menuObj.str("id")
                                     ?: return@forEach
 
                             val menuLabel =
-                                menuObj
-                                    .get("label")
-                                    ?.asString
+                                menuObj.str("label")
                                     ?: menuId.uppercase()
 
                             menuLabelMap[
@@ -157,53 +172,50 @@ object SymphogearJsonConverter {
                     // ------------------------------------------------
 
                     val name =
-                        obj.get("name")
-                            ?.asString
+                        obj.str("name")
                             ?: continue
 
                     val url =
-                        obj.get("url")
-                            ?.asString
+                        obj.str("url")
                             ?: continue
 
                     val cat =
-                        obj.get("cat")
-                            ?.asString
+                        obj.str("cat")
                             ?: "nasional"
 
                     val menuId =
-                        obj.get("menu")
-                            ?.asString
+                        obj.str("menu")
 
                     // ------------------------------------------------
                     // DRM DATA
                     // ------------------------------------------------
 
                     val hasDrm =
-                        obj.get("drm")
-                            ?.asBoolean
+                        obj.bool("drm")
                             ?: false
 
                     val drmType =
-                        obj.get("drmType")
-                            ?.asString
+                        obj.str("drmType")
                             ?: "ClearKey"
 
                     val licUrl =
-                        obj.get("licUrl")
-                            ?.asString
+                        obj.str("licUrl")
 
                     val licenseKey =
-                        obj.get("licenseKey")
-                            ?.asString
+                        obj.str("licenseKey")
 
                     // ------------------------------------------------
                     // USER AGENT
                     // ------------------------------------------------
 
+                    // Buang awalan salah ketik seperti "http-user-agent="
                     val ua =
-                        obj.get("ua")
-                            ?.asString
+                        obj.str("ua")
+                            ?.replace(
+                                Regex("^\\s*(http-)?user-agent=", RegexOption.IGNORE_CASE),
+                                ""
+                            )
+                            ?.trim()
 
                     // ------------------------------------------------
                     // REFERER
@@ -243,24 +255,21 @@ object SymphogearJsonConverter {
                     // ------------------------------------------------
 
                     val origin =
-                        obj.get("origin")
-                            ?.asString
+                        obj.str("origin")
 
                     // ------------------------------------------------
                     // BUFFER (opsional, preset per channel)
                     // ------------------------------------------------
 
                     val bufferMode =
-                        obj.get("buffer")
-                            ?.asString
+                        obj.str("buffer")
 
                     // ------------------------------------------------
                     // LOGO
                     // ------------------------------------------------
 
                     val logo =
-                        obj.get("logo")
-                            ?.asString
+                        obj.str("logo")
 
                     // =================================================
                     // CREATE CHANNEL
