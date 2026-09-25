@@ -493,18 +493,16 @@
     },
     {
       "id": 136,
-      "name": "DUNIA LAIN (IHT)",
+      "name": "DUNIA LAIN",
       "cat": "MOVIES & ENTERTAINMENT",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "dash",
       "logo": "https://i.ibb.co.com/nr4HQFm/dunialain.png",
-      "url": "https://cdn08jtedge.indihometv.com/dassdvr/130/dunialain/manifest.mpd",
+      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-439abf566997b187117993103dfd8508/dash/RHVuaWEgTGFpbg/manifest.mpd",
       "desc": "DUNIA LAIN DASH+ClearKey (Indihome)",
       "tvgId": "DUNIA LAIN.indihome",
-      "drmType": "ClearKey",
-      "licUrl": "33e5bead1364469aa10625a95f512d44:4bad449e73fde62396a03b9d82f81b7f",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
