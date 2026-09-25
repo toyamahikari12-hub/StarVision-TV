@@ -35,47 +35,19 @@ object SymphogearJsonConverter {
     // CATEGORY NAMES
     // ================================================================
 
-    private val CAT_NAMES = mapOf(
-        "nasional" to "NASIONAL",
-        "movies & entertainment" to "MOVIES & ENTERTAINMENT",
-        "daerah" to "DAERAH",
-        "kids" to "KIDS",
-        "anime" to "ANIME",
-        "jepang" to "JEPANG",
-        "sport" to "SPORT",
-
-        // legacy
-        "berita" to "BERITA",
-        "hiburan" to "HIBURAN",
-        "olahraga" to "OLAHRAGA",
-        "internasional" to "INTERNASIONAL",
-        "vision" to "VISION+",
-        "indihome" to "INDIHOME",
-        "custom" to "CUSTOM"
-    )
-
     // ================================================================
-    // CATEGORY ORDER
+    // CATEGORY NAME & ORDER
     // ================================================================
-
-    private val ORDERED_CATS = listOf(
-        "nasional",
-        "movies & entertainment",
-        "daerah",
-        "kids",
-        "anime",
-        "jepang",
-        "sport",
-
-        // legacy
-        "berita",
-        "hiburan",
-        "olahraga",
-        "internasional",
-        "vision",
-        "indihome",
-        "custom"
-    )
+    //
+    // Sengaja TIDAK ada lagi daftar urutan/nama kategori yang di-hardcode
+    // di sini. Urutan kategori sepenuhnya mengikuti urutan kemunculan
+    // pertama field "cat" di channels.json -- supaya nambah, atur urutan,
+    // dan hapus kategori bisa dilakukan cukup dengan edit channels.json,
+    // tanpa perlu build ulang aplikasi.
+    //
+    // "jepang"/"Jepang"/"JEPANG" dkk yang beda huruf besar-kecil tetap
+    // digabung jadi satu kategori (case-insensitive), dan nama yang
+    // dipakai adalah penulisan PERTAMA yang ditemukan di file.
 
     // ================================================================
     // CONVERTER
@@ -106,6 +78,12 @@ object SymphogearJsonConverter {
 
             val categoryMap =
                 LinkedHashMap<String, ArrayList<Channel>>()
+
+            // Simpan penulisan asli (huruf besar/kecil) pertama kali
+            // sebuah kategori muncul di channels.json, supaya tampilannya
+            // tidak dipaksa jadi "Judul huruf pertama saja".
+            val categoryDisplayNames =
+                LinkedHashMap<String, String>()
 
             val drmMap =
                 LinkedHashMap<String, String>()
@@ -433,6 +411,9 @@ object SymphogearJsonConverter {
 
                         categoryMap[catKey] =
                             ArrayList()
+
+                        categoryDisplayNames[catKey] =
+                            cat.trim()
                     }
 
                     categoryMap[catKey]
@@ -469,54 +450,29 @@ object SymphogearJsonConverter {
             // =========================================================
             // CREATE CATEGORIES
             // =========================================================
+            // categoryMap adalah LinkedHashMap, jadi urutan iterasinya
+            // sudah otomatis mengikuti urutan kemunculan pertama tiap
+            // kategori di channels.json. Tidak ada penyusunan ulang di
+            // sini -- itu ditangani belakangan oleh CategoryOrderManager
+            // (yang defaultnya juga membiarkan urutan ini apa adanya).
 
             val categories =
                 ArrayList<Category>()
 
-            // Kategori berdasarkan urutan yang ditentukan
-            for (key in ORDERED_CATS) {
-
-                if (categoryMap.containsKey(key)) {
-
-                    val category =
-                        Category()
-
-                    category.name =
-                        CAT_NAMES[key]
-                            ?: key.replaceFirstChar {
-                                it.uppercase()
-                            }
-
-                    category.channels =
-                        categoryMap[key]
-
-                    categories.add(
-                        category
-                    )
-                }
-            }
-
-            // Kategori lain
             for ((key, channels) in categoryMap) {
 
-                if (!ORDERED_CATS.contains(key)) {
+                val category =
+                    Category()
 
-                    val category =
-                        Category()
+                category.name =
+                    categoryDisplayNames[key] ?: key
 
-                    category.name =
-                        CAT_NAMES[key]
-                            ?: key.replaceFirstChar {
-                                it.uppercase()
-                            }
+                category.channels =
+                    channels
 
-                    category.channels =
-                        channels
-
-                    categories.add(
-                        category
-                    )
-                }
+                categories.add(
+                    category
+                )
             }
 
             playlist.categories =

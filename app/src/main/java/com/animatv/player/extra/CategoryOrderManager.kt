@@ -34,11 +34,11 @@ object CategoryOrderManager {
      * Untuk mengubah urutan default di SEMUA perangkat, edit list ini
      * lalu build ulang aplikasinya.
      */
-    private val DEFAULT_ORDER = listOf(
-        "Live Event"
-        // tambahkan nama kategori lain di sini sesuai urutan yang diinginkan,
-        // contoh: "Live Event", "V+ IONTV", "Dunia Wibu"
-    )
+    // Kosong = tidak ada override apa pun di kode. Urutan kategori
+    // sepenuhnya mengikuti urutan alami di channels.json (lihat
+    // SymphogearJsonConverter). Isi list ini HANYA kalau kamu benar-benar
+    // mau memaksa urutan tertentu langsung dari kode / build.
+    private val DEFAULT_ORDER = emptyList<String>()
 
     /** Simpan urutan kategori (list nama kategori) — override lokal per perangkat */
     fun saveOrder(orderedNames: List<String>) {
