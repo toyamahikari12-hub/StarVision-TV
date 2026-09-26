@@ -343,13 +343,11 @@
       "drm": false,
       "type": "hls",
       "logo": "https://thumbor.prod.vidiocdn.com/g7gTjD2Il1GI4DJULOZ1cv6NSj4=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/206/1823dc.png",
-      "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/2f1c4190dcf045c9aafc447d54ef7c91/index.mpd",
+      "url": "https://op-flashcon-digdayahd-1.dens.tv/h/h207/index.m3u8",
       "desc": "Moji HLS",
       "tvgId": "Moji.id",
-      "drmType": "Widevine",
-      "licUrl": "https://dusk.biz.id/rpl/drm.php?id=19",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/"
+      "referrer": "https://www.dens.tv/"
     },
     {
       "id": 119,
