@@ -123,6 +123,34 @@ object SymphogearJsonConverter {
                             menuLabelMap[
                                 menuId.lowercase()
                             ] = menuLabel
+
+                            // Daftarkan langsung dari "subCategories" di
+                            // sini, supaya urutan & keanggotaan menu bisa
+                            // 100% diatur dari sini, tanpa perlu nambah
+                            // field "menu" di tiap channel satu-satu.
+                            // Kalau nama sub-kategori belum ada channel-nya,
+                            // ya cuma tidak akan muncul -- tidak masalah.
+                            if (menuObj.has("subCategories")) {
+                                try {
+                                    menuObj.getAsJsonArray("subCategories")
+                                        .forEach { subEl ->
+                                            val subName = subEl.asString?.trim()
+                                            if (!subName.isNullOrEmpty()) {
+                                                com.animatv.player.extra.MenuManager
+                                                    .registerCategoryMenu(
+                                                        subName,
+                                                        menuId,
+                                                        menuLabel
+                                                    )
+                                            }
+                                        }
+                                } catch (e: Exception) {
+                                    Log.w(
+                                        TAG,
+                                        "Gagal membaca subCategories menu '$menuId': ${e.message}"
+                                    )
+                                }
+                            }
                         }
 
                 } catch (e: Exception) {

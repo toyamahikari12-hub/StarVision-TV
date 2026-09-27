@@ -97,10 +97,21 @@ object MenuManager {
         val menu = menus.firstOrNull { it.id.equals(menuId, ignoreCase = true) }
             ?: return emptyList()
 
-        return Playlist.cached.categories.filter { cat ->
-            val catName = cat.name ?: return@filter false
-            menu.subCategories.any { it.equals(catName, ignoreCase = true) }
+        val all = Playlist.cached.categories
+
+        // PENTING: urutan hasil harus ikut urutan menu.subCategories
+        // (persis seperti ditulis di "menus" -> channels.json), bukan
+        // urutan alami Playlist.cached.categories. Sebelumnya di-filter
+        // langsung dari `all`, jadi urutannya ikut daftar kategori global
+        // dan kelihatan "acak" dibanding urutan subCategories yang ditulis.
+        val result = mutableListOf<com.animatv.player.model.Category>()
+        for (subCatName in menu.subCategories) {
+            val found = all.firstOrNull { (it.name ?: "").equals(subCatName, ignoreCase = true) }
+            if (found != null && result.none { it === found }) {
+                result.add(found)
+            }
         }
+        return result
     }
 
     /**
