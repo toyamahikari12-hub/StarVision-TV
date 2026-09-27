@@ -63,15 +63,28 @@ object MenuManager {
      * Prioritas: Admin override > JSON menus > auto-detect
      */
     fun getMenus(): List<MenuConfig> {
-        // Coba load admin override
-        val adminMenus = loadAdminMenus()
-        if (adminMenus.isNotEmpty()) return adminMenus
+        val raw = run {
+            // Coba load admin override
+            val adminMenus = loadAdminMenus()
+            if (adminMenus.isNotEmpty()) return@run adminMenus
 
-        // Pakai dari channels.json
-        if (jsonMenus.isNotEmpty()) return jsonMenus
+            // Pakai dari channels.json
+            if (jsonMenus.isNotEmpty()) return@run jsonMenus
 
-        // Fallback: auto-detect dari nama kategori
-        return autoDetectMenus()
+            // Fallback: auto-detect dari nama kategori
+            autoDetectMenus()
+        }
+
+        // Sembunyikan menu yang tidak punya kategori nyata sama sekali
+        // (misal menu yang subCategories-nya belum ada channel-nya).
+        // Menu kosong seperti ini tidak ada gunanya ditampilkan.
+        val realNames = Playlist.cached.categories
+            .mapNotNull { it.name?.lowercase()?.trim() }
+            .toSet()
+
+        return raw.filter { menu ->
+            menu.subCategories.any { realNames.contains(it.lowercase().trim()) }
+        }
     }
 
     /**
@@ -97,21 +110,15 @@ object MenuManager {
         val menu = menus.firstOrNull { it.id.equals(menuId, ignoreCase = true) }
             ?: return emptyList()
 
-        val all = Playlist.cached.categories
-
-        // PENTING: urutan hasil harus ikut urutan menu.subCategories
-        // (persis seperti ditulis di "menus" -> channels.json), bukan
-        // urutan alami Playlist.cached.categories. Sebelumnya di-filter
-        // langsung dari `all`, jadi urutannya ikut daftar kategori global
-        // dan kelihatan "acak" dibanding urutan subCategories yang ditulis.
-        val result = mutableListOf<com.animatv.player.model.Category>()
-        for (subCatName in menu.subCategories) {
-            val found = all.firstOrNull { (it.name ?: "").equals(subCatName, ignoreCase = true) }
-            if (found != null && result.none { it === found }) {
-                result.add(found)
-            }
+        // Urutan hasil ikut urutan Playlist.cached.categories (sudah
+        // disortir global lewat "category_order" di channels.json).
+        // "subCategories" di sini cuma dipakai sebagai daftar KEANGGOTAAN
+        // (siapa saja yang masuk menu ini), bukan urutan tampil -- supaya
+        // hanya perlu atur urutan di SATU tempat saja: category_order.
+        return Playlist.cached.categories.filter { cat ->
+            val catName = cat.name ?: return@filter false
+            menu.subCategories.any { it.equals(catName, ignoreCase = true) }
         }
-        return result
     }
 
     /**
