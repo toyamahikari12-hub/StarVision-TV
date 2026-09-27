@@ -1560,6 +1560,22 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
       "parent": "BEIN SPORT"
+    },
+    {
+      "id": 189,
+      "name": "Astro Prima",
+      "cat": "MALAYSIA",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": true,
+      "type": "dash",
+      "logo": "https://www.mncvision.id/userfiles/image/channel/channel_310.png",
+      "url": "http://live8.cdn.iptv8k.org:80/review_stream/primakbmm23/i.m3u8",
+      "desc": "Astro Prima",
+      "tvgId": "Astro Prima",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "luar negeri",
+      "parent": "MALAYSIA"
     }
   ],
   "menus": [
@@ -1582,6 +1598,14 @@
       "icon": "NDL",
       "subCategories": [
         "NASIONAL SPORT"
+      ]
+    },
+    {
+      "id": "luar negeri",
+      "label": "LUAR NEGERI",
+      "icon": "LN",
+      "subCategories": [
+        "MALAYSIA"
       ]
     }
   ]
