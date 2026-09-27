@@ -1162,7 +1162,7 @@
       "url": "https://d2xz2v5wuvgur6.cloudfront.net/out/v1/63c0da12bb4d48afbaf053f51dff2353/index.mpd",
       "desc": "Soccer Channel DASH+ClearKey (Vision+)",
       "tvgId": "Soccer Channel.vision+",
-      "drmType": "ClearKey",
+      "drmType": "Widevine",
       "licUrl": "https://dusk.biz.id/rpl/drm.php?id=115",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
