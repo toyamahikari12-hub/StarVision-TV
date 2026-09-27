@@ -451,6 +451,34 @@ open class MainActivity : AppCompatActivity() {
 
         val menus = MenuManager.getMenus()
 
+        // LIVE TV selalu di paling atas (sebelum menu-menu lain dari
+        // channels.json), lalu diikuti pemisah, baru menu-menu lainnya
+        // sesuai urutan di "menus" -> channels.json.
+        if (menus.isNotEmpty()) {
+            addDropdownItem(container, "LIVE TV") {
+                binding.txtCurrentMenu?.text = "LIVE TV"
+                // Kembalikan sidebar ke kategori primary
+                sidebarAdapter?.updateCategories(primaryCategories)
+                if (primaryCategories.isNotEmpty()) {
+                    val catIndex = Playlist.cached.categories.indexOfFirst {
+                        it.name?.trim().equals(primaryCategories[0].name?.trim(), ignoreCase = true)
+                    }
+                    adapter.showCategory(if (catIndex >= 0) catIndex else 0)
+                    sidebarAdapter?.selectCategory(0)
+                }
+                binding.rvSidebar.scrollToPosition(0)
+                binding.rvCategory.scrollToPosition(0)
+                closeDropdown()
+            }
+
+            val divider = View(this).apply {
+                setBackgroundColor(0x88E91E8C.toInt())
+                layoutParams = android.widget.LinearLayout.LayoutParams(
+                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(2))
+            }
+            container.addView(divider)
+        }
+
         for (menu in menus) {
             addDropdownItem(container, menu.label) {
                 binding.txtCurrentMenu?.text = menu.label
@@ -467,32 +495,6 @@ open class MainActivity : AppCompatActivity() {
                     binding.rvSidebar.scrollToPosition(0)
                     binding.rvCategory.scrollToPosition(0)
                 }
-                closeDropdown()
-            }
-        }
-
-        // Divider + tombol kembali ke Live TV
-        if (menus.isNotEmpty()) {
-            val divider = View(this).apply {
-                setBackgroundColor(0x88E91E8C.toInt())
-                layoutParams = android.widget.LinearLayout.LayoutParams(
-                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT, dpToPx(2))
-            }
-            container.addView(divider)
-
-            addDropdownItem(container, "LIVE TV") {
-                binding.txtCurrentMenu?.text = "LIVE TV"
-                // Kembalikan sidebar ke kategori primary
-                sidebarAdapter?.updateCategories(primaryCategories)
-                if (primaryCategories.isNotEmpty()) {
-                    val catIndex = Playlist.cached.categories.indexOfFirst {
-                        it.name?.trim().equals(primaryCategories[0].name?.trim(), ignoreCase = true)
-                    }
-                    adapter.showCategory(if (catIndex >= 0) catIndex else 0)
-                    sidebarAdapter?.selectCategory(0)
-                }
-                binding.rvSidebar.scrollToPosition(0)
-                binding.rvCategory.scrollToPosition(0)
                 closeDropdown()
             }
         }
