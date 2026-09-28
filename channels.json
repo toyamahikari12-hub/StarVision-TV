@@ -77,19 +77,20 @@
     },
     {
       "id": 102,
-      "name": "RCTI (VS)",
+      "name": "RCTI (TRV)",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "hls",
       "logo": "https://i.ibb.co.com/dM0SYrN/rcti.png",
-      "url": "https://jt.drmlive.net/jiotvplus/2258.mpd",
+      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-437ec38cc692ca43976ff80c7af30565/dash/UkNUSS1DaGFubmVs/manifest.mpd?signature=M2E4Y2FjZWIxNWEwNmI1YjViYTc5MDAxM2UxYTg5MjM=&time=77777777777&device_id=hY5M2fmdSFTWh5tytanqPWbmxgnCzg5URb9Cgk5AB1RWkUWMtA",
       "desc": "RCTI DASH+ClearKey (Vision+)",
       "tvgId": "RCTI.id",
       "drmType": "ClearKey",
-      "licUrl": "https://jt.drmlive.net/jiotvplus/jtck?id=2258",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 102,
@@ -895,7 +896,7 @@
       "drm": true,
       "type": "dash",
       "logo": "https://raw.githubusercontent.com/apistech/project/refs/heads/main/logo/image_ch_cartoonnetwork.png",
-      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-439abf566997b187117993103dfd8508/dash/Q2FydG9vbiBOZXR3b3Jr/manifest.mpd",
+      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-437ec38cc692ca43976ff80c7af30565/dash/Q2FydG9vbiBOZXR3b3Jr/manifest.mpd",
       "desc": "CartoonNetwork DASH+ClearKey (Indihome)",
       "tvgId": "CartoonNetwork.indihome",
       "drmType": "org.w3.clearkey",
