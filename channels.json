@@ -777,7 +777,7 @@
       "color": "#ffd700",
       "q": "SD",
       "drm": false,
-      "type": "ts",
+      "type": "hls",
       "logo": "http://hometv.biz.id:80/images/Ew7KWgEVPBJlBK0JSddniCSXgQUyeYTSUh135SFESvbfdeNmlgxK086DUO-GdhDcNmI4Q-R2d7yXPiGs26TrDw.png",
       "url": "http://166.88.186.26/live/ss4.m3u8",
       "desc": "Home TV",
