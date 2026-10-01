@@ -22,6 +22,7 @@
     "KIDS",
     "Jepang",
     "Dunia Wibu",
+    "RANDOM SPORT",
     "BEIN SPORT",
     "SPORT",
     "FIFA SERIES 2026"
@@ -1579,19 +1580,19 @@
     },
     {
       "id": 189,
-      "name": "Astro Prima",
-      "cat": "MALAYSIA",
+      "name": "Elta Sport 3",
+      "cat": "RANDOM SPORT",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
-      "type": "hls",
-      "logo": "https://www.mncvision.id/userfiles/image/channel/channel_310.png",
-      "url": "http://w.nasvpn.xyz:8080/live/saya/saya/16578.ts?blog.ntnas.top",
-      "desc": "Astro Prima",
-      "tvgId": "Astro Prima",
+      "type": "ts",
+      "logo": "https://i.postimg.cc/DZQ99Fxp/ezgif-8f9dbedb092ff151.png",
+      "url": "http://31.43.191.125:8080/live/vip6821768502490/6c17bae55394/34866.ts",
+      "desc": "Elta Sport 3",
+      "tvgId": "Elta Sport 3",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "menu": "luar negeri",
-      "parent": "MALAYSIA"
+      "menu": "sport",
+      "parent": "RANDOM SPORT"
     },
     {
       "id": 189,
