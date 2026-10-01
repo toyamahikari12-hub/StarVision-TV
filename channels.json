@@ -22,8 +22,8 @@
     "KIDS",
     "Jepang",
     "Dunia Wibu",
-    "RANDOM SPORT",
     "BEIN SPORT",
+    "RANDOM SPORT",
     "SPORT",
     "FIFA SERIES 2026"
   ],
@@ -1443,7 +1443,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.imgur.com/6YETrUA.jpg",
-      "url": "https://cdnbal1.indihometv.com/atm/DASH/nickelodeon/nickelodeon-avc1_2500000=7-3277707030000000.mpd",
+      "url": "http://103.178.58.10:8000/play/a005/index.m3u8",
       "desc": "&FLIX HLS",
       "tvgId": "&FLIX.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
