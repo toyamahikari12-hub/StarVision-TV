@@ -128,8 +128,23 @@ class Preferences {
     var sources: ArrayList<Source>?
         get() {
             val result = ArrayList<Source>()
+
+            // Keduanya BISA di-override dari remote config (features.json
+            // -> playlistUrl / backupPlaylistUrl) tanpa build ulang. Kalau
+            // kosong di remote config, jatuh balik ke link bawaan yang
+            // ditanam di strings.xml.
+            val remoteConfig = AdminManager.getConfig()
+
+            val source1Path = remoteConfig.playlistUrl
+                .trim()
+                .ifEmpty { context.getString(R.string.iptv_playlist) }
+
+            val source2Path = remoteConfig.backupPlaylistUrl
+                .trim()
+                .ifEmpty { context.getString(R.string.iptv_playlist_2) }
+
             val default = Source().apply {
-                path = context.getString(R.string.iptv_playlist)
+                path = source1Path
                 active = true
             }
 
@@ -139,7 +154,7 @@ class Preferences {
             // lewat Settings, dan tetap ikut ter-update kalau linknya
             // berubah isinya (bukan salinan statis).
             val defaultVisionPlus = Source().apply {
-                path = context.getString(R.string.iptv_playlist_2)
+                path = source2Path
                 active = true
             }
 
@@ -161,9 +176,14 @@ class Preferences {
 
             // Pastikan source Vision+ selalu ada, baik saat install baru
             // maupun setelah update dari versi lama yang belum punya
-            // source ini tersimpan.
+            // source ini tersimpan. Kalau URL-nya berubah lewat remote
+            // config, source yang sudah tersimpan ikut di-refresh ke URL
+            // baru itu (match berdasarkan source lama, baik yang masih
+            // sama dengan strings.xml maupun override sebelumnya).
             val visionPlusIndex = result.indexOfFirst {
-                it.path.trim().equals(defaultVisionPlus.path.trim(), ignoreCase = true)
+                it.path.trim().equals(defaultVisionPlus.path.trim(), ignoreCase = true) ||
+                    it.path.trim().equals(context.getString(R.string.iptv_playlist_2).trim(), ignoreCase = true) ||
+                    it.path.trim().equals(remoteConfig.backupPlaylistUrl.trim(), ignoreCase = true)
             }
             if (visionPlusIndex >= 0) {
                 result[visionPlusIndex].path = defaultVisionPlus.path
