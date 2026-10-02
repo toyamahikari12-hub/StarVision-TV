@@ -1,7 +1,6 @@
 {
   "configVersion": 1,
   "lastUpdated": "2026-03-17",
-
   "featureSleepTimer": true,
   "featurePlaybackSpeed": true,
   "featureGestureControl": true,
@@ -16,17 +15,17 @@
   "featureRecentlyWatched": true,
   "featureChannelShortcut": true,
   "featureLiveNowBanner": true,
-
   "appAnnouncement": "",
   "announcementEnabled": false,
   "maintenanceMode": false,
   "maintenanceMessage": "Sedang maintenance, coba lagi nanti.",
   "forceUpdateVersion": 0,
-
   "playlistUrl": "",
   "backupPlaylistUrl": "",
-
   "themeColorPrimary": "#E91E8C",
   "themeColorAccent": "#00BCD4",
-  "bgRotatorInterval": 30
+  "bgRotatorInterval": 30,
+  "extraSources": [],
+  "categoryOrder": [],
+  "categoryHidden": []
 }
