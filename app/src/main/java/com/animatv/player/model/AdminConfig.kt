@@ -42,6 +42,12 @@ data class AdminConfig(
     val categoryOrder: List<String> = emptyList(),
     val categoryHidden: List<String> = emptyList(),
 
+    // Sumber playlist TAMBAHAN di luar Source 1 (playlistUrl) dan
+    // Source 2 (backupPlaylistUrl). Tiap URL di sini otomatis ditambahkan
+    // sebagai source aktif, berlaku di SEMUA perangkat tanpa build ulang
+    // dan tanpa perlu dibuka satu-satu lewat Settings > Playlist.
+    val extraSources: List<String> = emptyList(),
+
     // Admin info
     val configVersion: Int = 1,
     val lastUpdated: String = ""
