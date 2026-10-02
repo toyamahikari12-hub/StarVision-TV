@@ -439,6 +439,19 @@
     if (!Array.isArray(state.data.category_order)) state.data.category_order = [];
     if (!Array.isArray(state.data.category_hidden)) state.data.category_hidden = [];
     if (!Array.isArray(state.data.menus)) state.data.menus = [];
+
+    // Bersihkan sisa bug versi lama yang sempat menulis "__idx" ke
+    // channel asli. Aman dihapus, bukan field yang dipakai aplikasi.
+    let cleaned = 0;
+    state.data.channels.forEach(c=>{
+      if (c && Object.prototype.hasOwnProperty.call(c, '__idx')){
+        delete c.__idx;
+        cleaned++;
+      }
+    });
+    if (cleaned > 0){
+      toast(`Membersihkan ${cleaned} sisa field "__idx" dari data lama. Simpan untuk menerapkan perbaikan ini.`, 'ok');
+    }
   }
 
   // ---------- LOAD ----------
@@ -856,7 +869,35 @@
     sel.value = current;
   }
 
-  const PRIORITY_FIELDS = ['name','cat','url','logo','ua','referrer','origin','drmType','licUrl','licenseKey','menu'];
+  // Template field channel baru -- urutan & isi field ini SENGAJA dibuat
+  // meniru struktur channel yang sudah terbukti bisa diputar (termasuk
+  // field DRM), supaya channel baru langsung lengkap tanpa perlu
+  // nambah field manual satu-satu / edit JSON mentah.
+  function newChannelTemplate(cat){
+    let nextId = 1;
+    (state.data.channels||[]).forEach(c=>{
+      const n = parseInt(c.id, 10);
+      if (!isNaN(n) && n >= nextId) nextId = n + 1;
+    });
+    return {
+      id: nextId,
+      name: 'Channel Baru',
+      cat: cat || 'UNCATEGORIZED',
+      color: '#e91e8c',
+      q: 'HD',
+      drm: 'false',
+      type: 'hls',
+      logo: '',
+      url: '',
+      licUrl: '',
+      drmType: '',
+      desc: '',
+      tvgId: '',
+      ua: '',
+      menu: '',
+      parent: ''
+    };
+  }
 
   function renderChannels(){
     refreshCategoryFilterOptions();
@@ -866,11 +907,14 @@
     const filterCat = $('channelFilterCat').value;
 
     const list = (state.data.channels||[]);
-    const filtered = list.filter((c,idx)=>{
-      c.__idx = idx; // tandai index asli
-      if (filterCat && (c.cat||'').toLowerCase() !== filterCat.toLowerCase()) return false;
-      if (search && !(c.name||'').toLowerCase().includes(search)) return false;
-      return true;
+    // PENTING: jangan tempel properti apa pun (mis. __idx) ke objek channel
+    // asli -- itu ikut ke-serialize ke channels.json kalau disimpan.
+    // Simpan index aslinya di array pasangan terpisah saja.
+    const filtered = [];
+    list.forEach((c, idx)=>{
+      if (filterCat && (c.cat||'').toLowerCase() !== filterCat.toLowerCase()) return;
+      if (search && !(c.name||'').toLowerCase().includes(search)) return;
+      filtered.push({ ch: c, idx: idx });
     });
 
     if (filtered.length === 0){
@@ -878,32 +922,50 @@
       return;
     }
 
-    filtered.forEach(ch=>{
-      wrap.appendChild(renderChannelItem(ch));
+    filtered.forEach(pair=>{
+      wrap.appendChild(renderChannelItem(pair.ch, pair.idx));
     });
   }
 
-  function renderChannelItem(ch){
+  function renderChannelItem(ch, originalIdx){
     const det = document.createElement('details');
     det.className = 'channel';
+    const isHidden = ch.hidden === true || ch.hidden === 'true';
     const summary = document.createElement('summary');
     summary.innerHTML = `
-      <span class="summary-name">${escapeHtml(ch.name || '(tanpa nama)')}</span>
+      <span class="summary-name" style="${isHidden?'opacity:.5; text-decoration:line-through;':''}">${escapeHtml(ch.name || '(tanpa nama)')}</span>
       <span class="badge">${escapeHtml(ch.cat || '-')}</span>
       ${ch.drmType ? '<span class="badge cyan">DRM</span>' : ''}
+      ${isHidden ? '<span class="badge muted">disembunyikan</span>' : ''}
     `;
     det.appendChild(summary);
 
     const body = document.createElement('div');
     body.className = 'channel-body';
 
+    // Baris sembunyikan/tampilkan -- paling atas, paling gampang dilihat.
+    const hideRow = document.createElement('label');
+    hideRow.style.cssText = 'display:flex; align-items:center; gap:8px; font-size:13px; margin-bottom:14px; cursor:pointer;';
+    hideRow.innerHTML = `<input type="checkbox" ${isHidden?'checked':''}> Sembunyikan channel ini dari aplikasi (data tetap tersimpan, bisa dimunculkan lagi kapan saja)`;
+    hideRow.querySelector('input').addEventListener('change', e=>{
+      if (e.target.checked){
+        state.data.channels[originalIdx].hidden = true;
+      } else {
+        delete state.data.channels[originalIdx].hidden;
+      }
+      renderChannels();
+    });
+    body.appendChild(hideRow);
+
     const grid = document.createElement('div');
     grid.className = 'kv-grid';
 
-    const keysInOrder = Array.from(new Set([...PRIORITY_FIELDS, ...Object.keys(ch).filter(k=>k!=='__idx')]));
+    // Urutan field ikut urutan ASLI di objeknya (sama seperti urutan di
+    // JSON mentah) -- tidak diacak/diprioritaskan ulang, supaya gampang
+    // dicocokkan dengan channel lain yang sudah terbukti jalan.
+    const keysInOrder = Object.keys(ch).filter(k=>k!=='__idx' && k!=='hidden');
 
     keysInOrder.forEach(key=>{
-      if (ch[key] === undefined && !PRIORITY_FIELDS.includes(key)) return;
       const label = document.createElement('div');
       label.className = 'kv-key';
       label.textContent = key;
@@ -912,12 +974,11 @@
       input.value = ch[key] !== undefined && ch[key] !== null ? ch[key] : '';
       input.placeholder = key;
       input.addEventListener('change', ()=>{
-        const idx = ch.__idx;
         const val = input.value;
         if (val === ''){
-          delete state.data.channels[idx][key];
+          delete state.data.channels[originalIdx][key];
         } else {
-          state.data.channels[idx][key] = val;
+          state.data.channels[originalIdx][key] = val;
         }
         if (key === 'name' || key === 'cat' || key === 'drmType'){
           renderChannels(); // refresh summary/badges
@@ -939,7 +1000,7 @@
       const keyInput = addFieldRow.querySelector('input');
       const key = keyInput.value.trim();
       if (!key) return;
-      state.data.channels[ch.__idx][key] = '';
+      state.data.channels[originalIdx][key] = '';
       keyInput.value = '';
       renderChannels();
     });
@@ -947,10 +1008,10 @@
 
     const delBtn = document.createElement('button');
     delBtn.className = 'btn-danger btn-sm';
-    delBtn.textContent = 'Hapus channel ini';
+    delBtn.textContent = 'Hapus channel ini (permanen)';
     delBtn.addEventListener('click', ()=>{
-      if (!confirm(`Hapus channel "${ch.name || ''}"?`)) return;
-      state.data.channels.splice(ch.__idx, 1);
+      if (!confirm(`Hapus channel "${ch.name || ''}" secara PERMANEN? Kalau cuma mau nonaktifkan sementara, pakai centang "Sembunyikan" di atas saja.`)) return;
+      state.data.channels.splice(originalIdx, 1);
       renderChannels();
       toast('Channel dihapus.', 'ok');
     });
@@ -962,10 +1023,10 @@
 
   $('btnAddChannel').addEventListener('click', ()=>{
     const filterCat = $('channelFilterCat').value;
-    const fresh = { name:'Channel Baru', cat: filterCat || 'UNCATEGORIZED', url:'' };
+    const fresh = newChannelTemplate(filterCat);
     state.data.channels.push(fresh);
     renderChannels();
-    toast('Channel baru ditambahkan, silakan lengkapi datanya.', 'ok');
+    toast('Channel baru ditambahkan dengan field lengkap, silakan isi datanya.', 'ok');
     // buka item baru otomatis
     requestAnimationFrame(()=>{
       const items = document.querySelectorAll('#channelList details.channel');
