@@ -1711,15 +1711,23 @@
       "__idx": 100
     },
     {
-      "cat": "SPORT",
-      "url": "https://qp-pldt-live-grp-13-prod.akamaized.net/out/u/dr_spotv2hd.mpd",
-      "__idx": 101,
+      "id": 190,
       "name": "SPOTV 2",
+      "cat": "SPORT",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": true,
+      "type": "dash",
       "logo": "https://www.mncvision.id/userfiles/image/channel/channel_308.png",
+      "url": "https://qp-pldt-live-grp-13-prod.akamaized.net/out/u/dr_spotv2hd.mpd",
       "licUrl": "7eea72d6075245a99ee3255603d58853:6848ef60575579bf4d415db1032153ed",
       "drmType": "Clearkey",
+      "desc": "SPOTV 2",
+      "tvgId": "SPOTV 2",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "parent": "SPORT",
+      "__idx": 190,
     }
   ],
   "menus": [
