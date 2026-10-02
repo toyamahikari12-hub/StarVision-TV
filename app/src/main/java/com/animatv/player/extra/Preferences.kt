@@ -191,6 +191,26 @@ class Preferences {
                 result.add(defaultVisionPlus)
             }
 
+            // Sumber playlist TAMBAHAN dari remote config (features.json
+            // -> extraSources). Ini yang memungkinkan nambah link playlist
+            // baru (seperti link Vision+ dulu) tanpa build ulang APK dan
+            // tanpa perlu buka Settings > Playlist manual -- otomatis
+            // kepakai di semua perangkat begitu config di-refresh.
+            remoteConfig.extraSources.forEach { url ->
+                val trimmed = url.trim()
+                if (trimmed.isEmpty()) return@forEach
+
+                val alreadyExists = result.any {
+                    it.path.trim().equals(trimmed, ignoreCase = true)
+                }
+                if (!alreadyExists) {
+                    result.add(Source().apply {
+                        path = trimmed
+                        active = true
+                    })
+                }
+            }
+
             val active = result.filter { s -> s.active }
             if (active.isEmpty()) result.first().active = true
 

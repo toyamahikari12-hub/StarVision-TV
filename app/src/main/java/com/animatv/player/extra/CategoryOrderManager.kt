@@ -46,9 +46,29 @@ object CategoryOrderManager {
     }
 
     /**
-     * Ambil urutan kategori yang berlaku. Prioritas:
+     * PENTING -- ada DUA mekanisme "urutan kategori" yang beda level:
+     *
+     *   1. "category_order" (huruf kecil, pakai underscore) di dalam
+     *      channels.json -- cuma ngatur urutan kategori DARI SATU SUMBER
+     *      itu saja, sebelum digabung dengan sumber lain. Dipakai oleh
+     *      SymphogearJsonConverter.
+     *
+     *   2. "categoryOrder" (huruf besar di tengah, TANPA underscore) di
+     *      config/features.json -- inilah yang dibaca fungsi getOrder()
+     *      di bawah ini. Ini ngatur urutan FINAL setelah SEMUA sumber
+     *      playlist digabung (channels.json, link M3U Vision+, extraSources,
+     *      dll). Kalau mau atur posisi kategori yang berasal dari sumber
+     *      M3U (contoh: "V+ IONTV", "Dunia Wibu"), WAJIB pakai yang ini,
+     *      bukan yang di channels.json -- karena kategori dari M3U tidak
+     *      pernah melewati channels.json sama sekali.
+     *
+     * Kalau ragu kategori dari sumber mana, aman untuk selalu pakai
+     * "categoryOrder" di features.json saja untuk SEMUA kategori, karena
+     * cakupannya lebih luas (semua sumber, bukan cuma channels.json).
+     *
+     * Prioritas:
      *   1. Override lokal dari Admin Panel (khusus perangkat itu, buat uji coba)
-     *   2. categoryOrder dari remote config (AdminManager) -- ini yang dipakai
+     *   2. categoryOrder dari remote config (features.json) -- ini yang dipakai
      *      supaya bisa diubah kapan saja tanpa build ulang, berlaku di
      *      SEMUA perangkat begitu config-nya di-refresh
      *   3. DEFAULT_ORDER yang tertanam di kode (fallback kalau remote
