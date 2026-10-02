@@ -278,7 +278,35 @@
             <label>Override Source 2 (pengganti link Vision+ bawaan)</label>
             <input type="text" id="srcBackupUrl" placeholder="kosongkan untuk tetap pakai link bawaan di strings.xml">
           </div>
-          <p class="hint" style="margin-top:4px;">
+
+          <hr style="border-color:var(--line); margin:20px 0;">
+
+          <h2 style="font-size:14px; margin-bottom:4px;">Sumber playlist tambahan</h2>
+          <p class="hint">
+            Tambahkan link playlist baru (seperti link Vision+ dulu) tanpa perlu build ulang APK sama sekali.
+            Begitu disimpan, link ini otomatis aktif di SEMUA perangkat.
+          </p>
+          <div class="toolbar">
+            <input type="text" id="newExtraSource" placeholder="https://contoh.com/playlist.m3u atau .json">
+            <button class="btn-primary btn-sm" id="btnAddExtraSource">+ Tambah sumber</button>
+          </div>
+          <div class="list" id="extraSourceList"></div>
+
+          <hr style="border-color:var(--line); margin:20px 0;">
+
+          <h2 style="font-size:14px; margin-bottom:4px;">Urutan kategori global (semua sumber)</h2>
+          <p class="hint">
+            Ini yang menentukan posisi akhir kategori setelah SEMUA sumber playlist digabung —
+            termasuk kategori dari link M3U seperti "V+ IONTV" atau "Dunia Wibu" yang tidak ada di channels.json.
+            Ketik nama kategori persis seperti yang muncul di aplikasi.
+          </p>
+          <div class="toolbar">
+            <input type="text" id="newGlobalCat" placeholder="Nama kategori, mis. V+ IONTV">
+            <button class="btn-primary btn-sm" id="btnAddGlobalCat">+ Tambah ke urutan</button>
+          </div>
+          <div class="list" id="globalCatOrderList"></div>
+
+          <p class="hint" style="margin-top:14px;">
             Perubahan di tab ini disimpan ke file <span id="featuresPathLabel">config/features.json</span>, terpisah
             dari channels.json. Field lain di file itu (pengaturan fitur, tema, dll.) tidak ikut berubah.
           </p>
@@ -587,6 +615,13 @@
     $('featuresPathLabel').textContent = state.featuresPath;
     $('srcPlaylistUrl').value = state.features.playlistUrl || '';
     $('srcBackupUrl').value = state.features.backupPlaylistUrl || '';
+
+    if (!Array.isArray(state.features.extraSources)) state.features.extraSources = [];
+    if (!Array.isArray(state.features.categoryOrder)) state.features.categoryOrder = [];
+    if (!Array.isArray(state.features.categoryHidden)) state.features.categoryHidden = [];
+
+    renderExtraSources();
+    renderGlobalCatOrder();
   }
 
   $('srcPlaylistUrl')?.addEventListener('change', e=>{
@@ -596,6 +631,118 @@
   $('srcBackupUrl')?.addEventListener('change', e=>{
     if (!state.features) return;
     state.features.backupPlaylistUrl = e.target.value.trim();
+  });
+
+  // ---- Extra sources (tambah link playlist baru tanpa build) ----
+  function renderExtraSources(){
+    const wrap = $('extraSourceList');
+    wrap.innerHTML = '';
+    const list = state.features.extraSources;
+
+    if (list.length === 0){
+      wrap.innerHTML = '<div class="empty">Belum ada sumber tambahan.</div>';
+      return;
+    }
+
+    list.forEach((url, idx)=>{
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      row.innerHTML = `
+        <input type="text" value="${escapeAttr(url)}" style="flex:1;">
+        <button class="btn-danger btn-sm" data-act="del">Hapus</button>
+      `;
+      row.querySelector('input').addEventListener('change', e=>{
+        state.features.extraSources[idx] = e.target.value.trim();
+      });
+      row.querySelector('[data-act=del]').addEventListener('click', ()=>{
+        state.features.extraSources.splice(idx,1);
+        renderExtraSources();
+      });
+      wrap.appendChild(row);
+    });
+  }
+
+  $('btnAddExtraSource').addEventListener('click', ()=>{
+    const input = $('newExtraSource');
+    const url = input.value.trim();
+    if (!url) return;
+    if (!state.features){
+      toast('Muat config/features.json dulu (isi path-nya di layar hubungkan).', 'err');
+      return;
+    }
+    if (state.features.extraSources.some(u=>u.toLowerCase()===url.toLowerCase())){
+      toast('Link itu sudah ada di daftar.', 'err');
+      return;
+    }
+    state.features.extraSources.push(url);
+    input.value = '';
+    renderExtraSources();
+    toast('Sumber playlist ditambahkan. Simpan untuk menerapkannya ke semua perangkat.', 'ok');
+  });
+
+  // ---- Global category order (lintas semua sumber) ----
+  function renderGlobalCatOrder(){
+    const wrap = $('globalCatOrderList');
+    wrap.innerHTML = '';
+    const list = state.features.categoryOrder;
+
+    if (list.length === 0){
+      wrap.innerHTML = '<div class="empty">Belum ada urutan global. Kategori akan tampil sesuai urutan alami tiap sumber.</div>';
+      return;
+    }
+
+    list.forEach((name, idx)=>{
+      const isHidden = state.features.categoryHidden.some(h=>h.toLowerCase()===name.toLowerCase());
+      const row = document.createElement('div');
+      row.className = 'list-item';
+      row.innerHTML = `
+        <div class="order-up-down">
+          <button class="btn-ghost btn-icon" data-act="up" ${idx===0?'disabled':''}>▲</button>
+          <button class="btn-ghost btn-icon" data-act="down" ${idx===list.length-1?'disabled':''}>▼</button>
+        </div>
+        <div class="name" style="flex:1;">${escapeHtml(name)}</div>
+        <label style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted); margin:0;">
+          <input type="checkbox" data-act="hide" ${isHidden?'checked':''}> sembunyikan
+        </label>
+        <button class="btn-danger btn-sm" data-act="del">Hapus</button>
+      `;
+      row.querySelector('[data-act=up]')?.addEventListener('click', ()=>{
+        [list[idx-1], list[idx]] = [list[idx], list[idx-1]];
+        renderGlobalCatOrder();
+      });
+      row.querySelector('[data-act=down]')?.addEventListener('click', ()=>{
+        [list[idx+1], list[idx]] = [list[idx], list[idx+1]];
+        renderGlobalCatOrder();
+      });
+      row.querySelector('[data-act=hide]').addEventListener('change', e=>{
+        const hidden = state.features.categoryHidden;
+        const i = hidden.findIndex(h=>h.toLowerCase()===name.toLowerCase());
+        if (e.target.checked && i===-1) hidden.push(name);
+        if (!e.target.checked && i!==-1) hidden.splice(i,1);
+      });
+      row.querySelector('[data-act=del]').addEventListener('click', ()=>{
+        list.splice(idx,1);
+        renderGlobalCatOrder();
+      });
+      wrap.appendChild(row);
+    });
+  }
+
+  $('btnAddGlobalCat').addEventListener('click', ()=>{
+    const input = $('newGlobalCat');
+    const name = input.value.trim();
+    if (!name) return;
+    if (!state.features){
+      toast('Muat config/features.json dulu (isi path-nya di layar hubungkan).', 'err');
+      return;
+    }
+    if (state.features.categoryOrder.some(o=>o.toLowerCase()===name.toLowerCase())){
+      toast('Kategori itu sudah ada di urutan global.', 'err');
+      return;
+    }
+    state.features.categoryOrder.push(name);
+    input.value = '';
+    renderGlobalCatOrder();
   });
 
   // ================= CATEGORIES TAB =================
