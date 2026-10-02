@@ -26,6 +26,10 @@
   "themeColorAccent": "#00BCD4",
   "bgRotatorInterval": 30,
   "extraSources": [],
-  "categoryOrder": [],
+  "categoryOrder": [
+    "NASIONAL",
+    "KIDS",
+    "V+ IONTV"
+  ],
   "categoryHidden": []
 }
