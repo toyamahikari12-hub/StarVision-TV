@@ -545,7 +545,12 @@
 
   $('btnSave').addEventListener('click', async ()=>{
     if (!state.data) return;
-    syncRawIntoState(); // pastikan raw tab (kalau diubah terakhir) ikut kepakai
+    // CATATAN: sengaja TIDAK menarik dari tab "JSON Mentah" di sini.
+    // Edit di tab Channel/Kategori/Menu sudah langsung mengubah state.data
+    // saat itu juga. Kalau ditarik ulang dari textarea JSON Mentah yang
+    // belum tentu ter-refresh, perubahan dari tab lain bisa ketimpa tanpa
+    // sengaja. Tab JSON Mentah cuma berlaku kalau kamu sendiri menekan
+    // tombol "Terapkan ke form" di tab itu.
     ensureShape();
 
     const baseMsg = $('commitMsg').value.trim() || 'Update via Panel Channels';
