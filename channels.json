@@ -1709,6 +1709,17 @@
       "tvgId": "Abema Anime",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "__idx": 100
+    },
+    {
+      "cat": "SPORT",
+      "url": "https://qp-pldt-live-grp-13-prod.akamaized.net/out/u/dr_spotv2hd.mpd",
+      "__idx": 101,
+      "name": "SPOTV 2",
+      "logo": "https://www.mncvision.id/userfiles/image/channel/channel_308.png",
+      "licUrl": "7eea72d6075245a99ee3255603d58853:6848ef60575579bf4d415db1032153ed",
+      "drmType": "Clearkey",
+      "menu": "sport",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     }
   ],
   "menus": [
