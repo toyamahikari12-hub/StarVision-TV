@@ -586,7 +586,15 @@ class AdminActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_save_playlist)?.setOnClickListener {
             val url = etPlaylist?.text?.toString() ?: ""
             val backup = etBackup?.text?.toString() ?: ""
-            toast("Update config/features.json:\n\"playlistUrl\": \"$url\",\n\"backupPlaylistUrl\": \"$backup\"")
+            // CATATAN: field ini sekarang BENAR-BENAR dipakai (lihat
+            // Preferences.kt) untuk override source 1 & 2 secara remote,
+            // bukan cuma dekorasi. Tapi mengubahnya harus lewat
+            // config/features.json di GitHub -- tombol ini sengaja TIDAK
+            // menulis ke GitHub langsung dari dalam APK, supaya token
+            // GitHub tidak perlu disimpan di aplikasi (itu akan jadi
+            // celah keamanan kalau APK dibongkar orang lain). Pakai Panel
+            // Channels (web app terpisah) untuk mengubah nilai ini.
+            toast("Field ini sekarang aktif dipakai aplikasi.\nUbah nilainya lewat Panel Channels (web), bukan dari sini, supaya tidak perlu simpan token GitHub di dalam APK.\n\nplaylistUrl: $url\nbackupPlaylistUrl: $backup")
         }
     }
 
