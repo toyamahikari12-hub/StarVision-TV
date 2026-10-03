@@ -46,8 +46,7 @@
       "desc": "TRANS7 DASH",
       "tvgId": "TRANS7.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://20.detik.com/",
-      "__idx": 0
+      "referrer": "https://20.detik.com/"
     },
     {
       "id": 100,
@@ -61,8 +60,7 @@
       "url": "http://202.150.161.212:5000/live/channel27/playlist.m3u8",
       "desc": "Cartoon Network DASH",
       "tvgId": "Cartoon Network.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 1
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 101,
@@ -77,8 +75,7 @@
       "desc": "ANTV DASH (IndiHome fallback)",
       "tvgId": "ANTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.vidio.com/",
-      "__idx": 2
+      "referrer": "https://www.vidio.com/"
     },
     {
       "id": 102,
@@ -95,8 +92,7 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 3
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 102,
@@ -111,8 +107,7 @@
       "desc": "RCTI DASH (IndiHome fallback)",
       "tvgId": "RCTI.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://m.rctiplus.com/",
-      "__idx": 4
+      "referrer": "https://m.rctiplus.com/"
     },
     {
       "id": 103,
@@ -127,8 +122,7 @@
       "desc": "SCTV HLS",
       "tvgId": "SCTV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.vidio.com/",
-      "__idx": 5
+      "referrer": "https://www.vidio.com/"
     },
     {
       "id": 104,
@@ -145,8 +139,7 @@
       "drmType": "Widevine",
       "licUrl": "http://tvratu.my.id/vid/index.mpd?id=2058&type=drm",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
-      "referrer": "https://www.vidio.com/",
-      "__idx": 6
+      "referrer": "https://www.vidio.com/"
     },
     {
       "id": 1051,
@@ -161,8 +154,7 @@
       "desc": "TRANS TV HLS (Detik)",
       "tvgId": "TransTV.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cnbcindonesia.com/",
-      "__idx": 7
+      "referrer": "https://www.cnbcindonesia.com/"
     },
     {
       "id": 1061,
@@ -176,8 +168,7 @@
       "url": "http://filex.me:8080//@singh_tesla_7207492/puWnhEGsXpK3/302311.m3u8",
       "desc": "TRANS7 HLS (Detik)",
       "tvgId": "Trans7.detik",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 8
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 107,
@@ -193,8 +184,7 @@
       "tvgId": "MNCTV.id",
       "drmType": "ClearKey",
       "licUrl": "c3004565365a42d08e3bde39a516d64e:dbfdc0967cfbbed01dba730c99d9c14a",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 9
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 1071,
@@ -209,8 +199,7 @@
       "desc": "MNC TV DASH (IndiHome fallback)",
       "tvgId": "MNCTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://m.rctiplus.com/",
-      "__idx": 10
+      "referrer": "https://m.rctiplus.com/"
     },
     {
       "id": 1072,
@@ -225,8 +214,7 @@
       "desc": "GTV (IndiHome fallback)",
       "tvgId": "GTV.id@SD",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0",
-      "referrer": "https://m.rctiplus.com/",
-      "__idx": 11
+      "referrer": "https://m.rctiplus.com/"
     },
     {
       "id": 108,
@@ -240,8 +228,7 @@
       "url": "https://cdn10jtedge.indihometv.com/atm/DASH/indosiar/indosiar-avc1_2500000=7-3277707030000000.mpd",
       "desc": "INDOSIAR HLS",
       "tvgId": "INDOSIAR.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 12
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 109,
@@ -257,8 +244,7 @@
       "tvgId": "iNEWS TV.visionplus",
       "drmType": "ClearKey",
       "licUrl": "8ee7df15ff584967a3eb7b885bafc71e:9a297bf2200eee7dee21b9ace9f57c77",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 13
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 111,
@@ -274,8 +260,7 @@
       "tvgId": "MDTV.visionplus",
       "drmType": "ClearKey",
       "licUrl": "91dec6fd9fd84b879aacc027bf532790:588a2214bfb91fc0150b9ac2a745cef8",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 14
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 112,
@@ -289,8 +274,7 @@
       "url": "http://210.210.155.35/dr9445/h/h144/index2.m3u8",
       "desc": "RTV HLS",
       "tvgId": "RTV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 15
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 114,
@@ -306,8 +290,7 @@
       "tvgId": "Metro TV.visionplus",
       "drmType": "ClearKey",
       "licUrl": "c64493155d8b443c834a13d4970cf834:509294911ac3c2d779ae2225a23460b4",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 16
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 115,
@@ -323,8 +306,7 @@
       "tvgId": "TV One.vision+",
       "drmType": "ClearKey",
       "licUrl": "eab667a8f7f14ff7bf00d790314a10f0:1d6693bc942f036053fc1c3c3b3b5032",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 17
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 116,
@@ -338,8 +320,7 @@
       "url": "http://op-group1-swiftservehd-1.dens.tv/h/h234/02.m3u8",
       "desc": "KOMPAS TV HLS",
       "tvgId": "KompasTV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 18
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 117,
@@ -354,8 +335,7 @@
       "desc": "CNN INDONESIA HLS",
       "tvgId": "CNNIndonesia.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://video.detik.com/",
-      "__idx": 19
+      "referrer": "https://video.detik.com/"
     },
     {
       "id": 118,
@@ -370,8 +350,7 @@
       "desc": "Moji HLS",
       "tvgId": "Moji.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.dens.tv/",
-      "__idx": 20
+      "referrer": "https://www.dens.tv/"
     },
     {
       "id": 119,
@@ -385,8 +364,7 @@
       "url": "https://cdn10jtedge.indihometv.com/atm/DASH/nusantaratv/manifest.mpd",
       "desc": "Nusantara TV HLS",
       "tvgId": "Nusantara TV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 21
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 121,
@@ -401,8 +379,7 @@
       "desc": "ANIMAX HLS",
       "tvgId": "ANIMAX.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "buffer": "stabil",
-      "__idx": 22
+      "buffer": "stabil"
     },
     {
       "id": 105,
@@ -419,8 +396,7 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b97",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.transvision.co.id/",
-      "__idx": 23
+      "referrer": "https://www.transvision.co.id/"
     },
     {
       "id": 106,
@@ -438,8 +414,7 @@
       "referrer": "https://visionplus.id",
       "origin": null,
       "drmType": "clearkey",
-      "licenseKey": "8b62ae389f0944d4a55daaad52de1f9d:ba145a1426491316010da87bfd69de05",
-      "__idx": 24
+      "licenseKey": "8b62ae389f0944d4a55daaad52de1f9d:ba145a1426491316010da87bfd69de05"
     },
     {
       "id": 1081,
@@ -456,8 +431,7 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 25
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 1081,
@@ -472,8 +446,7 @@
       "desc": "GTV (R+)",
       "tvgId": "GTV (R+)",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.rctiplus.com/",
-      "__idx": 26
+      "referrer": "https://www.rctiplus.com/"
     },
     {
       "id": 130,
@@ -489,8 +462,7 @@
       "tvgId": "Trans TV Indihome.indihome",
       "drmType": "ClearKey",
       "licUrl": "685d124959a94f89872760636a868956:5cda423e983403ee02b24ac8643470ee",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 27
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 139,
@@ -504,8 +476,7 @@
       "url": "https://hgmtv.com:19360/garudatvlivestreaming/720p.m3u8",
       "desc": "Garuda TV HLS",
       "tvgId": "Garuda TV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 28
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 110,
@@ -522,8 +493,7 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 29
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 135,
@@ -539,8 +509,7 @@
       "tvgId": "Bioskop Indonesia.indihome",
       "drmType": "ClearKey",
       "licUrl": "7fc74162f12d430fad0513d9d5c1bdd5:b195817a10d9b592eb002543cdcdeaf6",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 30
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 136,
@@ -557,8 +526,7 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 31
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 137,
@@ -575,8 +543,7 @@
       "drmType": "Widevine",
       "licenseKey": "https://visionplus.drmiontv.workers.dev/lic?id=60&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 32
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 138,
@@ -590,8 +557,7 @@
       "url": "https://cdnbal1.indihometv.com/atm/DASH/axn/axn-avc1_2500000=7-3277707030000000.mpd",
       "desc": "AXN Asia HLS",
       "tvgId": "AXN Asia.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 33
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 138,
@@ -608,8 +574,7 @@
       "drmType": "Widevine",
       "licUrl": "https://dusk.biz.id/rpl/drm.php?id=49",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/",
-      "__idx": 34
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 141,
@@ -626,8 +591,7 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 35
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 140,
@@ -641,8 +605,7 @@
       "url": "http://sep22x.in/live/N5nzdB/UUNpGG/83574.ts",
       "desc": "HBO HLS",
       "tvgId": "HBO.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 36
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 125,
@@ -656,8 +619,7 @@
       "url": "https://jmp2.uk/plu-65652f7fc0fc88000883537a.m3u8",
       "desc": "Crunchyroll",
       "tvgId": "Crunchyroll",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 37
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 129,
@@ -673,8 +635,7 @@
       "tvgId": "CARTOON NETWORK.id",
       "drmType": "ClearKey",
       "licUrl": "7ef57f7f3e8cf0efe4f3d5772a7cbb35:0ac6d617095fbe0ca7f4c9ae72fa5f51",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 38
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 131,
@@ -691,8 +652,7 @@
       "drmType": "Widevine",
       "licUrl": "https://dusk.biz.id/rpl/drm.php?id=67",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/",
-      "__idx": 39
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 132,
@@ -709,8 +669,7 @@
       "drmType": "org.w3.clearkey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 40
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 133,
@@ -727,8 +686,7 @@
       "drmType": "Widevine",
       "licUrl": "https://dusk.biz.id/rpl/drm.php?id=20",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/",
-      "__idx": 41
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 134,
@@ -745,8 +703,7 @@
       "drmType": "Widevine",
       "licUrl": "https://dusk.biz.id/rpl/drm.php?id=60",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/",
-      "__idx": 42
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 134,
@@ -763,8 +720,7 @@
       "drmType": "Widevine",
       "licUrl": "https://dusk.biz.id/rpl/drm.php?id=64",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/",
-      "__idx": 43
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 127,
@@ -778,8 +734,7 @@
       "url": "https://naori-test.netgenx.site/pxx.php?shk_cid=bs15#.m3u8",
       "desc": "ANIMAX JAPAN HLS (dens.tv)",
       "tvgId": "Animax.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 44
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 126,
@@ -798,8 +753,7 @@
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
       "buffer": "stabil",
       "referrer": "https://www.visionplus.id/",
-      "origin": "https://www.visionplus.id",
-      "__idx": 45
+      "origin": "https://www.visionplus.id"
     },
     {
       "id": 128,
@@ -816,8 +770,7 @@
       "drmType": "Widevine",
       "licenseKey": "https://visionplus.drmiontv.workers.dev/lic?id=7&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/",
-      "__idx": 46
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 120,
@@ -833,7 +786,7 @@
       "tvgId": "Home TV",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "buffer": "stabil",
-      "__idx": 47
+      "hidden": true
     },
     {
       "id": 122,
@@ -847,8 +800,7 @@
       "url": "https://naori-test.netgenx.site/pxx.php?shk_cid=cs27#.m3u8",
       "desc": "Toei Channel HLS",
       "tvgId": "Toei Channel.jp",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 48
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 129,
@@ -862,8 +814,7 @@
       "url": "https://haru.charandom.blog/stream/jp/at-x/stream-output.m3u8?mode=hls",
       "desc": "AT-X HLS",
       "tvgId": "AT-X.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 49
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 113,
@@ -879,8 +830,7 @@
       "tvgId": "TVRISport.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT",
-      "__idx": 50
+      "parent": "SPORT"
     },
     {
       "id": 142,
@@ -894,8 +844,7 @@
       "url": "https://cdn10jtedge.indihometv.com/atm/DASH/hbofamily/manifest.mpd",
       "desc": "HBO FAMILY HLS",
       "tvgId": "HBO FAMILY.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 51
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 143,
@@ -909,8 +858,7 @@
       "url": "http://103.148.44.38:8000/play/a01m/index.m3u8",
       "desc": "HBO HITS HLS",
       "tvgId": "HBO HITS.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 52
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 144,
@@ -926,8 +874,7 @@
       "tvgId": "Astro Premier League.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT",
-      "__idx": 53
+      "parent": "SPORT"
     },
     {
       "id": 145,
@@ -941,8 +888,7 @@
       "url": "https://banjartv.siar.us/banjartv/live/playlist.m3u8",
       "desc": "Banjar TV HLS",
       "tvgId": "Banjar TV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 54
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 146,
@@ -959,8 +905,7 @@
       "drmType": "org.w3.clearkey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 55
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 147,
@@ -974,8 +919,7 @@
       "url": "https://beritasatu.secureswiftcontent.com/han/beritasatu/bsatu10008/srtoutput/manifest.m3u8",
       "desc": "Berita Satu HLS",
       "tvgId": "Berita Satu.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 56
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 148,
@@ -989,8 +933,7 @@
       "url": "https://edge.medcom.id/live-edge/smil:magna.smil/playlist.m3u8",
       "desc": "Magna Channel HLS",
       "tvgId": "Magna Channel.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 57
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 149,
@@ -1004,8 +947,7 @@
       "url": "https://public-streaming.rri.co.id/memfs/a3a573d6-1ed3-4d6e-9f9f-e9a4e2cefd9d.m3u8",
       "desc": "RRINET HLS",
       "tvgId": "RRINET.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 58
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 150,
@@ -1021,8 +963,7 @@
       "tvgId": "ASTRO ARENA.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT",
-      "__idx": 59
+      "parent": "SPORT"
     },
     {
       "id": 151,
@@ -1038,8 +979,7 @@
       "tvgId": "ASTRO BADMINTON.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT",
-      "__idx": 60
+      "parent": "SPORT"
     },
     {
       "id": 152,
@@ -1053,8 +993,7 @@
       "url": "https://dutatv.siar.us/dutatv/live/playlist.m3u8",
       "desc": "Duta TV HLS",
       "tvgId": "Duta TV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 61
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 153,
@@ -1068,8 +1007,7 @@
       "url": "https://btv.secureswiftcontent.com/han/btv/btv10005/srtoutput/manifest.m3u8",
       "desc": "BTV HLS",
       "tvgId": "BTV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 62
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 154,
@@ -1086,8 +1024,7 @@
       "drmType": "org.w3.clearkey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "__idx": 63
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 155,
@@ -1105,8 +1042,7 @@
       "licUrl": "294b5761cefc22d0c6312939e13d8278:52148f1042d238849f0a7813f1da8a7b",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT",
-      "__idx": 64
+      "parent": "SPORT"
     },
     {
       "id": 156,
@@ -1124,8 +1060,7 @@
       "licUrl": "3dd653fc7aa1e3075b7f0233620df68f:8573791fa55bff03a3094ff559fc1407",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT",
-      "__idx": 65
+      "parent": "SPORT"
     },
     {
       "id": 157,
@@ -1143,8 +1078,7 @@
       "licUrl": "ec7ee27d83764e4b845c48cca31c8eef:9c0e4191203fccb0fde34ee29999129e",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT",
-      "__idx": 66
+      "parent": "SPORT"
     },
     {
       "id": 158,
@@ -1158,8 +1092,7 @@
       "url": "https://naori-test.netgenx.site/pxx.php?shk_cid=hdgd06#.m3u8",
       "desc": "TV Asahi HLS",
       "tvgId": "TV Asahi.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 67
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 159,
@@ -1173,8 +1106,7 @@
       "url": "https://naori-test.netgenx.site/pxx.php?shk_cid=hdgd03#.m3u8",
       "desc": "NTV HLS",
       "tvgId": "NTV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 68
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 160,
@@ -1188,8 +1120,7 @@
       "url": "https://flv.intechmedia.net/live/ch107.m3u8",
       "desc": "VTV HLS",
       "tvgId": "VTV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 69
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 161,
@@ -1203,8 +1134,7 @@
       "url": "https://live.cnbcindonesia.com/livecnbc/smil:cnbctv.smil/chunklist_kamiselaluada_b384000_sleng.m3u8",
       "desc": "CNBC HLS",
       "tvgId": "CNBC.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 70
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 162,
@@ -1218,8 +1148,7 @@
       "url": "http://103.18.181.69:1935/golive/livestream/playlist.m3u8",
       "desc": "TVR PARLEMEN HLS",
       "tvgId": "TVR PARLEMEN.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 71
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 163,
@@ -1238,8 +1167,7 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
       "parent": "SPORT",
-      "referrer": "https://www.visionplus.id",
-      "__idx": 72
+      "referrer": "https://www.visionplus.id"
     },
     {
       "id": 164,
@@ -1258,8 +1186,7 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
       "parent": "SPORT",
-      "referrer": "https://www.visionplus.id/",
-      "__idx": 73
+      "referrer": "https://www.visionplus.id/"
     },
     {
       "id": 165,
@@ -1275,8 +1202,7 @@
       "tvgId": "DISNEY CHANNEL.vision+",
       "drmType": "ClearKey",
       "licUrl": "be9caaa813c5305e761c66ac63645901:3d40f2990ec5362ca5be3a3c9bb8f8b4",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 74
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 166,
@@ -1290,8 +1216,7 @@
       "url": "https://ebsonair.ebs.co.kr/ebsufamilypc/familypc1m/playlist.m3u8",
       "desc": "EBS KIDS HLS",
       "tvgId": "EBS KIDS.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 75
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 167,
@@ -1305,8 +1230,7 @@
       "url": "https://newidco-babysharktv-1-us.roku.wurl.tv/4300.m3u8",
       "desc": "BABY SHARK TV HLS",
       "tvgId": "BABY SHARK TV.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 76
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 168,
@@ -1322,8 +1246,7 @@
       "tvgId": "ROCK ACTION.vision+",
       "drmType": "ClearKey",
       "licUrl": "d4126f7fd6134adfbedb3a0daefd7657:920f1adcca60069c887da7f1d225607d",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 77
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 169,
@@ -1339,8 +1262,7 @@
       "tvgId": "GALAXY PREMIUM.vision+",
       "drmType": "ClearKey",
       "licUrl": "0d9539db24004da9ac36ea49a09e255c:30304533b5008ad7f33c25f225506bc0",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 78
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 170,
@@ -1356,8 +1278,7 @@
       "tvgId": "HITS.vision+",
       "drmType": "ClearKey",
       "licUrl": "9e9d9ca2bb814de9bfd73d7c19bfe190:e8c178a885d1a1e042ca34ec5ea3b938",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 79
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 171,
@@ -1373,8 +1294,7 @@
       "tvgId": "HITS MOVIES.vision+",
       "drmType": "ClearKey",
       "licUrl": "07af9ce05d8f4960a1b9113e7fdb8e7e:12b66b374d9c804f7311cb6a8d421c8c",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 80
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 173,
@@ -1390,8 +1310,7 @@
       "tvgId": "History.indihome",
       "drmType": "ClearKey",
       "licUrl": "a598d133e3ea508a29255f58e09758bf:ad64ce2c7864315dfd293f454f54bea0",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 81
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 174,
@@ -1407,8 +1326,7 @@
       "tvgId": "Maxstream.indihome",
       "drmType": "ClearKey",
       "licUrl": "727489e7583045de8d7e118acb8f757d:13fe71d17a1f9a8cdec42b1089275b03",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 82
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 175,
@@ -1422,8 +1340,7 @@
       "url": "https://cdn10jtedge.indihometv.com/atm/DASH/maxeats/manifest.mpd",
       "desc": "Max.Eats HLS",
       "tvgId": "Max.Eats.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 83
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 176,
@@ -1439,8 +1356,7 @@
       "tvgId": "Max.Kids.indihome",
       "drmType": "ClearKey",
       "licUrl": "e27444f671974cefbb5063444ff91ce7:aa4dbc164e4083486b74462b025c42d5",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 84
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 177,
@@ -1456,8 +1372,7 @@
       "tvgId": "Lifetime.vision+",
       "drmType": "ClearKey",
       "licUrl": "59de57168ce94a96bed1606f10c65f67:459fdec6262975e03adc82d62b749f44",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 85
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 178,
@@ -1473,8 +1388,7 @@
       "tvgId": "SUPRERRIX.vision+",
       "drmType": "ClearKey",
       "licUrl": "1dc30f49888c4652897d9c998aa2cac1:8ccb6857157c1a01c5a47eb853f51aa2",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 86
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 179,
@@ -1490,8 +1404,7 @@
       "tvgId": "Originals.vision+",
       "drmType": "ClearKey",
       "licUrl": "33333f38930949b1af65b3361ad80d1d:b159847f9af0500738b01e91cf023e30",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 87
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 180,
@@ -1507,8 +1420,7 @@
       "tvgId": "ONE.vision+",
       "drmType": "ClearKey",
       "licUrl": "be886ebe45024d4b80110269211b3adb:91b1858f34ece95c8377366fb87d99c4",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 88
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 181,
@@ -1522,8 +1434,7 @@
       "url": "https://linear-798.frequency.stream/mt/plex/798/hls/master/playlist.m3u8",
       "desc": "&PRIVE HLS",
       "tvgId": "&PRIVE.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 89
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 182,
@@ -1537,8 +1448,7 @@
       "url": "http://116.90.120.151:8000/play/a0il/index.m3u8",
       "desc": "&FLIX HLS",
       "tvgId": "&FLIX.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 90
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 183,
@@ -1552,8 +1462,7 @@
       "url": "https://jmp2.uk/plu-6793eaa4bc03978b9bc63db1.m3u8",
       "desc": "ANIME x HIDIVE HLS",
       "tvgId": "ANIME x HIDIVE.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 91
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 184,
@@ -1567,8 +1476,7 @@
       "url": "http://vipboacnn.top:8080/VIP0113172679126129/51732389530751/34358",
       "desc": "SONY ONE HLS",
       "tvgId": "SONY ONE.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 92
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 185,
@@ -1587,8 +1495,7 @@
       "ua": "Mozilla/5.0",
       "menu": "sport",
       "parent": "SPORT",
-      "referrer": "https://www.visionplus.id",
-      "__idx": 93
+      "referrer": "https://www.visionplus.id"
     },
     {
       "id": 186,
@@ -1603,8 +1510,7 @@
       "desc": "UPIN IPIN HLS",
       "tvgId": "UPIN IPIN.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "buffer": "stabil",
-      "__idx": 94
+      "buffer": "stabil"
     },
     {
       "id": 187,
@@ -1618,8 +1524,7 @@
       "url": "",
       "desc": "Animal Planet HLS",
       "tvgId": "Animal Planet.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 95
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 1082,
@@ -1637,8 +1542,7 @@
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
       "parent": "SPORT",
-      "referrer": "https://www.visionplus.id",
-      "__idx": 96
+      "referrer": "https://www.visionplus.id"
     },
     {
       "id": 188,
@@ -1656,8 +1560,7 @@
       "licUrl": "335dad778109954503dcbb21dc92015f:24bfd75d436cbf73168a2a2dccd40281",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "BEIN SPORT",
-      "__idx": 97
+      "parent": "BEIN SPORT"
     },
     {
       "id": 189,
@@ -1675,8 +1578,7 @@
       "licUrl": "0b42be2664d7e811d04f3e504e0924c5:ae24090123b8c72ac5404dc152847cb8",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "BEIN SPORT",
-      "__idx": 98
+      "parent": "BEIN SPORT"
     },
     {
       "id": 189,
@@ -1692,8 +1594,7 @@
       "tvgId": "Elta Sport 3",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "RANDOM SPORT",
-      "__idx": 99
+      "parent": "RANDOM SPORT"
     },
     {
       "id": 189,
@@ -1707,8 +1608,7 @@
       "url": "https://linear-abematv.akamaized.net/preview/channel/abema-anime/playlist.m3u8",
       "desc": "Abema Anime",
       "tvgId": "Abema Anime",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "__idx": 100
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 190,
@@ -1726,8 +1626,7 @@
       "tvgId": "SPOTV 2",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT",
-      "__idx": 101
+      "parent": "SPORT"
     }
   ],
   "menus": [
