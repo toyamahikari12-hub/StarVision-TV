@@ -174,6 +174,16 @@ object SymphogearJsonConverter {
                         element.asJsonObject
 
                     // ------------------------------------------------
+                    // HIDDEN CHANNEL
+                    // ------------------------------------------------
+                    // Channel dengan "hidden": true dilewati total -- tidak
+                    // ikut masuk ke aplikasi sama sekali, tapi datanya tetap
+                    // ada di channels.json (bisa dimunculkan lagi kapan saja
+                    // tanpa perlu input ulang).
+
+                    if (obj.bool("hidden") == true) continue
+
+                    // ------------------------------------------------
                     // BASIC DATA
                     // ------------------------------------------------
 
