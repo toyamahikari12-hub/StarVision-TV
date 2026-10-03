@@ -874,7 +874,8 @@
       "tvgId": "Astro Premier League.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT"
+      "parent": "SPORT",
+      "hidden": true
     },
     {
       "id": 145,
@@ -947,7 +948,8 @@
       "url": "https://public-streaming.rri.co.id/memfs/a3a573d6-1ed3-4d6e-9f9f-e9a4e2cefd9d.m3u8",
       "desc": "RRINET HLS",
       "tvgId": "RRINET.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 150,
@@ -1042,7 +1044,8 @@
       "licUrl": "294b5761cefc22d0c6312939e13d8278:52148f1042d238849f0a7813f1da8a7b",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "SPORT"
+      "parent": "SPORT",
+      "hidden": true
     },
     {
       "id": 156,
@@ -1326,7 +1329,8 @@
       "tvgId": "Maxstream.indihome",
       "drmType": "ClearKey",
       "licUrl": "727489e7583045de8d7e118acb8f757d:13fe71d17a1f9a8cdec42b1089275b03",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 175,
@@ -1340,7 +1344,8 @@
       "url": "https://cdn10jtedge.indihometv.com/atm/DASH/maxeats/manifest.mpd",
       "desc": "Max.Eats HLS",
       "tvgId": "Max.Eats.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 176,
@@ -1356,7 +1361,8 @@
       "tvgId": "Max.Kids.indihome",
       "drmType": "ClearKey",
       "licUrl": "e27444f671974cefbb5063444ff91ce7:aa4dbc164e4083486b74462b025c42d5",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 177,
@@ -1434,7 +1440,8 @@
       "url": "https://linear-798.frequency.stream/mt/plex/798/hls/master/playlist.m3u8",
       "desc": "&PRIVE HLS",
       "tvgId": "&PRIVE.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 182,
@@ -1448,7 +1455,8 @@
       "url": "http://116.90.120.151:8000/play/a0il/index.m3u8",
       "desc": "&FLIX HLS",
       "tvgId": "&FLIX.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 183,
@@ -1594,7 +1602,8 @@
       "tvgId": "Elta Sport 3",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
-      "parent": "RANDOM SPORT"
+      "parent": "RANDOM SPORT",
+      "hidden": true
     },
     {
       "id": 189,
@@ -1608,7 +1617,8 @@
       "url": "https://linear-abematv.akamaized.net/preview/channel/abema-anime/playlist.m3u8",
       "desc": "Abema Anime",
       "tvgId": "Abema Anime",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 190,
