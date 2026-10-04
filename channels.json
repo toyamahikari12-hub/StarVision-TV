@@ -1640,21 +1640,21 @@
     },
     {
       "id": 1083,
-      "name": "Sony Max HD",
-      "cat": "MOVIES & ENTERTAINMENT",
+      "name": "Max Sport",
+      "cat": "RANDOM SPORT",
       "color": "#e91e8c",
       "q": "HD",
       "drm": "false",
       "type": "hls",
-      "logo": "",
-      "url": "http://107.167.16.138/sonymax2/index.m3u8?token=test",
+      "logo": "https://images.indihometv.com/images/channels/imageCir_180x180_CLMAXSports_2026_01_31_00_39_38.jpg",
+      "url": "https://cdnbal1.indihometv.com/atm/DASH/useesport/manifest.mpd",
       "licUrl": "",
       "drmType": "",
-      "desc": "Sony Max HD",
-      "tvgId": "Sony Max HD",
+      "desc": "Max Sport",
+      "tvgId": "Max Sport",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "menu": "",
-      "parent": ""
+      "menu": "sport",
+      "parent": "RANDOM SPORT"
     }
   ],
   "menus": [
