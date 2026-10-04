@@ -1728,6 +1728,24 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1088,
+      "name": "WOWOW Live",
+      "cat": "Jepang",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "https://www.skyperfectv.co.jp/library/common/img/channel/icon/basic/bs192.gif",
+      "url": "https://naori-test.netgenx.site/pxx.php?shk_cid=bs20#.m3u8",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "WOWOW Live",
+      "tvgId": "WOWOW Live",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
