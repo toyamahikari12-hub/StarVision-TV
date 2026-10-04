@@ -1637,6 +1637,24 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "sport",
       "parent": "SPORT"
+    },
+    {
+      "id": 1083,
+      "name": "Sony Max HD",
+      "cat": "MOVIES & ENTERTAINMENT",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "",
+      "url": "https://cloudplay-sonyliv.pages.dev/maxhd.m3u8",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "Sony Max HD",
+      "tvgId": "Sony Max HD",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
