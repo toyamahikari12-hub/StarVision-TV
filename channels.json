@@ -451,18 +451,16 @@
     },
     {
       "id": 130,
-      "name": "TransTV (IHT)",
+      "name": "TransTV",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
-      "type": "dash",
+      "type": "Hls",
       "logo": "https://www.transtv.co.id/themes/v25.7/src/assets/logo/01-ttv.png",
-      "url": "https://cdn08jtedge.indihometv.com/dassdvr/130/transtv/manifest_wuseetv.mpd",
-      "desc": "Trans TV Indihome DASH+ClearKey (Indihome)",
-      "tvgId": "Trans TV Indihome.indihome",
-      "drmType": "ClearKey",
-      "licUrl": "685d124959a94f89872760636a868956:5cda423e983403ee02b24ac8643470ee",
+      "url": "https://ogietv.biz.id/auth/1310.m3u8?token=IwjkQOpJDGd12KXMcVsiQIRB7S6kdNGVUS_d0pyh7lasNeKyaGD4MxpyhzD7uS-F_EF1tu4iaio9ohEqLM8k5IFMFN8Ywt_mDdcG9ehxG1GPPER_hoP7Bp54GGSno_aEa7sn1bmlbWEOTyKwM1JVlSQUX5Ib8dykkwn2gP0DCmg3MyHC8N8gNZhS3U8H_KD9Bqq-BxEHF5vBqJKjgHGdNAclJ-UeOCy2HerHBZj5ZdV_K3P9gONulf-AhSHb2TFSWU6f-gMt59RzDil6ef4gQ8t3E5L3odALOoqNQRJKHeu-9YmHuRyHqvBDdoJrGIx0_GXBUQ7R-y85M5zc4BrEqIeTqxj-DYt4QepKv3hWHhunUdo4CnxPhC8eBziNJBHXCt5sT7q4EWAEzHtmsKTXmBCMzXCGRJs3HAcjxwspqF79crEBURbIJl_FfI17EIWgZ9iiDh-T1g463KZRv1jljQB44JVufoudv-Wi6L4xgLswgG_nfm7LK0AJkBjOTLGT-LqOrjZH5zCvG1UY4wMws7H9zuDv9XK6R8CEZIS5p-fM24sRK-UpSO98Qj0TRS5xYzLcwMgM7q5xkPYoR89VW5451zVicERigbKS2SmF45w",
+      "desc": "Trans TV",
+      "tvgId": "Trans TV",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
