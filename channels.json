@@ -166,7 +166,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/V37y7jf/trans7.png",
-      "url": "https://live.eu-north-1a.cf.dmcdn.net/sec2(Qj56_aXw9ts5GWwmQElz3Z37mP5U-ZEIm4xIFECp4Qpod4ft9GR58MB40ZQ54zQDc09_kvUCtN0CCQuHog2tBahjzLwPX9R_D0b2QWLR8KWODd4aFGDkRTM25ZlCt7Cc)/dm/3/x8qckyq/d/live-480.m3u8#cell=lcf-eu-north-1a",
+      "url": "https://cdndirector.dailymotion.com/cdn/live/video/x8qckyq.m3u8?sec=8-r10S7Xr5N96lcaPW-jnzVsYkEEf6VBNNE05fxLhEgDU9Ps4xJD7yU2LXlqsJrK9df5aSnJvVWfraQUPrG6G6-ALznDvnPEGOZxPpoT7tEi7MGTLBVzG-ixtB41KQyV",
       "desc": "TRANS7 HLS (Detik)",
       "tvgId": "Trans7.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
