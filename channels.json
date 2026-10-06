@@ -1761,6 +1761,24 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1092,
+      "name": "μ's",
+      "cat": "Love Live",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "",
+      "url": "https://upos-sz-mirrorcosbstar1.bilivideo.com/iupxcodeboss/l9/4z/n230716adzhew83ub4orj35s6oyb4zl9-1-1a1301000022.m4s?e=ig8euxZM2rNcNbdlhoNvNC8BqJIzNbfq9rVEuxTEnE8L5F6VnEsSTx0vkX8fqJeYTj_lta53NCM=&mid=0&deadline=1790953948&gen=playurlv3&os=cosbstar1bv&oi=3054011469&trid=249d6ae98b4548ceab5036c92d88e344i&platform=html5&uipk=5&nbs=1&upsig=ef96741f578fe66c9427db648f6cf440&uparams=e,mid,deadline,gen,os,oi,trid,platform,uipk,nbs&bvc=vod&orderid=0,2&logo=00000000&f=i_0_0",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
