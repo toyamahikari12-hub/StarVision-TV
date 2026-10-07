@@ -1777,6 +1777,42 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1093,
+      "name": "Animax NA",
+      "cat": "Dunia Wibu",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "https://i.postimg.cc/4yKdtFV5/IMG-20260904-131327-550.jpg",
+      "url": "https://animax.live/hls/stream.m3u8",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
+    },
+    {
+      "id": 1094,
+      "name": "Animax 2",
+      "cat": "Dunia Wibu",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "true",
+      "type": "dash",
+      "logo": "https://image-resizer-cloud-cdn.api.tmcms.quickplay.com/image/D40AFC4A-BD3D-46B2-B1F4-78B483796A2A/0-16x9.png?width=330",
+      "url": "https://ptv2026.com/myunifi.mpd?username=vip_3klp0es8&password=wg3piwEs&channel=Animax&kid=4bd30e54-5711-44eb-9168-a1a7e5915f75",
+      "licUrl": "4bd30e54571144eb9168a1a7e5915f75:f8cb24e54d555381a326c157b5dfaa59",
+      "drmType": "org.w3.clearkey",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
