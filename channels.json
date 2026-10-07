@@ -1786,7 +1786,7 @@
       "q": "HD",
       "drm": "false",
       "type": "hls",
-      "logo": "https://i.postimg.cc/4yKdtFV5/IMG-20260904-131327-550.jpg",
+      "logo": "https://i.postimg.cc/Bn76RHrq/animax-(1).png",
       "url": "https://animax.live/hls/stream.m3u8",
       "licUrl": "",
       "drmType": "",
@@ -1813,6 +1813,24 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1095,
+      "name": "Unifi Sport",
+      "cat": "RANDOM SPORT",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "true",
+      "type": "dash",
+      "logo": "https://ptv2026.com/logo/unifisport.png",
+      "url": "https://ptv2026.com/myunifi.mpd?username=vip_3klp0es8&password=wg3piwEs&channel=unifi1&kid=90c7eb5d-66b4-42a9-a591-775cc1154bc9",
+      "licUrl": "90c7eb5d66b442a9a591775cc1154bc9:4af842b9ad5315a01d7655b8b502196f",
+      "drmType": "org.w3.clearkey",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "sport",
+      "parent": "RANDOM SPORT"
     }
   ],
   "menus": [
