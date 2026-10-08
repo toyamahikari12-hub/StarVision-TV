@@ -151,7 +151,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/k3S01Fh/transtv.png",
-      "url": "https://green-night-d2b4.iontv.workers.dev/transtv.m3u8",
+      "url": "https://live.cnnindonesia.com/transtv/smil:transtv/chunklist_w2685575259_b744100_sleng.m3u8",
       "desc": "TRANS TV HLS (Detik)",
       "tvgId": "TransTV.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -166,7 +166,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/V37y7jf/trans7.png",
-      "url": "https://live.eu-north-1a.cf.dmcdn.net/sec2(OMM6yFR0lG8RcENd4mPsPr8bdhwrJeP31u5AFRPwpKW1C50rK2mVwQT_sSNlD7EhQEZ6xXYN96-bJ_RkycVh-LTB4Ilnd5DzlTwjMJ_prE5F-GN3jkBTfSPykzfjR5O2)/dm/3/x8qckyq/d/live-480.m3u8#cell=lcf-eu-north-1a",
+      "url": "https://live.cnnindonesia.com/trans7/smil:trans7/chunklist_w2685575259_b744100_sleng.m3u8",
       "desc": "TRANS7 HLS (Detik)",
       "tvgId": "Trans7.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
