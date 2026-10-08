@@ -47,7 +47,8 @@
       "desc": "TRANS7 DASH",
       "tvgId": "TRANS7.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://20.detik.com/"
+      "referrer": "https://20.detik.com/",
+      "hidden": true
     },
     {
       "id": 100,
@@ -397,7 +398,8 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b97",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.transvision.co.id/"
+      "referrer": "https://www.transvision.co.id/",
+      "hidden": true
     },
     {
       "id": 106,
@@ -769,7 +771,8 @@
       "drmType": "Widevine",
       "licenseKey": "https://visionplus.drmiontv.workers.dev/lic?id=7&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/"
+      "referrer": "https://www.visionplus.id/",
+      "hidden": true
     },
     {
       "id": 120,
@@ -1760,7 +1763,8 @@
       "tvgId": "TransTV (TRV)",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
-      "parent": ""
+      "parent": "",
+      "hidden": true
     },
     {
       "id": 1092,
