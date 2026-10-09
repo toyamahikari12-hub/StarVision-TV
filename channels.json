@@ -1503,16 +1503,14 @@
     },
     {
       "id": 186,
-      "name": "UPIN IPIN",
+      "name": "Tom And Jerry",
       "cat": "KIDS",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "",
-      "url": "http://aflaxtv.xyz:8080/0613bffd/d7f0406c7a/298501",
-      "desc": "UPIN IPIN HLS",
-      "tvgId": "UPIN IPIN.id",
+      "logo": "https://gia.tv/streams/pptv/208314.jpg?1750373428",
+      "url": "https://live20.bozztv.com/giatvplayout7/giatv-208314/playlist.m3u8",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "buffer": "stabil"
     },
@@ -1864,8 +1862,7 @@
       "tvgId": "",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
-      "parent": "",
-      "logo": "https://i.postimg.cc/jSBDsbBX/20240823_021324.png"
+      "parent": ""
     },
     {
       "id": 1098,
