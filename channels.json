@@ -1971,6 +1971,42 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1104,
+      "name": "TOKYO MX1 ",
+      "cat": "Jepang",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "https://xuanzi-storage.netgenx.site/icons/icon_7.png",
+      "url": "https://haru.charandom.blog/stream/jp/tokyo_mx1/stream-output.m3u8?mode=hls",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
+    },
+    {
+      "id": 1105,
+      "name": "TOKYO MX2",
+      "cat": "Jepang",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "https://xuanzi-storage.netgenx.site/icons/icon_8.png",
+      "url": "https://haru.charandom.blog/stream/jp/tokyo_mx2/stream-output.m3u8?mode=hls",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
