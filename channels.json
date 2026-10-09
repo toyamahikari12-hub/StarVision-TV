@@ -1852,21 +1852,19 @@
     },
     {
       "id": 1097,
-      "name": "Sonic",
+      "name": "Sony YaY",
       "cat": "KIDS",
       "color": "#e91e8c",
       "q": "HD",
-      "drm": "true",
-      "type": "dash",
-      "logo": "https://dvdh7g0f0hwck.cloudfront.net/assets/images/channel/Sonic_Thumbnail_499a3f89-3733-4a5e-8a39-642a6eee5393.png",
-      "url": "https://jiotvmblive.cdn.jio.com/bpk-tv/sonic_Hindi_MOB/WDVLive/index.mpd?__hdnea__=st=1791446403~exp=1791468003~acl=/*~hmac=2880c0f9b5eaba45368f013d158670ea0c",
-      "licUrl": "14af5805a98f52bdb1001f47ee99a211:fd7eb438ff90f8412832e230dd8db804",
-      "drmType": "Clearkey",
+      "drm": "false",
+      "type": "hls",
+      "url": "https://drk6xq0vhn.gpcdn.net/live/sony_yay_abr/index.m3u8",
       "desc": "",
       "tvgId": "",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
-      "parent": ""
+      "parent": "",
+      "logo": "https://i.postimg.cc/jSBDsbBX/20240823_021324.png"
     },
     {
       "id": 1098,
