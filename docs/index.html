@@ -109,6 +109,8 @@
   }
   .badge.cyan{background:rgba(0,217,217,.1); color:var(--cyan); border-color:rgba(0,217,217,.3);}
   .badge.muted{background:transparent; color:var(--muted); border-color:var(--line);}
+  .badge.ok{background:rgba(56,217,150,.1); color:#38d996; border-color:rgba(56,217,150,.35);}
+  .badge.bad{background:rgba(255,77,77,.1); color:var(--danger); border-color:rgba(255,77,77,.35);}
 
   details.channel{
     background:var(--panel-2); border:1px solid var(--line); border-radius:8px;
@@ -266,30 +268,33 @@
         </div>
         <div id="playlistSrcBody" style="display:none;">
           <p class="hint">
-            Dua link ini tertanam permanen di aplikasi (<code>strings.xml</code>) sebagai bawaan. Isi field di bawah
-            untuk MENGGANTI link itu tanpa build ulang APK — aplikasi akan memakai link di sini duluan, dan baru
-            jatuh balik ke bawaan di strings.xml kalau field ini dikosongkan.
+            Semua sumber playlist aplikasimu (bawaan di <code>strings.xml</code> maupun tambahan) dipantau di satu
+            tempat ini. Tiap sumber dicek isinya (jumlah channel & kategori) langsung dari sini, dan bisa
+            disembunyikan sementara atau dihapus kalau matinya tanpa perlu build ulang APK.
           </p>
-          <div class="field">
-            <label>Override Source 1 (pengganti channels.json bawaan)</label>
-            <input type="text" id="srcPlaylistUrl" placeholder="kosongkan untuk tetap pakai link bawaan di strings.xml">
-          </div>
-          <div class="field">
-            <label>Override Source 2 (pengganti link Vision+ bawaan)</label>
-            <input type="text" id="srcBackupUrl" placeholder="kosongkan untuk tetap pakai link bawaan di strings.xml">
-          </div>
+
+          <h2 style="font-size:14px; margin:18px 0 4px;">Source 1 & Source 2 (bawaan strings.xml)</h2>
+          <p class="hint">
+            Dua ini selalu ada di aplikasi secara default. Kosongkan kolom URL untuk tetap pakai link bawaan di
+            <code>strings.xml</code>, atau isi untuk menggantinya. Pakai tombol "Nonaktifkan" kalau sumbernya lagi
+            mati — channel-channelnya langsung hilang dari aplikasi tanpa perlu dihapus datanya.
+          </p>
+          <div class="list" id="builtinSourceList"></div>
 
           <hr style="border-color:var(--line); margin:20px 0;">
 
           <h2 style="font-size:14px; margin-bottom:4px;">Sumber playlist tambahan</h2>
           <p class="hint">
             Tambahkan link playlist baru (seperti link Vision+ dulu) tanpa perlu build ulang APK sama sekali.
-            Begitu disimpan, link ini otomatis aktif di SEMUA perangkat.
+            Begitu disimpan, link ini otomatis aktif di SEMUA perangkat. Tiap sumber dicek dulu isinya sebelum
+            ditambahkan.
           </p>
           <div class="toolbar">
+            <input type="text" id="newExtraSourceLabel" placeholder="Nama (opsional), mis. Nex Parabola" style="max-width:220px;">
             <input type="text" id="newExtraSource" placeholder="https://contoh.com/playlist.m3u atau .json">
-            <button class="btn-primary btn-sm" id="btnAddExtraSource">+ Tambah sumber</button>
+            <button class="btn-primary btn-sm" id="btnCheckExtraSource">Cek dulu</button>
           </div>
+          <div id="newExtraSourcePreview"></div>
           <div class="list" id="extraSourceList"></div>
 
           <hr style="border-color:var(--line); margin:20px 0;">
@@ -362,8 +367,34 @@
     sha:null,
     data:null,        // parsed channels.json
     featuresSha:null,
-    features:null     // parsed config/features.json (optional)
+    features:null,    // parsed config/features.json (optional)
+    stringsXmlDefaults: null // { source1, source2 } hasil baca strings.xml, cuma buat ditampilkan
   };
+
+  // Path standar strings.xml di project Android. Dibaca read-only cuma
+  // buat MENAMPILKAN URL bawaan Source 1/2 -- tidak pernah ditulis/disimpan
+  // dari sini. Kalau project-mu menaruh strings.xml di path lain, bagian
+  // ini akan gagal diam-diam dan Panel Channels tetap jalan normal, cuma
+  // URL bawaannya ditampilkan sebagai "(tidak diketahui)".
+  const STRINGS_XML_PATH = 'app/src/main/res/values/strings.xml';
+
+  async function tryLoadStringsXmlDefaults(){
+    try {
+      const url = `https://api.github.com/repos/${state.owner}/${state.repo}/contents/${encodeURI(STRINGS_XML_PATH)}?ref=${encodeURIComponent(state.branch)}`;
+      const res = await fetch(url, { headers: ghHeaders() });
+      if (!res.ok) { state.stringsXmlDefaults = null; return; }
+      const json = await res.json();
+      const xml = b64decodeUnicode(json.content.replace(/\n/g,''));
+      const m1 = xml.match(/<string\s+name="iptv_playlist"[^>]*>([\s\S]*?)<\/string>/);
+      const m2 = xml.match(/<string\s+name="iptv_playlist_2"[^>]*>([\s\S]*?)<\/string>/);
+      state.stringsXmlDefaults = {
+        source1: m1 ? m1[1].trim() : null,
+        source2: m2 ? m2[1].trim() : null
+      };
+    } catch(e){
+      state.stringsXmlDefaults = null;
+    }
+  }
 
   function loadSavedConfig(){
     try {
@@ -505,6 +536,10 @@
         state.featuresSha = null;
       }
 
+      // Best-effort, cuma buat ditampilkan -- kalau gagal/path beda,
+      // kartu Source 1/2 nanti cuma bilang "tidak diketahui".
+      await tryLoadStringsXmlDefaults();
+
       persistConfigIfAsked();
 
       $('saveTargetLabel').textContent = `${state.owner}/${state.repo} @ ${state.branch}`;
@@ -631,25 +666,146 @@
     disabled.style.display = 'none';
     body.style.display = 'block';
     $('featuresPathLabel').textContent = state.featuresPath;
-    $('srcPlaylistUrl').value = state.features.playlistUrl || '';
-    $('srcBackupUrl').value = state.features.backupPlaylistUrl || '';
 
     if (!Array.isArray(state.features.extraSources)) state.features.extraSources = [];
     if (!Array.isArray(state.features.categoryOrder)) state.features.categoryOrder = [];
     if (!Array.isArray(state.features.categoryHidden)) state.features.categoryHidden = [];
 
+    renderBuiltinSources();
     renderExtraSources();
     renderGlobalCatOrder();
   }
 
-  $('srcPlaylistUrl')?.addEventListener('change', e=>{
+  // ---- Cek isi sebuah URL playlist (JSON channels.json ATAU M3U) ----
+  // Fetch langsung dari browser. Kalau sumbernya tidak mengizinkan CORS,
+  // pengecekan di sini bisa gagal walau linknya sebenarnya hidup -- itu
+  // batasan browser, bukan berarti linknya mati (aplikasi Android tidak
+  // kena masalah CORS karena itu bukan browser).
+  async function fetchAndAnalyzePlaylist(url){
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) return { ok:false, error: `HTTP ${res.status}` };
+      const text = await res.text();
+      return analyzePlaylistText(text);
+    } catch(e){
+      return { ok:false, error: 'Gagal diakses dari browser (kemungkinan server sumbernya tidak mengizinkan CORS). Coba buka linknya langsung di tab baru untuk cek manual.' };
+    }
+  }
+
+  function analyzePlaylistText(text){
+    const trimmed = text.trim();
+
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')){
+      try {
+        const data = JSON.parse(trimmed);
+        const channels = Array.isArray(data) ? data : (Array.isArray(data.channels) ? data.channels : null);
+        if (channels){
+          const catCount = {};
+          channels.forEach(c=>{
+            const cat = (c && (c.cat || c.group) ? (c.cat || c.group) : 'UNCATEGORIZED').toString().trim();
+            catCount[cat] = (catCount[cat]||0) + 1;
+          });
+          return {
+            ok:true, format:'JSON', channelCount: channels.length,
+            categories: Object.entries(catCount).map(([name,count])=>({name,count}))
+          };
+        }
+      } catch(e){ /* lanjut coba M3U di bawah */ }
+    }
+
+    if (trimmed.includes('#EXTINF')){
+      const lines = trimmed.split('\n');
+      let channelCount = 0;
+      const catCount = {};
+      lines.forEach(line=>{
+        if (line.trim().toUpperCase().startsWith('#EXTINF')){
+          channelCount++;
+          const m = line.match(/group-title="([^"]*)"/i);
+          const cat = m ? m[1].trim() : 'UNCATEGORIZED';
+          catCount[cat] = (catCount[cat]||0) + 1;
+        }
+      });
+      if (channelCount > 0){
+        return {
+          ok:true, format:'M3U', channelCount,
+          categories: Object.entries(catCount).map(([name,count])=>({name,count}))
+        };
+      }
+    }
+
+    return { ok:false, error: 'Format tidak dikenali (bukan channels.json atau M3U yang valid).' };
+  }
+
+  function renderPreviewHtml(result){
+    if (!result.ok){
+      return `<div class="hint" style="color:var(--danger); margin:6px 0 0;">✕ ${escapeHtml(result.error)}</div>`;
+    }
+    const catList = result.categories
+      .sort((a,b)=>b.count-a.count)
+      .map(c=>`<span class="badge muted">${escapeHtml(c.name)} (${c.count})</span>`)
+      .join(' ');
+    return `
+      <div class="hint" style="color:#38d996; margin:6px 0 6px;">✓ Hidup — ${result.channelCount} channel, format ${escapeHtml(result.format)}</div>
+      <div style="display:flex; flex-wrap:wrap; gap:6px;">${catList}</div>
+    `;
+  }
+
+  // ---- Source 1 & Source 2 (bawaan strings.xml, bisa di-override/dimatikan) ----
+  function renderBuiltinSources(){
+    const wrap = $('builtinSourceList');
+    wrap.innerHTML = '';
     if (!state.features) return;
-    state.features.playlistUrl = e.target.value.trim();
-  });
-  $('srcBackupUrl')?.addEventListener('change', e=>{
-    if (!state.features) return;
-    state.features.backupPlaylistUrl = e.target.value.trim();
-  });
+
+    const defs = [
+      { key:'playlistUrl', activeKey:'source1Active', label:'Source 1 (channels.json)',
+        baked: state.stringsXmlDefaults ? state.stringsXmlDefaults.source1 : null },
+      { key:'backupPlaylistUrl', activeKey:'source2Active', label:'Source 2 (Vision+)',
+        baked: state.stringsXmlDefaults ? state.stringsXmlDefaults.source2 : null }
+    ];
+
+    defs.forEach(def=>{
+      const overrideVal = state.features[def.key] || '';
+      const effectiveUrl = overrideVal || def.baked || '(tidak diketahui — gagal baca strings.xml, cek manual)';
+      const isActive = state.features[def.activeKey] !== false; // default aktif kalau field belum ada
+
+      const card = document.createElement('div');
+      card.className = 'list-item';
+      card.style.cssText = 'flex-direction:column; align-items:stretch; gap:10px;';
+      card.innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div class="name" style="flex:1;">${escapeHtml(def.label)}</div>
+          <span class="badge ${isActive?'ok':'bad'}">${isActive ? 'Aktif' : 'Nonaktif'}</span>
+        </div>
+        <div class="hint" style="margin:0; word-break:break-all;">URL aktif saat ini: ${escapeHtml(effectiveUrl)}</div>
+        <input type="text" data-f="override" placeholder="Override URL (kosongkan untuk pakai bawaan strings.xml)" value="${escapeAttr(overrideVal)}">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn-ghost btn-sm" data-act="check">Cek status</button>
+          <button class="btn-${isActive?'danger':'primary'} btn-sm" data-act="toggle">${isActive?'Nonaktifkan':'Aktifkan'}</button>
+        </div>
+        <div data-el="preview"></div>
+      `;
+      card.querySelector('[data-f=override]').addEventListener('change', e=>{
+        state.features[def.key] = e.target.value.trim();
+        renderBuiltinSources();
+      });
+      card.querySelector('[data-act=toggle]').addEventListener('click', ()=>{
+        state.features[def.activeKey] = !isActive;
+        renderBuiltinSources();
+      });
+      card.querySelector('[data-act=check]').addEventListener('click', async ()=>{
+        const previewEl = card.querySelector('[data-el=preview]');
+        const urlToCheck = overrideVal || def.baked;
+        if (!urlToCheck){
+          previewEl.innerHTML = '<div class="hint" style="color:var(--danger);">URL tidak diketahui, tidak bisa dicek.</div>';
+          return;
+        }
+        previewEl.innerHTML = '<div class="hint">Mengecek...</div>';
+        const result = await fetchAndAnalyzePlaylist(urlToCheck);
+        previewEl.innerHTML = renderPreviewHtml(result);
+      });
+      wrap.appendChild(card);
+    });
+  }
 
   // ---- Extra sources (tambah link playlist baru tanpa build) ----
   function renderExtraSources(){
@@ -657,45 +813,95 @@
     wrap.innerHTML = '';
     const list = state.features.extraSources;
 
+    // Migrasi otomatis dari format lama (array berisi string polos)
+    // ke format baru {url, active, label}.
+    list.forEach((src, idx)=>{
+      if (typeof src === 'string'){
+        list[idx] = { url: src, active: true, label: '' };
+      }
+    });
+
     if (list.length === 0){
       wrap.innerHTML = '<div class="empty">Belum ada sumber tambahan.</div>';
       return;
     }
 
-    list.forEach((url, idx)=>{
+    list.forEach((src, idx)=>{
       const row = document.createElement('div');
       row.className = 'list-item';
+      row.style.cssText = 'flex-direction:column; align-items:stretch; gap:10px;';
       row.innerHTML = `
-        <input type="text" value="${escapeAttr(url)}" style="flex:1;">
-        <button class="btn-danger btn-sm" data-act="del">Hapus</button>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <input type="text" data-f="label" placeholder="Nama (opsional)" value="${escapeAttr(src.label||'')}" style="max-width:160px;">
+          <input type="text" data-f="url" value="${escapeAttr(src.url)}" style="flex:1; min-width:160px;">
+          <span class="badge ${src.active?'ok':'muted'}">${src.active?'Aktif':'Nonaktif'}</span>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn-ghost btn-sm" data-act="check">Cek status</button>
+          <button class="btn-ghost btn-sm" data-act="toggle">${src.active?'Sembunyikan':'Aktifkan'}</button>
+          <button class="btn-danger btn-sm" data-act="del">Hapus permanen</button>
+        </div>
+        <div data-el="preview"></div>
       `;
-      row.querySelector('input').addEventListener('change', e=>{
-        state.features.extraSources[idx] = e.target.value.trim();
+      row.querySelector('[data-f=label]').addEventListener('change', e=>{ src.label = e.target.value.trim(); });
+      row.querySelector('[data-f=url]').addEventListener('change', e=>{ src.url = e.target.value.trim(); });
+      row.querySelector('[data-act=toggle]').addEventListener('click', ()=>{
+        src.active = !src.active;
+        renderExtraSources();
       });
       row.querySelector('[data-act=del]').addEventListener('click', ()=>{
-        state.features.extraSources.splice(idx,1);
+        if (!confirm(`Hapus sumber "${src.label || src.url}" secara permanen?`)) return;
+        list.splice(idx,1);
         renderExtraSources();
+      });
+      row.querySelector('[data-act=check]').addEventListener('click', async ()=>{
+        const previewEl = row.querySelector('[data-el=preview]');
+        previewEl.innerHTML = '<div class="hint">Mengecek...</div>';
+        const result = await fetchAndAnalyzePlaylist(src.url);
+        previewEl.innerHTML = renderPreviewHtml(result);
       });
       wrap.appendChild(row);
     });
   }
 
-  $('btnAddExtraSource').addEventListener('click', ()=>{
-    const input = $('newExtraSource');
-    const url = input.value.trim();
+  function addExtraSourceNow(url, label){
+    if (state.features.extraSources.some(s=>(typeof s==='string'?s:s.url).toLowerCase()===url.toLowerCase())){
+      toast('Link itu sudah ada di daftar.', 'err');
+      return;
+    }
+    state.features.extraSources.push({ url, active: true, label: label||'' });
+    $('newExtraSource').value = '';
+    $('newExtraSourceLabel').value = '';
+    $('newExtraSourcePreview').innerHTML = '';
+    renderExtraSources();
+    toast('Sumber playlist ditambahkan. Simpan untuk menerapkannya ke semua perangkat.', 'ok');
+  }
+
+  $('btnCheckExtraSource').addEventListener('click', async ()=>{
+    const url = $('newExtraSource').value.trim();
+    const label = $('newExtraSourceLabel').value.trim();
     if (!url) return;
     if (!state.features){
       toast('Muat config/features.json dulu (isi path-nya di layar hubungkan).', 'err');
       return;
     }
-    if (state.features.extraSources.some(u=>u.toLowerCase()===url.toLowerCase())){
-      toast('Link itu sudah ada di daftar.', 'err');
+
+    const previewEl = $('newExtraSourcePreview');
+    previewEl.innerHTML = '<div class="hint">Mengecek...</div>';
+    const result = await fetchAndAnalyzePlaylist(url);
+
+    if (!result.ok){
+      previewEl.innerHTML = renderPreviewHtml(result) + `
+        <button class="btn-ghost btn-sm" id="btnAddAnyway" style="margin-top:8px;">Tetap tambahkan (lewati pengecekan)</button>
+      `;
+      $('btnAddAnyway').addEventListener('click', ()=> addExtraSourceNow(url, label));
       return;
     }
-    state.features.extraSources.push(url);
-    input.value = '';
-    renderExtraSources();
-    toast('Sumber playlist ditambahkan. Simpan untuk menerapkannya ke semua perangkat.', 'ok');
+
+    previewEl.innerHTML = renderPreviewHtml(result) + `
+      <button class="btn-primary btn-sm" id="btnConfirmAddSource" style="margin-top:10px;">+ Tambah sumber ini</button>
+    `;
+    $('btnConfirmAddSource').addEventListener('click', ()=> addExtraSourceNow(url, label));
   });
 
   // ---- Global category order (lintas semua sumber) ----
