@@ -1,5 +1,13 @@
 package com.animatv.player.model
 
+// Satu entri sumber playlist tambahan. "label" cuma buat memudahkan kamu
+// mengenali sumber ini di Panel Channels, tidak dipakai aplikasi.
+data class ExtraSourceConfig(
+    val url: String = "",
+    val active: Boolean = true,
+    val label: String = ""
+)
+
 data class AdminConfig(
     // Feature Flags - toggle fitur ON/OFF
     val featureSleepTimer: Boolean = true,
@@ -43,10 +51,18 @@ data class AdminConfig(
     val categoryHidden: List<String> = emptyList(),
 
     // Sumber playlist TAMBAHAN di luar Source 1 (playlistUrl) dan
-    // Source 2 (backupPlaylistUrl). Tiap URL di sini otomatis ditambahkan
-    // sebagai source aktif, berlaku di SEMUA perangkat tanpa build ulang
-    // dan tanpa perlu dibuka satu-satu lewat Settings > Playlist.
-    val extraSources: List<String> = emptyList(),
+    // Source 2 (backupPlaylistUrl). Tiap entri aktif (active=true) otomatis
+    // ditambahkan sebagai source, berlaku di SEMUA perangkat tanpa build
+    // ulang. active=false = disembunyikan sementara (data tetap ada, gampang
+    // diaktifkan lagi kalau sumbernya hidup lagi); hapus dari list = permanen.
+    val extraSources: List<ExtraSourceConfig> = emptyList(),
+
+    // Matikan/hidupkan Source 1 (channels.json bawaan / override playlistUrl)
+    // dan Source 2 (Vision+ bawaan / override backupPlaylistUrl) tanpa perlu
+    // sentuh strings.xml maupun build ulang. false = source itu diperlakukan
+    // seperti tidak ada sama sekali (channel-channelnya tidak akan muncul).
+    val source1Active: Boolean = true,
+    val source2Active: Boolean = true,
 
     // Admin info
     val configVersion: Int = 1,
