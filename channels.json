@@ -2043,6 +2043,24 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1108,
+      "name": "Astro Ceria HD",
+      "cat": "KIDS",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "http://linear-poster.astro.com.my/prod/logo/AstroCeria_2024.png",
+      "url": "http://speedmel.net:80/T3ZT2SM3960ZY8V/umae6FQlwQ/1052390",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
