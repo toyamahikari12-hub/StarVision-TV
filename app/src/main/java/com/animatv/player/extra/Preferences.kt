@@ -191,14 +191,26 @@ class Preferences {
                 result.add(defaultVisionPlus)
             }
 
+            // Source 1 / Source 2 bisa dimatikan lewat Panel Channels
+            // (tab Sumber Playlist) tanpa perlu sentuh strings.xml atau
+            // build ulang -- dipakai kalau sumbernya lagi mati dan mau
+            // disembunyikan sementara dari aplikasi.
+            if (!remoteConfig.source1Active) {
+                result.removeAll { it.path.trim().equals(default.path.trim(), ignoreCase = true) }
+            }
+            if (!remoteConfig.source2Active) {
+                result.removeAll { it.path.trim().equals(defaultVisionPlus.path.trim(), ignoreCase = true) }
+            }
+
             // Sumber playlist TAMBAHAN dari remote config (features.json
             // -> extraSources). Ini yang memungkinkan nambah link playlist
             // baru (seperti link Vision+ dulu) tanpa build ulang APK dan
             // tanpa perlu buka Settings > Playlist manual -- otomatis
             // kepakai di semua perangkat begitu config di-refresh.
-            remoteConfig.extraSources.forEach { url ->
-                val trimmed = url.trim()
-                if (trimmed.isEmpty()) return@forEach
+            // Entri dengan active=false dilewati (disembunyikan sementara).
+            remoteConfig.extraSources.forEach { extra ->
+                val trimmed = extra.url.trim()
+                if (trimmed.isEmpty() || !extra.active) return@forEach
 
                 val alreadyExists = result.any {
                     it.path.trim().equals(trimmed, ignoreCase = true)
@@ -209,6 +221,15 @@ class Preferences {
                         active = true
                     })
                 }
+            }
+
+            // Jaga-jaga: kalau semua source (termasuk Source 1 & 2) sampai
+            // dimatikan semua dan tidak ada source lain, jangan sampai
+            // aplikasi crash gara-gara list kosong -- balikin ke Source 1
+            // bawaan supaya aplikasi tetap bisa jalan (lebih baik daripada
+            // layar kosong total tanpa penjelasan).
+            if (result.isEmpty()) {
+                result.add(default)
             }
 
             val active = result.filter { s -> s.active }
