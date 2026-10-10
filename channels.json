@@ -2079,6 +2079,24 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1110,
+      "name": "On Sport",
+      "cat": "RANDOM SPORT",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "",
+      "url": "https://fastly.live.brightcove.com/6386027187112/us-east-1/6416013238001/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJob3N0IjoieWN3Ymx1LmVncmVzcy5zenkzeHgiLCJhY2NvdW50X2lkIjoiNjQxNjAxMzIzODAwMSIsImVobiI6ImZhc3RseS5saXZlLmJyaWdodGNvdmUuY29tIiwiaXNzIjoiYmxpdmUtcGxheWJhY2stc291cmNlLWFwaSIsInN1YiI6InBhdGhtYXB0b2tlbiIsImF1ZCI6WyI2NDE2MDEzMjM4MDAxIl0sImp0aSI6IjYzODYwMjcxODcxMTIifQ.o9bQYbACQ386kDSKbOPBVYlIhCz3WFgEHI3A8Pcw3qg/chunklist_hls720p.m3u8",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "sport",
+      "parent": "RANDOM SPORT"
     }
   ],
   "menus": [
