@@ -760,14 +760,13 @@
       "drm": true,
       "type": "dash",
       "logo": "https://www.visionplus.id/images/repository/207/514207-LOGO-m.png",
-      "url": "https://d2tjypxxy769fn.cloudfront.net/out/v1/0fd7b7d368bc44bc9b4dece20acc3e33/index.mpd",
-      "desc": "TRANS7 DASH+ClearKey (Vision+)",
-      "tvgId": "TRANS7.id",
-      "drmType": "Widevine",
-      "licenseKey": "https://visionplus.drmiontv.workers.dev/lic?id=7&t=YXV0by00ZGI5YzQ0N2M4YTNjY2NjfDE3OTAyMzIyMjN8YzkxNGE3NmFjNTAzYzljYmU2YWVmMmI0ZDA2MzE2MDkzZTZiMDEwYjkxZWIwMTQxYTQzNDEwNTQzODJlYjlkZQ",
+      "url": "https://cdnjktbpid02.transvision.co.id/riutx01-3f9d9dd6012b7cdd7558fdd44b9a002b/dashx/VFJBTlM3LW15/manifest.mpd?signature=YzBiZjU3ZWM1MmJhZmQ5MTA1Nzk2YmRjN2JiMWQ1ZWM=&time=15263225443&device_id=ZTPmbTHEg6WPPXtVJ5QmBdil7ajR2JTSRPzc-nki2440rVheV3AMcorNW_s7_sBO",
+      "desc": "TRANS7",
+      "tvgId": "TRANS7",
+      "drmType": "Clearkey",
+      "licenseKey": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.visionplus.id/",
-      "hidden": true
+      "referrer": "https://www.cubmu.com/"
     },
     {
       "id": 120,
