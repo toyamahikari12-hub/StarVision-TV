@@ -1802,7 +1802,7 @@
       "drm": "false",
       "type": "hls",
       "logo": "https://image-resizer-cloud-cdn.api.tmcms.quickplay.com/image/D40AFC4A-BD3D-46B2-B1F4-78B483796A2A/0-16x9.png?width=330",
-      "url": "http://wwhomeindo.wewatch.asia/nn_live.m3u8?id=1008",
+      "url": "http://wwhomeindo.wewatch.asia/nn_live.ts?id=1162&nn_m3u8=1&nn_file_index=358365299&nn_file_name=20261012T175500Z&nn_file_index_time=1791827710&nn_file_start=4781028&nn_file_end=7170884&ngs=Fd6e46b57c33b49468e25f19d2742a26&ncmsid=10001001",
       "desc": "",
       "tvgId": "",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
