@@ -727,10 +727,10 @@
       "drm": false,
       "type": "hls",
       "logo": "https://xuanzi-storage.netgenx.site/icons/icon_42.png",
-      "url": "https://haru.charandom.blog/stream/jp/animax/stream-output.m3u8?mode=hls",
       "desc": "ANIMAX JAPAN HLS (dens.tv)",
       "tvgId": "Animax.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "url": "https://sra72yz.s.gy/ANIMAX_ASIA"
     },
     {
       "id": 126,
