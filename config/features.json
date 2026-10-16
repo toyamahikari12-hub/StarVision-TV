@@ -25,7 +25,13 @@
   "themeColorPrimary": "#E91E8C",
   "themeColorAccent": "#00BCD4",
   "bgRotatorInterval": 30,
-  "extraSources": [],
+  "extraSources": [
+    {
+      "url": "https://maxstream.malingtv.workers.dev/",
+      "active": true,
+      "label": "Maxstream"
+    }
+  ],
   "categoryOrder": [
     "NASIONAL",
     "MOVIES & ENTERTAINMENT",
