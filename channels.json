@@ -697,7 +697,7 @@
       "desc": "Nick Jr DASH+ClearKey (Vision+)",
       "tvgId": "Nick Jr.vision+",
       "drmType": "Widevine",
-      "licUrl": "https://dusk.biz.id/rpl/drm.php?id=60",
+      "licUrl": "https://vision.mikrofast.web.id/license?id=60",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "referrer": "https://www.visionplus.id/"
     },
@@ -714,7 +714,7 @@
       "desc": "Nickelodeon DASH+ClearKey (Vision+)",
       "tvgId": "Nickelodeon.vision+",
       "drmType": "Widevine",
-      "licUrl": "https://dusk.biz.id/rpl/drm.php?id=64",
+      "licUrl": "https://vision.mikrofast.web.id/license?id=64",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "referrer": "https://www.visionplus.id/"
     },
