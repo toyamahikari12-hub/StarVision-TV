@@ -38,8 +38,11 @@
     "HBO GROUP",
     "DAERAH",
     "KIDS",
+    "MaxstreamTV",
     "V+ IONTV"
   ],
-  "categoryHidden": [],
+  "categoryHidden": [
+    "V+ IONTV"
+  ],
   "source2Active": false
 }
