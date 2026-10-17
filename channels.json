@@ -94,7 +94,8 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/"
+      "referrer": "https://www.cubmu.com/",
+      "hidden": true
     },
     {
       "id": 102,
@@ -105,7 +106,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://images.indihometv.com/assets/logo_rcti_hd.png",
-      "url": "https://beetv.my.id/xstreamx/rctiplus.m3u8?ch=rcti",
+      "url": "https://bintangstreaming.my.id/000/rcti.php/.m3u8?id=rcti",
       "desc": "RCTI DASH (IndiHome fallback)",
       "tvgId": "RCTI.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -186,7 +187,8 @@
       "tvgId": "MNCTV.id",
       "drmType": "ClearKey",
       "licUrl": "c3004565365a42d08e3bde39a516d64e:dbfdc0967cfbbed01dba730c99d9c14a",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 1071,
@@ -196,8 +198,8 @@
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://i.ibb.co.com/qjg9wCC/mnctv.png",
-      "url": "http://beetv.my.id/xstreamx/rctiplus.m3u8?ch=mnctv",
+      "logo": "https://static.rctiplus.id/media/400/files/fta_rcti/Channel_Logo/MNCTV.png",
+      "url": "https://bintangstreaming.my.id/000/rcti.php/.m3u8?id=mnctv",
       "desc": "MNC TV DASH (IndiHome fallback)",
       "tvgId": "MNCTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -430,7 +432,8 @@
       "drmType": "ClearKey",
       "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/"
+      "referrer": "https://www.cubmu.com/",
+      "hidden": true
     },
     {
       "id": 1081,
@@ -441,7 +444,7 @@
       "drm": true,
       "type": "hls",
       "logo": "https://static.rctiplus.id/media/300/files/fta_rcti/Channel_Logo/GTV.png",
-      "url": "https://gtv-linier.rctiplus.id/gtv-sdi.m3u8?hdnts=exp=1790637039~hmac=02616018ff473d69b3e5d76430678cda7d7891a7007f3a4046e16455494e9999",
+      "url": "https://bintangstreaming.my.id/000/rcti.php/.m3u8?id=gtv",
       "desc": "GTV (R+)",
       "tvgId": "GTV (R+)",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
