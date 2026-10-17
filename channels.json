@@ -2126,6 +2126,24 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1113,
+      "name": "Pokemon",
+      "cat": "KIDS",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "http://onlytimewilltell.xyz:2086/images/deb3526ab200b3ff9f881fc4f143a673.jpg",
+      "url": "http://fastcable.click:5050/dz8/L88yQSMEEJ/814717",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
