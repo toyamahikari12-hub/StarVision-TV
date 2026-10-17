@@ -41,8 +41,6 @@
     "MaxstreamTV",
     "V+ IONTV"
   ],
-  "categoryHidden": [
-    "V+ IONTV"
-  ],
-  "source2Active": false
+  "categoryHidden": [],
+  "source2Active": true
 }
