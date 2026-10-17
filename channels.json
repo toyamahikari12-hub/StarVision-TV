@@ -2091,6 +2091,24 @@
       "desc": "",
       "tvgId": "",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+    },
+    {
+      "id": 1111,
+      "name": "Anime 1 ᴴᴰ",
+      "cat": "Dunia Wibu",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "https://iili.io/HPnvuUl.md.png",
+      "url": "http://fastcable.click:5050/dz8/L88yQSMEEJ/566952",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
