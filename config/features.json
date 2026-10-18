@@ -30,11 +30,6 @@
       "url": "https://maxstream.malingtv.workers.dev/",
       "active": true,
       "label": "Maxstream"
-    },
-    {
-      "url": "https://raw.githubusercontent.com/dbghelp/Abema-TV/refs/heads/main/abema.m3u8",
-      "active": true,
-      "label": "AbemaTV"
     }
   ],
   "categoryOrder": [
