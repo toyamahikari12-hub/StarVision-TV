@@ -2234,6 +2234,24 @@
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1119,
+      "name": "요리왕 비룡 더 마스터",
+      "cat": "Dunia Wibu",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "https://tvpnlogopus.samsungcloud.tv/platform/image/sourcelogo/vc/00/02/34/KRBC3200001VC_20260422T013525SQUARE.png",
+      "url": "https://jmp2.uk/stvp-KRBC3200001VC",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
