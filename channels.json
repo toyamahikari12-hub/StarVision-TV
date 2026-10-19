@@ -36,19 +36,17 @@
   "channels": [
     {
       "id": 100,
-      "name": "TRANS7",
-      "cat": "NASIONAL",
+      "name": "Big A Anime",
+      "cat": "Dunia Wibu",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://images.indihometv.com/images/channels/image_ch_trans7.png",
-      "url": "https://green-night-d2b4.iontv.workers.dev/trans7.m3u8",
+      "logo": "https://images.pluto.tv/channels/6a3c5fa46276c42ac6726b27/colorLogoPNG_1785178474278.png",
+      "url": "https://jmp2.uk/plu-6a3c5fa46276c42ac6726b27.m3u8",
       "desc": "TRANS7 DASH",
       "tvgId": "TRANS7.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://20.detik.com/",
-      "hidden": true
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 100,
@@ -81,21 +79,17 @@
     },
     {
       "id": 102,
-      "name": "RCTI (TRV)",
-      "cat": "NASIONAL",
+      "name": "It's Anime",
+      "cat": "Dunia Wibu ",
       "color": "#e91e8c",
       "q": "HD",
       "drm": true,
       "type": "hls",
-      "logo": "https://i.ibb.co.com/dM0SYrN/rcti.png",
-      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-437ec38cc692ca43976ff80c7af30565/dash/UkNUSS1DaGFubmVs/manifest.mpd?signature=M2E4Y2FjZWIxNWEwNmI1YjViYTc5MDAxM2UxYTg5MjM=&time=77777777777&device_id=hY5M2fmdSFTWh5tytanqPWbmxgnCzg5URb9Cgk5AB1RWkUWMtA",
+      "logo": "https://images.pluto.tv/channels/6a4fda4538f47f0af402bdb0/colorLogoPNG_1787854579734.png",
+      "url": "https://jmp2.uk/plu-6a4fda4538f47f0af402bdb0.m3u8",
       "desc": "RCTI DASH+ClearKey (Vision+)",
       "tvgId": "RCTI.id",
-      "drmType": "ClearKey",
-      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/",
-      "hidden": true
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 102,
