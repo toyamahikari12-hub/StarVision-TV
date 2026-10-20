@@ -851,20 +851,17 @@
     },
     {
       "id": 144,
-      "name": "Astro Premier League",
-      "cat": "SPORT",
+      "name": "Astro Ceria HD2",
+      "cat": "KIDS",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
       "type": "hls",
       "logo": "https://divign0fdw3sv.cloudfront.net/Images/ChannelLogo/contenthub/536_144.png",
-      "url": "http://EXM3U.extraott.com:80/live/6JG6WQTK/1RS973F7/29151.m3u8",
-      "desc": "Astro Premier League HLS",
-      "tvgId": "Astro Premier League.id",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "menu": "sport",
-      "parent": "SPORT",
-      "hidden": true
+      "url": "https://hd.rip/stream/Ceria/playlist.m3u8?e=1792552013&s=cd879daffc0aebd824db030284d7d945",
+      "desc": "Astro Ceria ",
+      "tvgId": "Astro Ceria ",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 145,
