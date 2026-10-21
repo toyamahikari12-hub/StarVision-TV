@@ -28,7 +28,7 @@
   "extraSources": [
     {
       "url": "https://maxstream.malingtv.workers.dev/",
-      "active": true,
+      "active": false,
       "label": "Maxstream"
     }
   ],
