@@ -28,7 +28,7 @@
   "extraSources": [
     {
       "url": "https://maxstream.malingtv.workers.dev/",
-      "active": false,
+      "active": true,
       "label": "Maxstream"
     }
   ],
@@ -41,8 +41,6 @@
     "MaxstreamTV",
     "V+ IONTV"
   ],
-  "categoryHidden": [
-    "MaxstreamTV"
-  ],
+  "categoryHidden": [],
   "source2Active": true
 }
