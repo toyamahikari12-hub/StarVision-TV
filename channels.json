@@ -746,11 +746,10 @@
       "drm": "false",
       "type": "hls",
       "logo": "https://www.visionplus.id/images/repository/207/514207-LOGO-m.png",
-      "url": "https://live.eu-north-1a.cf.dmcdn.net/sec2(cUKwkWCOum2HMgt5p-f8og9adhDPfO1OUKMhdq5u-jcaEChNc6VZpItEs1hah9_9HdNFMEVJDTwg2CvVqaHBADK6AJi8Odlt1ZT6EgmAJEn4w8ptEmp7EUBrulgVbm6h)/dm/3/x8qckyq/d/live-240.m3u8#cell=lcf-eu-north-1a",
+      "url": "https://live.eu-north-1a.cf.dmcdn.net/sec2(nAt5ADwZBdROiAr464LoYJx6iEocOH-LSB1rLhC52TTwhE-zV1b1xUKz_risoxjMwfUMzPupHTq9kO6uBzKUhQXgetAWtt8n-Pfl2I6HIgiM1SkPl0M8YSd4tafpflMc)/dm/3/x8qckyq/d/live-480.m3u8",
       "desc": "TRANS7",
       "tvgId": "TRANS7",
-      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cubmu.com/"
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
       "id": 120,
