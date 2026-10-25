@@ -190,7 +190,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://static.rctiplus.id/media/400/files/fta_rcti/Channel_Logo/MNCTV.png",
-      "url": "https://bintangstreaming.my.id/000/rcti.php/.m3u8?id=mnctv",
+      "url": "https://rplus.inisemar.my.id/mnctv.m3u8",
       "desc": "MNC TV DASH (IndiHome fallback)",
       "tvgId": "MNCTV.indihome",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
