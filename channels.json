@@ -447,7 +447,7 @@
       "drm": true,
       "type": "dash",
       "logo": "https://www.transtv.co.id/themes/v25.7/src/assets/logo/01-ttv.png",
-      "url": "http://gvisiontv.channell.my.id/ch/id/trans.php/.m3u8?ch=transtv",
+      "url": "https://live.cnbcindonesia.com/transtv/smil:transtv.smil/playlist.m3u8",
       "desc": "Trans TV",
       "tvgId": "Trans TV",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -739,14 +739,14 @@
     },
     {
       "id": 128,
-      "name": "TRANS7 (V+)",
+      "name": "TRANS7",
       "cat": "NASIONAL",
       "color": "#ff6eb4",
       "q": "HD",
       "drm": "false",
       "type": "hls",
       "logo": "https://www.visionplus.id/images/repository/207/514207-LOGO-m.png",
-      "url": "https://live.eu-north-1a.cf.dmcdn.net/sec2(nAt5ADwZBdROiAr464LoYJx6iEocOH-LSB1rLhC52TTwhE-zV1b1xUKz_risoxjMwfUMzPupHTq9kO6uBzKUhQXgetAWtt8n-Pfl2I6HIgiM1SkPl0M8YSd4tafpflMc)/dm/3/x8qckyq/d/live-480.m3u8",
+      "url": "https://live.cnbcindonesia.com/trans7/smil:trans7.smil/playlist.m3u8",
       "desc": "TRANS7",
       "tvgId": "TRANS7",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
