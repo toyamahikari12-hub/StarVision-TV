@@ -217,10 +217,10 @@
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
-      "drm": false,
-      "type": "hls",
+      "drm": "true",
+      "type": "dash",
       "logo": "https://thumbor.prod.vidiocdn.com/0plBZ7Gso7gNBJxid9ksA8HMGxc=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/205/54ab19.png",
-      "url": "https://vidio123.mikrofast.web.id/vidio/205/index.mpd",
+      "url": "https://nextgenz.my.id/event/pidio/play.mpd?id=205&type=dash",
       "desc": "INDOSIAR HLS",
       "tvgId": "INDOSIAR.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
