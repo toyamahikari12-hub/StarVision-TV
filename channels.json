@@ -1029,7 +1029,7 @@
       "drm": true,
       "type": "dash",
       "logo": "https://object-streamo.emonaja.com/img/spotv.png",
-      "url": "https://svod.mana2.my/SpotvNow/index.mpd",
+      "url": "https://slive.mana2.my/SpotvNow/index.mpd",
       "desc": "SPOTV Now DASH+ClearKey (Indihome)",
       "tvgId": "SPOTV Now.indihome",
       "drmType": "ClearKey",
