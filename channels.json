@@ -133,7 +133,7 @@
       "url": "https://vidsemar.pages.dev/terraluna3/205.mpd",
       "desc": "INDOSIAR DASH+Widevine",
       "tvgId": "Indosiar",
-      "drmType": "Widevine",
+      "drmType": "org.w3.clearkey",
       "licUrl": "https://sports.inisemar.my.id/ck.php?id=indosiar",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
       "referrer": "https://www.vidio.com/"
