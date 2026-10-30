@@ -112,14 +112,14 @@
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
-      "drm": "true",
-      "type": "dash",
+      "drm": "false",
       "logo": "https://thumbor.prod.vidiocdn.com/kH-K9J4cROqL0TZrAyQhw7P5pBk=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/204/4e9f5c.png",
-      "url": "https://vidio123.mikrofast.web.id/vidio/204/index.mpd",
+      "url": "https://aspaltvpasti.top/Drmvidbos/Akun121/bosstv.m3u8?id=204",
       "desc": "SCTV HLS",
       "tvgId": "SCTV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://m.vidio.com/"
+      "referrer": "https://m.vidio.com/",
+      "type": "hls"
     },
     {
       "id": 104,
@@ -217,10 +217,10 @@
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
-      "drm": "true",
-      "type": "dash",
+      "drm": "false",
+      "type": "hls",
       "logo": "https://thumbor.prod.vidiocdn.com/0plBZ7Gso7gNBJxid9ksA8HMGxc=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/205/54ab19.png",
-      "url": "https://nextgenz.my.id/event/pidio/play.mpd?id=205&type=dash",
+      "url": "https://aspaltvpasti.top/Drmvidbos/Akun121/bosstv.m3u8?id=205",
       "desc": "INDOSIAR HLS",
       "tvgId": "INDOSIAR.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
