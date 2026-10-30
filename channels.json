@@ -661,11 +661,9 @@
       "drm": true,
       "type": "dash",
       "logo": "https://raw.githubusercontent.com/apistech/project/refs/heads/main/logo/image_ch_mentaritv.png",
-      "url": "https://nextgenz.my.id/event/pidio/play.mpd?id=8237&type=dash",
-      "desc": "Mentari TV DASH+ClearKey (Indihome)",
-      "tvgId": "Mentari TV.indihome",
-      "drmType": "Widevine",
-      "licUrl": "https://nextgenz.my.id/event/pidio/play.mpd?id=8237&type=drm",
+      "url": "http://nextgenz.my.id/event/pidio/play.mpd?id=8237&type=dash",
+      "desc": "Mentari TV",
+      "tvgId": "Mentari TV",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
