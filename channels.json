@@ -115,11 +115,11 @@
       "drm": "true",
       "type": "dash",
       "logo": "https://thumbor.prod.vidiocdn.com/kH-K9J4cROqL0TZrAyQhw7P5pBk=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/204/4e9f5c.png",
-      "url": "https://calistaiptv.my.id/indopart/play.mpd?id=204&type=dash",
+      "url": "https://vidio123.mikrofast.web.id/vidio/204/index.mpd",
       "desc": "SCTV HLS",
       "tvgId": "SCTV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.vidio.com/"
+      "referrer": "https://m.vidio.com/"
     },
     {
       "id": 104,
