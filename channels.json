@@ -147,11 +147,11 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/k3S01Fh/transtv.png",
-      "url": "https://live.cnnindonesia.com/transtv/smil:transtv/chunklist_w2685575259_b744100_sleng.m3u8",
+      "url": "https://trans.diorx.my.id/transtv.m3u8",
       "desc": "TRANS TV HLS (Detik)",
       "tvgId": "TransTV.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
-      "referrer": "https://www.cnbcindonesia.com/"
+      "referrer": "https://video.detik.com/"
     },
     {
       "id": 1061,
@@ -162,7 +162,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/V37y7jf/trans7.png",
-      "url": "https://live.cnnindonesia.com/trans7/smil:trans7/chunklist_w2685575259_b744100_sleng.m3u8",
+      "url": "https://trans.diorx.my.id/trans7.m3u8",
       "desc": "TRANS7 HLS (Detik)",
       "tvgId": "Trans7.detik",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -372,14 +372,14 @@
     },
     {
       "id": 105,
-      "name": "TRANSTV (TRV)",
+      "name": "TRANSTV  ",
       "cat": "NASIONAL",
       "color": "#7df9ff",
       "q": "HD",
       "drm": true,
       "type": "dash",
       "logo": "https://thumbor.prod.vidiocdn.com/__j35q7LPpcS2EgkR7v8GpE4USQ=/230x230/filters:quality(70)/vidio-web-prod-livestreaming/uploads/livestreaming/square_image/733/ecaa60.png",
-      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-437ec38cc692ca43976ff80c7af30565/dash/VHJhbnNUVg/manifest.mpd?signature=ZGQ2YmE4NGVhMmJiOGIzODQ4NGZkZmJhZDcyN2I4NDE=&time=77777777777&device_id=7IXVvzSbNJ39Hp_b0mAgbbOBp5XFfn0vNSN6RhA_ZEuaryTJog",
+      "url": "https://trans.diorx.my.id/trans7.m3u8",
       "desc": "TRANS TV DASH+ClearKey (Vision+)",
       "tvgId": "TransTV.id",
       "drmType": "ClearKey",
@@ -438,7 +438,7 @@
     },
     {
       "id": 130,
-      "name": "TransTV",
+      "name": "TransTV D",
       "cat": "NASIONAL",
       "color": "#e91e8c",
       "q": "HD",
@@ -448,7 +448,8 @@
       "url": "https://live.cnbcindonesia.com/transtv/smil:transtv.smil/playlist.m3u8",
       "desc": "Trans TV",
       "tvgId": "Trans TV",
-      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+      "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "hidden": true
     },
     {
       "id": 139,
