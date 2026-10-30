@@ -262,7 +262,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/b1tcbgm/rtv.png",
-      "url": "https://rtvstream.rtv.co.id:4555/hls/rtv.m3u8",
+      "url": "https://aspaltvpasti.top/Drmvidbos/Akun121/bosstv.m3u8?id=1561",
       "desc": "RTV HLS",
       "tvgId": "RTV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -977,7 +977,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwOOXHzTEMbDw1YdQG5v5Gp5AU-Z9GuVV8eA&s",
-      "url": "https://btv.secureswiftcontent.com/han/btv/btv10005/srtoutput/manifest.m3u8",
+      "url": "https://aspaltvpasti.top/Drmvidbos/Akun121/bosstv.m3u8?id=6165",
       "desc": "BTV HLS",
       "tvgId": "BTV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -2240,6 +2240,24 @@
       "tvgId": "",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "buffer": "stabil",
+      "menu": "",
+      "parent": ""
+    },
+    {
+      "id": 1121,
+      "name": "Moji 2",
+      "cat": "NASIONAL",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "https://raw.githubusercontent.com/aderandi/iptv-playlist/refs/heads/main/xx/SCTV.png",
+      "url": "https://aspaltvpasti.top/Drmvidbos/Akun121/bosstv.m3u8?id=206",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
     }
