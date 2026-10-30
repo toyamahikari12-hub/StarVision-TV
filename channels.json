@@ -343,14 +343,14 @@
     },
     {
       "id": 119,
-      "name": "Nusantara TV (IHT)",
-      "cat": "NASIONAL",
+      "name": "Nusantara TV",
+      "cat": "DAERAH",
       "color": "#ffd700",
       "q": "HD",
       "drm": false,
       "type": "hls",
-      "logo": "https://i.ibb.co.com/dJrj97X/nusantaratv.png",
-      "url": "https://cdn10jtedge.indihometv.com/atm/DASH/nusantaratv/manifest.mpd",
+      "logo": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj617YfJUnmpKEHsGLPkNIt8_8r_gw7yvo8rVBBDGC0SYRZ9P3QL5vUuyjTUgoDQ3skZ1sR7yVc29sEuyXR331l5HUgDxO3_1pBUJBnOz8CpFH96GaB0C7GslqiR8nkYqDLVSbpzGK5RH4Z-b2g3fiJE-WucTroy3soKEZDALEq_ufbGexUBAXEFsB3WSo/s700/NusantaraTV.png",
+      "url": "https://op-flashcon-digdayahd-1.dens.tv/h/h37/index.m3u8",
       "desc": "Nusantara TV HLS",
       "tvgId": "Nusantara TV.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
@@ -453,7 +453,7 @@
     {
       "id": 139,
       "name": "Garuda TV",
-      "cat": "NASIONAL",
+      "cat": "DAERAH",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
