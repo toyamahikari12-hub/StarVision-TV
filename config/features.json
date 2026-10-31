@@ -30,11 +30,6 @@
       "url": "https://maxstream.malingtv.workers.dev/",
       "active": true,
       "label": "Maxstream"
-    },
-    {
-      "url": "maxstreamtv.memektv.my.id",
-      "active": true,
-      "label": "Max"
     }
   ],
   "categoryOrder": [
