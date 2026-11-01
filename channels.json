@@ -57,7 +57,7 @@
       "drm": false,
       "type": "hls",
       "logo": "https://icon2.cleanpng.com/20180811/aav/ddb009144338717fc078da28acc058fc.webp",
-      "url": "http://202.150.161.212:5000/live/channel27/playlist.m3u8",
+      "url": "http://play.fastkobar.my.id:8080/live/43215/43215/41.ts",
       "desc": "Cartoon Network DASH",
       "tvgId": "Cartoon Network.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
