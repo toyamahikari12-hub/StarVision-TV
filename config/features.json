@@ -25,13 +25,7 @@
   "themeColorPrimary": "#E91E8C",
   "themeColorAccent": "#00BCD4",
   "bgRotatorInterval": 30,
-  "extraSources": [
-    {
-      "url": "https://a3.randhyrandhy421.workers.dev",
-      "active": true,
-      "label": "MUTV"
-    }
-  ],
+  "extraSources": [],
   "categoryOrder": [
     "NASIONAL",
     "MOVIES & ENTERTAINMENT",
