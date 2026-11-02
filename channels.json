@@ -528,14 +528,14 @@
     },
     {
       "id": 138,
-      "name": "AXN Asia",
+      "name": "Warner TV",
       "cat": "MOVIES & ENTERTAINMENT",
       "color": "#e91e8c",
       "q": "HD",
       "drm": false,
       "type": "hls",
       "logo": "https://i.ibb.co.com/f9XVz9j/axn.png",
-      "url": "https://cdnbal1.indihometv.com/atm/DASH/axn/axn-avc1_2500000=7-3277707030000000.mpd",
+      "url": "http://play.fastkobar.my.id:8080/live/43215/43215/75.ts",
       "desc": "AXN Asia HLS",
       "tvgId": "AXN Asia.id",
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
