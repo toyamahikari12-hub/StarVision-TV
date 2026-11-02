@@ -2274,6 +2274,24 @@
       "referrer": "https://www.rctiplus.com/",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1123,
+      "name": "LARVA",
+      "cat": "KIDS",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "false",
+      "type": "hls",
+      "logo": "https://m.media-amazon.com/images/S/pv-target-images/503f402742d706c5cc452ed25e1fcf4954b0153dafcb2721f1a60ac8050e4454.jpg",
+      "url": "https://cilok99.serv00.net/ythls/xxxx.py/play.m3u8?id=UCOgmWbn6W6ahOc0QVzuJ65g",
+      "licUrl": "",
+      "drmType": "",
+      "desc": "",
+      "tvgId": "",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
