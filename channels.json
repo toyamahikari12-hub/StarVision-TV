@@ -2294,6 +2294,24 @@
       "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
       "menu": "",
       "parent": ""
+    },
+    {
+      "id": 1124,
+      "name": "Khazanah",
+      "cat": "MOVIES & ENTERTAINMENT",
+      "color": "#e91e8c",
+      "q": "HD",
+      "drm": "true",
+      "type": "dash",
+      "logo": "https://www.transvision.co.id/img/channel/khazanah.png",
+      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-8d60a02923af3b585decfb9bea4655d9/dash/S2hhemFuYWg/manifest.mpd?signature=NWUxNGNlZjIzOGU1MzY5ZTQwMmJiOGJkMTIwOTdkMDY=&time=15272262614&device_id=ycAhxFIWGeEd-HdvDNzabcjyoxo_lVa3IyFHDybOmCSC2Ouf2hSMmohN",
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
+      "drmType": "Clearkey",
+      "desc": "",
+      "tvgId": "",
+      "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+      "menu": "",
+      "parent": ""
     }
   ],
   "menus": [
