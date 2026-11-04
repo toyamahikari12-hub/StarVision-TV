@@ -504,12 +504,14 @@
       "cat": "MOVIES & ENTERTAINMENT",
       "color": "#e91e8c",
       "q": "HD",
-      "drm": "false",
-      "type": "hls",
+      "drm": "true",
+      "type": "dash",
       "logo": "https://i.ibb.co.com/nr4HQFm/dunialain.png",
-      "url": "https://delivery.skuyytv.xyz/stream/dunialain/playlist.m3u8?token=jyfds&v=20200807",
+      "url": "https://cdnjktcyber05.transvision.co.id/riutx01-8d60a02923af3b585decfb9bea4655d9/dash/RHVuaWEgTGFpbg/manifest.mpd?signature=OTg3NWEwMjhkNzQ3MjQ2YjBlNGFkZjQwNzIyODY5NDI=&time=15272662073&device_id=bpmePZvVASBph2SZjEij7WdhLhvPsoAzplKlUmKgZv0KSLHOSoqSDO0s",
       "desc": "DUNIA LAIN DASH+ClearKey (Indihome)",
       "tvgId": "DUNIA LAIN.indihome",
+      "drmType": "Widevine",
+      "licUrl": "6ffb9c53af284fd590217ede1eba765e:4abf1fd26e8c45a5b6bae60cf6ffc2b9",
       "ua": "http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
     },
     {
