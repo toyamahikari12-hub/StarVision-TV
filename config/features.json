@@ -27,9 +27,9 @@
   "bgRotatorInterval": 30,
   "extraSources": [
     {
-      "url": "https://hd.rip/?ch=327&_r=1793347701887",
+      "url": "https://hd.rip/",
       "active": true,
-      "label": "Hd"
+      "label": "hd"
     }
   ],
   "categoryOrder": [
