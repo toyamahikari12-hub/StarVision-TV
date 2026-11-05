@@ -25,7 +25,13 @@
   "themeColorPrimary": "#E91E8C",
   "themeColorAccent": "#00BCD4",
   "bgRotatorInterval": 30,
-  "extraSources": [],
+  "extraSources": [
+    {
+      "url": "https://hd.rip/?ch=327&_r=1793347701887",
+      "active": true,
+      "label": "Hd"
+    }
+  ],
   "categoryOrder": [
     "NASIONAL",
     "MOVIES & ENTERTAINMENT",
