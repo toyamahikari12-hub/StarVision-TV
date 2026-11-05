@@ -25,13 +25,7 @@
   "themeColorPrimary": "#E91E8C",
   "themeColorAccent": "#00BCD4",
   "bgRotatorInterval": 30,
-  "extraSources": [
-    {
-      "url": "https://hd.rip/",
-      "active": true,
-      "label": "hd"
-    }
-  ],
+  "extraSources": [],
   "categoryOrder": [
     "NASIONAL",
     "MOVIES & ENTERTAINMENT",
