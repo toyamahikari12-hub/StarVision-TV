@@ -435,7 +435,15 @@ class PlayerActivity : AppCompatActivity() {
             streamUrl.contains("playlist.m3u8", ignoreCase = true) -> MimeTypes.APPLICATION_M3U8
             streamUrl.contains("master.m3u8", ignoreCase = true) -> MimeTypes.APPLICATION_M3U8
             streamUrl.contains("index.m3u8", ignoreCase = true) -> MimeTypes.APPLICATION_M3U8
-            else -> null
+            // URL tanpa ekstensi (mis. .../pxx.php?id=bs15): percayai jenis
+            // yang dideklarasikan di playlist, kalau tidak ExoPlayer menebak
+            // "progressive" lalu gagal memutar HLS/DASH.
+            else -> when (current?.streamType?.trim()?.lowercase()) {
+                "hls", "m3u8" -> MimeTypes.APPLICATION_M3U8
+                "dash", "mpd" -> MimeTypes.APPLICATION_MPD
+                "ss", "smoothstreaming" -> MimeTypes.APPLICATION_SS
+                else -> null
+            }
         }
 
         // HTTP factory dengan User-Agent dan Referer
