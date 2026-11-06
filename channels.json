@@ -1981,7 +1981,7 @@
       "cat": "Dunia Wibu",
       "color": "#e91e8c",
       "q": "HD",
-      "drm": "false",
+      "drm": "true",
       "type": "hls",
       "logo": "https://www.skyperfectv.co.jp/library/common/img/channel/icon/basic/bs236.gif",
       "url": "https://ri.shinori.my.id/pxx.php?shk_cid=bs15",
