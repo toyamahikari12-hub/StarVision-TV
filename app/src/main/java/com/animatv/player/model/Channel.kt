@@ -14,7 +14,7 @@ class Channel {
     var drmName: String? = null
 
     // FIX: field "type" dari JSON (dash/hls/ss/dll)
-    @SerializedName("type")
+    @SerializedName(value = "type", alternate = ["stream_type", "streamType"])
     var streamType: String? = null
 
     var logo: String? = null
