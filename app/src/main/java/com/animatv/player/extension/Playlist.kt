@@ -579,6 +579,13 @@ fun String?.toPlaylist(): Playlist? {
                     }
 
 
+                // Jenis stream (hls/dash/...) dari JSON, dipakai player kalau
+                // URL-nya tidak punya ekstensi (.m3u8/.mpd), mis. pxx.php?id=..
+                channel.streamType =
+                    listOf("type", "stream_type", "streamType")
+                        .firstOrNull { k -> obj.has(k) && !obj.get(k).isJsonNull }
+                        ?.let { k -> obj.get(k).asString.trim().ifEmpty { null } }
+
                 // Simpan metadata ke Channel
                 channel.userAgent =
                     userAgent.ifEmpty { null }
