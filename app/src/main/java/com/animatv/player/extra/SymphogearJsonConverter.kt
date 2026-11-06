@@ -304,6 +304,10 @@ object SymphogearJsonConverter {
                     // SIMPAN FIELD TAMBAHAN
                     // =================================================
 
+                    channel.streamType =
+                        (obj.str("type") ?: obj.str("stream_type"))
+                            ?.trim()?.ifEmpty { null }
+
                     channel.userAgent =
                         ua
 
