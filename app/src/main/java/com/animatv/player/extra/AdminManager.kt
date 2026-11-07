@@ -147,7 +147,19 @@ object AdminManager {
 
     // ===== 3. FEATURE FLAGS =====
 
+    // HP/TV box lama (Android 6 ke bawah) atau RAM kecil: efek visual berat
+    // dimatikan otomatis supaya aplikasi tidak patah-patah / kehabisan memori.
+    // Berlaku di perangkat itu saja, tidak mengubah config remote.
+    private val isLowEndDevice: Boolean by lazy {
+        val am = App.context.getSystemService(Context.ACTIVITY_SERVICE) as? android.app.ActivityManager
+        android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.M ||
+            (am?.isLowRamDevice == true)
+    }
+
+    private val heavyVisualFeatures = setOf("sakura_effect", "anime_background", "anime_guide")
+
     fun isFeatureEnabled(feature: String): Boolean {
+        if (isLowEndDevice && feature in heavyVisualFeatures) return false
         val config = getConfig()
         return when (feature) {
             "sleep_timer"        -> config.featureSleepTimer
