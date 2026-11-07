@@ -28,6 +28,10 @@ android {
 
         multiDexEnabled true
 
+        // Hanya simpan bahasa yang memang dipakai app; terjemahan library
+        // (material, appcompat, dll.) bahasa lain dibuang -> APK lebih kecil.
+        resConfigs "en", "in", "id", "ja", "ms"
+
         vectorDrawables {
             useSupportLibrary true
         }
@@ -35,7 +39,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            abiFilters "armeabi-v7a", "arm64-v8a"
         }
 
         // Token diambil dari environment variable saat build (GitHub Actions secret),
@@ -64,8 +68,10 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            // Kalau setelah build app crash/error aneh yang tidak ada di versi
+            // sebelumnya, balikin dua baris ini ke false dulu (lalu kabari).
+            minifyEnabled true
+            shrinkResources true
 
             proguardFiles(
                 getDefaultProguardFile('proguard-android-optimize.txt'),
@@ -105,8 +111,6 @@ android {
 
         pickFirst 'lib/armeabi-v7a/libc++_shared.so'
         pickFirst 'lib/arm64-v8a/libc++_shared.so'
-        pickFirst 'lib/x86/libc++_shared.so'
-        pickFirst 'lib/x86_64/libc++_shared.so'
     }
 }
 

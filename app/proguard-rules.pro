@@ -1,90 +1,62 @@
 # ============================================================
-# ProGuard Rules - StarVision TV
+# ProGuard/R8 Rules - StarVision TV (versi kecil & ringan)
+# Library modern (androidx, media3, okhttp, glide, lottie) sudah membawa
+# consumer rules sendiri, jadi TIDAK perlu di-keep semuanya lagi.
 # ============================================================
 
-# Jaga semua class aplikasi utama
+# Kode aplikasi sendiri kecil -> aman di-keep penuh (model Gson, binding, dll.)
 -keep class com.animatv.player.** { *; }
 
-# Jaga model (Gson parsing)
--keep class com.animatv.player.model.** { *; }
--keepclassmembers class com.animatv.player.model.** { *; }
-
-# Gson
--keep class com.google.gson.** { *; }
+# Gson: butuh info generic & anotasi
 -keepattributes Signature
 -keepattributes *Annotation*
+-keepattributes InnerClasses,EnclosingMethod
 -dontwarn sun.misc.**
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
 
-# ExoPlayer
--keep class com.google.android.exoplayer2.** { *; }
--dontwarn com.google.android.exoplayer2.**
+# Decoder FFmpeg (JNI) -> nama class/method native tidak boleh diubah
+-keep class org.jellyfin.media3.decoder.ffmpeg.** { *; }
+-keep class androidx.media3.decoder.** { *; }
+-keepclasseswithmembernames class * { native <methods>; }
 
-# OkHttp
--keep class okhttp3.** { *; }
--dontwarn okhttp3.**
--dontwarn okio.**
+# Conscrypt / OkHttp: komponen opsional yang tidak ada di Android
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+-dontwarn okhttp3.internal.platform.**
 
-# Glide
+# Glide (modul hasil kapt)
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule { *; }
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** { *; }
 
-# Lottie
--keep class com.airbnb.lottie.** { *; }
--dontwarn com.airbnb.lottie.**
-
-# AndroidX
--keep class androidx.** { *; }
--dontwarn androidx.**
-
-# Data Binding
--keep class androidx.databinding.** { *; }
--dontwarn androidx.databinding.**
+# FilePicker (library JitPack, pakai reflection untuk dialog)
+-keep class com.developer.filepicker.** { *; }
 
 # MultiDex - PENTING untuk Android 5
 -keep class androidx.multidex.** { *; }
 
-# Jangan obfuscate Activity, Service, Receiver
+# Komponen Android yang dipanggil lewat manifest
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
 -keep public class * extends android.content.ContentProvider
--keep public class * extends android.view.View
-
-# Jaga Fragment
 -keep public class * extends androidx.fragment.app.Fragment
 
-# Serializable
--keepclassmembers class * implements java.io.Serializable {
-    static final long serialVersionUID;
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
+# Resource id yang dicari lewat nama (AdminActivity pakai getIdentifier)
+-keepclassmembers class **.R$* { public static <fields>; }
 
-# Parcelable
--keep class * implements android.os.Parcelable {
-    public static final android.os.Parcelable$Creator *;
-}
-
-# Enum
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
 
-# Jaga R class
--keepclassmembers class **.R$* {
-    public static <fields>;
-}
-
-# Suppress warnings umum
 -dontwarn java.lang.invoke.**
 -dontwarn **$$Lambda$*
 -dontwarn kotlin.**
